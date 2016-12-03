@@ -54,17 +54,8 @@
 </tr>
 </tbody>
 </table>
-<p>BlockQueue 不接受 null 元素。否则会抛空指针异常</p>
-<p>BlockQueue 容量是可以设定的，如果没有设定，则容量为 Integer.MAX_VALUE</p>
-<p>BlockQueue 的实现是线程安全的。</p>
-<p>BlockQueue 本质上不支持关闭，如果需要可以通过插入特定的结束标记 来让调用者中断。</p>
-<p>BlockQueue 有几个常用的实现类</p>
-<ul>
-<li>LinkedBlockingQueue 链表队列</li>
-<li>ArrayBlockingQueue 数组队列</li>
-<li>SynchronousQueue 同步队列（插入操作必须等待另一个线程的删除操作之后，反之亦然）</li>
-<li>BlockDeque 它是个双端队列，可以两从两端插入/获取。 BlockQueue 是单端队列</li>
-</ul>
+<p>BlockQueue 不接受 null 元素。否则会抛空指针异常<br>BlockQueue 容量是可以设定的，如果没有设定，则容量为 Integer.MAX_VALUE<br>BlockQueue 的实现是线程安全的。<br>BlockQueue 本质上不支持关闭，如果需要可以通过插入特定的结束标记 来让调用者中断。</p>
+<p>BlockQueue 有几个常用的实现类<br>    LinkedBlockingQueue 链表队列<br>    ArrayBlockingQueue 数组队列<br>    SynchronousQueue 同步队列（插入操作必须等待另一个线程的删除操作之后，反之亦然）<br>    BlockDeque 它是个双端队列，可以两从两端插入/获取。 BlockQueue 是单端队列</p>
 <h2 id="线程池的流程图"><a href="#线程池的流程图" class="headerlink" title="线程池的流程图"></a>线程池的流程图</h2><p><img src="/images/ThreadPool.png" alt="ThreadPool"></p>
 <p><br><br><br></p>
 <p><a rel="external" href="http://creativecommons.org/licenses/by-nc-nd/3.0/cn/" target="_blank"><img alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/3.0/cn/88x31.png"></a><br>本作品采用<a rel="external" href="http://creativecommons.org/licenses/by-nc-nd/3.0/cn/" target="_blank">知识共享署名-非商业性使用-禁止演绎 3.0 中国大陆许可协议</a>进行许可。</p>
