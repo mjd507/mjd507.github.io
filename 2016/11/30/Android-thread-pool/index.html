@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>说说线程池 | Cleaner</title><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/5.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/0.6.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/0.6.0/grids-responsive-min.css"><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">说说线程池</h1><a id="logo" href="/.">Cleaner</a><p class="description">对代码有洁癖</p></div><div id="nav-menu"><a href="/." class="current"><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a></div></div><div id="layout" class="pure-g"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">说说线程池</h1><div class="post-meta">Nov 30, 2016<span> | </span><span class="category"><a href="/categories/Android/">Android</a></span><script src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js" async></script><span id="busuanzi_container_page_pv"> | <span id="busuanzi_value_page_pv"></span><span> Hits</span></span></div><a data-thread-key="2016/11/30/Android-thread-pool/" href="/2016/11/30/Android-thread-pool/#comments" class="ds-thread-count"></a><div class="clear"><div id="toc" class="toc-article"><div class="toc-title">文章目录</div><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#线程池的好处"><span class="toc-number">1.</span> <span class="toc-text">线程池的好处</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#线程池的使用方法"><span class="toc-number">2.</span> <span class="toc-text">线程池的使用方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#自定义线程池"><span class="toc-number">3.</span> <span class="toc-text">自定义线程池</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Doug-Lea-的设计逻辑"><span class="toc-number">4.</span> <span class="toc-text">Doug Lea 的设计逻辑</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#几个类的说明"><span class="toc-number">5.</span> <span class="toc-text">几个类的说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#线程池的流程图"><span class="toc-number">6.</span> <span class="toc-text">线程池的流程图</span></a></li></ol></div></div><div class="post-content"><p>线程池就好比一个部门，部门一般都有一个项目经理，他有一系列的项目需要安排手下去完成，当人手不够的时候，就去招人，人手够了，大家都紧锣密鼓的工作了，几天后，项目经理发现任务比较多，心里考虑着先把多余的任务排列好，等大家忙完再分配，又过了几天，任务越来越多了，需要动态的再招几个人备用，终于人手差不多了，这个时候，如果项目任务还是很多，项目经理就该考虑挡住一些任务了。</p>
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>说说线程池 | Cleaner</title><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/5.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/0.6.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/0.6.0/grids-responsive-min.css"><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">说说线程池</h1><a id="logo" href="/.">Cleaner</a><p class="description">对代码有洁癖</p></div><div id="nav-menu"><a href="/." class="current"><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a></div></div><div id="layout" class="pure-g"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">说说线程池</h1><div class="post-meta">Nov 30, 2016<span> | </span><span class="category"><a href="/categories/Android/">Android</a></span><script src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js" async></script><span id="busuanzi_container_page_pv"> | <span id="busuanzi_value_page_pv"></span><span> Hits</span></span></div><a data-thread-key="2016/11/30/Android-thread-pool/" href="/2016/11/30/Android-thread-pool/#comments" class="ds-thread-count"></a><div class="clear"><div id="toc" class="toc-article"><div class="toc-title">文章目录</div><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#线程池的好处"><span class="toc-number">1.</span> <span class="toc-text">线程池的好处</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#线程池的使用方法"><span class="toc-number">2.</span> <span class="toc-text">线程池的使用方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#自定义线程池"><span class="toc-number">3.</span> <span class="toc-text">自定义线程池</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Doug-Lea-的设计逻辑"><span class="toc-number">4.</span> <span class="toc-text">Doug Lea 的设计逻辑</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#几个类的说明"><span class="toc-number">5.</span> <span class="toc-text">几个类的说明</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ThreadFactory-—-线程工厂"><span class="toc-number">5.1.</span> <span class="toc-text">ThreadFactory — 线程工厂</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BlockingQueue-—-阻塞队列"><span class="toc-number">5.2.</span> <span class="toc-text">BlockingQueue — 阻塞队列</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#线程池的流程图"><span class="toc-number">6.</span> <span class="toc-text">线程池的流程图</span></a></li></ol></div></div><div class="post-content"><p>线程池就好比一个部门，部门一般都有一个项目经理，他有一系列的项目需要安排手下去完成，当人手不够的时候，就去招人，人手够了，大家都紧锣密鼓的工作了，几天后，项目经理发现任务比较多，心里考虑着先把多余的任务排列好，等大家忙完再分配，又过了几天，任务越来越多了，需要动态的再招几个人备用，终于人手差不多了，这个时候，如果项目任务还是很多，项目经理就该考虑挡住一些任务了。</p>
 <a id="more"></a>
 <p>哈哈，上面只是模仿线程池的设计硬举的一个例子。言归正传，为什么要使用线程池呢？</p>
 <h2 id="线程池的好处"><a href="#线程池的好处" class="headerlink" title="线程池的好处"></a>线程池的好处</h2><p>由于创建或者销毁一个线程都是需要时间的，而且现在用户的操作像请求网络，读写文件等频率很高，如果频繁的去创建销毁线程，必然导致系统性能不佳，用户体验不好。 这个时候使用线程池就能很好的去调度线程，让系统处于一个资源利用相对平衡的状态。线程池不是新技术，之前就有，但是在 Java 1.5 之后 Doug Lea 编写了并发包（java.util.concurrent），让开发者对线程池的使用更加的方便。</p>
@@ -13,20 +13,47 @@
 <p>如果当前池大小 poolSize 大于 corePoolSize 且大于 maximumPoolSize ，且等待队列已满，则调用拒绝策略来处理该任务。</p>
 <p>线程池里的每个线程执行完任务后不会立刻退出，而是会去检查下等待队列里是否还有线程任务需要执行，如果在 keepAliveTime 里等不到新的任务了，那么线程就会退出。</p>
 </blockquote>
-<h2 id="几个类的说明"><a href="#几个类的说明" class="headerlink" title="几个类的说明"></a>几个类的说明</h2><ul>
-<li><p>ThreadFactory — 线程工厂</p>
-<p>它是一个接口，专门负责创建线程。在线程初始化的时候可以设置优先级，线程名称，守护进程状态，线程组等。</p>
-</li>
-<li><p>BlockingQueue — 阻塞队列</p>
-<p>队列公有的方法 增加/移除/检索 元素，该队列为操作提供了四种处理形式。</p>
+<h2 id="几个类的说明"><a href="#几个类的说明" class="headerlink" title="几个类的说明"></a>几个类的说明</h2><h3 id="ThreadFactory-—-线程工厂"><a href="#ThreadFactory-—-线程工厂" class="headerlink" title="ThreadFactory — 线程工厂"></a>ThreadFactory — 线程工厂</h3><p>它是一个接口，专门负责创建线程。在线程初始化的时候可以设置优先级，线程名称，守护进程状态，线程组等。</p>
+<h3 id="BlockingQueue-—-阻塞队列"><a href="#BlockingQueue-—-阻塞队列" class="headerlink" title="BlockingQueue — 阻塞队列"></a>BlockingQueue — 阻塞队列</h3><p>队列公有的方法 增加/移除/检索 元素，该队列为操作提供了四种处理形式。</p>
 <ol>
 <li>抛异常</li>
 <li>返回 null 或 false </li>
 <li>阻塞线程直到操作完成 </li>
-<li><p>阻塞（指定时间）</p>
-<p>|         | Throws exception | Special Value | Blocks |     Times Out      |<br>| ——- | :————–: | :———–: | :—-: | :—————-: |<br>| Insert  |      add(e)      |   offer(e)    | put(e) | offer(e,time,unit) |<br>| Remove  |     remove()     |    poll()     | take() |  poll(time,unit)   |<br>| Examine |     Element      |    peek()     |        |                    |</p>
-</li>
+<li>阻塞（指定时间）</li>
 </ol>
+<table>
+<thead>
+<tr>
+<th></th>
+<th style="text-align:center">Throws exception</th>
+<th style="text-align:center">Special Value</th>
+<th style="text-align:center">Blocks</th>
+<th style="text-align:center">Times Out</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Insert</td>
+<td style="text-align:center">add(e)</td>
+<td style="text-align:center">offer(e)</td>
+<td style="text-align:center">put(e)</td>
+<td style="text-align:center">offer(e,time,unit)</td>
+</tr>
+<tr>
+<td>Remove</td>
+<td style="text-align:center">remove()</td>
+<td style="text-align:center">poll()</td>
+<td style="text-align:center">take()</td>
+<td style="text-align:center">poll(time,unit)</td>
+</tr>
+<tr>
+<td>Examine</td>
+<td style="text-align:center">Element</td>
+<td style="text-align:center">peek()</td>
+<td style="text-align:center"></td>
+</tr>
+</tbody>
+</table>
 <p>BlockQueue 不接受 null 元素。否则会抛空指针异常</p>
 <p>BlockQueue 容量是可以设定的，如果没有设定，则容量为 Integer.MAX_VALUE</p>
 <p>BlockQueue 的实现是线程安全的。</p>
@@ -37,8 +64,6 @@
 <li>ArrayBlockingQueue 数组队列</li>
 <li>SynchronousQueue 同步队列（插入操作必须等待另一个线程的删除操作之后，反之亦然）</li>
 <li>BlockDeque 它是个双端队列，可以两从两端插入/获取。 BlockQueue 是单端队列</li>
-</ul>
-</li>
 </ul>
 <h2 id="线程池的流程图"><a href="#线程池的流程图" class="headerlink" title="线程池的流程图"></a>线程池的流程图</h2><p><img src="/images/ThreadPool.png" alt="ThreadPool"></p>
 <p><br><br><br></p>
