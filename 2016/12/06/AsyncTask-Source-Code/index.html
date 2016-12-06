@@ -2,18 +2,11 @@
 <a id="more"></a>
 <p>网上已经有很多对 AsyncTask 解读了，多数把源码一段一段讲解，由表及里，循序渐进，容易理解，在文章末尾我也会贴出解读的非常棒的文章链接。想一睹为快的可以直接拉到底部点进去，哈哈，我这里就随意分析了。先从 FutureTask 说起。</p>
 <h2 id="FutureTask"><a href="#FutureTask" class="headerlink" title="FutureTask"></a>FutureTask</h2><p>先来看一张 FutureTask 的 UML 关系图<br><img src="/images/FutureTask.png" alt="FutureTask"><br>简单解释一下：</p>
-<ul>
-<li>Callable<v> 这个类与 Runnable 类似，里面的 call() 方法也是设计在 子线程 调用的，优势是可以返回结果或者抛出异常。</v></li>
-</ul>
 <ol>
-<li>call() 方法什么时候会执行呢？既然在子线程跑，肯定得有线程，所以，Callable<v> 一般是传递到 ExecutorService 当中去的，通过 submit(Callable<v> task) ，最终调用 execute() 方法去执行。</v></v></li>
-<li>call() 方法由谁执行呢？记得 AsyncTask 有个必须实现的 doInBackground() 方法吗？ call() 方法体里面 就调用了 doInBackground() 方法来让我们自己实现耗时逻辑。</li>
-</ol>
-<ul>
-<li>FutureTask 主要用来 调度任务。内部提供操作 Callable<v> 运行状态的方法。</v></li>
-</ul>
-<ol>
-<li>为什么它能操作线程的状态？ 可以再看下上面的图，RunnableFuture 继承了 Runnable 接口和 Future 接口，而 FutureTask 实现了 RunnableFuture 接口。所以它既可以作为 Runnable 被线程执行，又可以作为 Future 操作线程的状态。</li>
+<li><p>Callable<v> 这个类与 Runnable 类似，里面的 call() 方法也是设计在 子线程 调用的，优势是可以返回结果或者抛出异常。<br>call() 方法什么时候会执行呢？既然在子线程跑，肯定得有线程，所以，Callable<v> 一般是传递到 ExecutorService 当中去的，通过 submit(Callable<v> task) ，最终调用 execute() 方法去执行。<br>call() 方法由谁执行呢？记得 AsyncTask 有个必须实现的 doInBackground() 方法吗？ call() 方法体里面 就调用了 doInBackground() 方法来让我们自己实现耗时逻辑。</v></v></v></p>
+</li>
+<li><p>FutureTask 主要用来 调度任务。内部提供操作 Callable<v> 运行状态的方法。<br>为什么它能操作线程的状态？ 可以再看下上面的图，RunnableFuture 继承了 Runnable 接口和 Future 接口，而 FutureTask 实现了 RunnableFuture 接口。所以它既可以作为 Runnable 被线程执行，又可以作为 Future 操作线程的状态。</v></p>
+</li>
 </ol>
 <h2 id="非常棒的文章"><a href="#非常棒的文章" class="headerlink" title="非常棒的文章"></a>非常棒的文章</h2><p><a href="http://whuhan2013.github.io/blog/2016/08/15/asynctask-source-code/" target="_blank" rel="external">AsyncTask源码解析</a><br><a href="https://github.com/white37/AndroidSdkSourceAnalysis/blob/master/article/AsyncTask%E5%92%8CAsyncTaskCompat%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90.md" target="_blank" rel="external">AsyncTask和AsyncTaskCompat源码解析</a></p>
 <p><br><br><br></p>
