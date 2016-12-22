@@ -33,13 +33,13 @@
 <p>到这里，事件分发的源码重要的部分都已经分析完了，下面在总结一些规律性的东西帮助记忆。</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
 <li>一个点击事件产生后，它的传递过程如下： Activity -&gt; Window -&gt; View。顶级 View 接收到事件之后，就会按相应规则去分发事件。如果一个 View 的 onTouchEvent 方法返回 false，那么将会交给父容器的 onTouchEvent 方法进行处理，逐级往上，如果所有的 View 都不处理该事件，则交由 Activity 的 onTouchEvent 进行处理。</li>
-<li>如果某一个 View 开始处理事件，如果他不消耗 ACTION_DOWN 事件（也就是 onTouchEvent 返回 false），则同一事件序列比如接下来进行 ACTION_MOVE，ACTION_UP 都不会再交给该 View 处理，而是将事件交由它的父容器 onTouchEvent方法 去处理。</li>
-<li>如果某一个 View 开始处理事件，如果他不消耗 除 ACTION_DOWN 以外的事件，那么这个事件会消失，此时 父容器的 onTouchEvent 并不会调用，并且当前 view 可以持续收到后续的事件，最终这些消失的事件会传递给 Activity 处理。</li>
 <li>ViewGroup 默认不拦截任何事件。</li>
-<li><p>子View 可以通过调用 getParent().requestDisallowInterceptTouchEvent(true); 阻止 ViewGroup 对其 MOVE 或者 UP 事件进行拦截</p>
-</li>
-<li><p>诸如 TextView、ImageView 这些不作为容器的 View，一旦接受到事件，就调用 onTouchEvent 方法，它们本身没有 onInterceptTouchEvent 方法。正常情况下，它们都会消耗事件（返回 true），除非它们是不可点击的（clickable 和 longClickable都为 false），那么就会交由父容器的 onTouchEvent处理。　</p>
-</li>
+<li>子View 可以通过调用 getParent().requestDisallowInterceptTouchEvent(true); 阻止 ViewGroup 对其 MOVE 或者 UP 事件进行拦截</li>
+<li>如果某一个 View 开始处理事件，如果他不消耗 ACTION_DOWN 事件（也就是 onTouchEvent 返回 false），则同一事件序列比如接下来进行 ACTION_MOVE，ACTION_UP 都不会再交给该 View 处理，而是将事件交由它的父容器 onTouchEvent 方法 去处理。</li>
+<li>如果某一个 View 开始处理事件，如果他不消耗 除 ACTION_DOWN 以外的事件，那么这个事件会消失，此时 父容器的 onTouchEvent 并不会调用，并且当前 view 可以持续收到后续的事件，最终这些消失的事件会传递给 Activity 处理。</li>
+<li>TextView、ImageView 这些不作为容器的 View，一旦接受到事件，就调用 onTouchEvent 方法，它们本身没有 onInterceptTouchEvent 方法。正常情况下，它们都会消耗事件（返回 true），除非它们是不可点击的（clickable 和 longClickable 都为 false）。　</li>
+<li>View 的 enable 属性不影响 onTouchEvent 的返回值。哪怕一个 view 是 disable 的，只要 clickable 和 longClickable 有一个为 true，onTouchEvent 就返回 true。</li>
+<li>点击事件分发过程如下 dispatchTouchEvent —-&gt; OnTouchListener 的 onTouch 方法 —-&gt; onTouchEvent –&gt; OnClickListener 的 onClick 方法。也就是说，我们平时调用的 setOnClickListener，优先级是最低的，所以，onTouchEvent 或 OnTouchListener 的 onTouch 方法如果返回 true，则不响应 onClick 方法。</li>
 </ul>
 <h2 id="非常棒的文章"><a href="#非常棒的文章" class="headerlink" title="非常棒的文章"></a>非常棒的文章</h2><p><a href="http://blog.csdn.net/guolin_blog/article/details/9097463/" target="_blank" rel="external">Android事件分发机制完全解析，带你从源码的角度彻底理解(上)</a><br><a href="https://github.com/HotBitmapGG/AndroidInterview/blob/master/android/Android%20View%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91%E6%9C%BA%E5%88%B6%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.md" target="_blank" rel="external">事件分发机制源码分析</a></p>
 <p><br><br><br></p>
