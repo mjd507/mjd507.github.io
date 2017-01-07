@@ -3,17 +3,17 @@
 <p>我的 Mac 系统的版本是 10.12.1，下面的记录都是基于此或者更高的版本。</p>
 <h2 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h2><ol>
 <li><p>Mac 系统的一些快捷键</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line"></div><div class="line">全屏截图              Command + Shift + 3</div><div class="line">区域截图              Command + Shift + 4</div><div class="line">窗口截图              Command + Shift + 4，再按 空格键</div><div class="line">默认截图是保存早桌面，不想要保存，按下 Ctrl 键保存在剪贴板中</div><div class="line"></div><div class="line">全屏/退出全屏        ctr+command+F</div><div class="line">切换到桌面           fn+f11</div><div class="line">输入法切换           ctr+空格       </div><div class="line">sublime多列操作     option+鼠标左键</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">全屏截图              Command + Shift + 3</div><div class="line">区域截图              Command + Shift + 4</div><div class="line">窗口截图              Command + Shift + 4，再按 空格键</div><div class="line">默认截图是保存早桌面，不想要保存，按下 Ctrl 键保存在剪贴板中</div><div class="line"></div><div class="line">全屏/退出全屏        ctr+command+F</div><div class="line">切换到桌面           fn+f11</div><div class="line">输入法切换           ctr+空格       </div><div class="line">sublime多列操作     option+鼠标左键</div></pre></td></tr></table></figure>
 </li>
 <li><p>提示 app 打不开 / app 已损坏<br>权限里需要允许  任何来源 ，默认不显示，需要在命令行输入如下语句，再次进入即可。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><div class="line">sudo spctl --master-disable</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo spctl --master-disable</div></pre></td></tr></table></figure>
 </li>
 <li><p>显示隐藏文件 </p>
-<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="comment">//不显示隐藏文件</span></div><div class="line">defaults write com.apple.finder AppleShowAllFiles -bool <span class="keyword">false</span>; KillAll Finder </div><div class="line"><span class="comment">//显示隐藏文件</span></div><div class="line">defaults write com.apple.finder AppleShowAllFiles -bool <span class="keyword">true</span>; KillAll Finder</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//不显示隐藏文件</span></div><div class="line">defaults write com.apple.finder AppleShowAllFiles -bool <span class="keyword">false</span>; KillAll Finder </div><div class="line"><span class="comment">//显示隐藏文件</span></div><div class="line">defaults write com.apple.finder AppleShowAllFiles -bool <span class="keyword">true</span>; KillAll Finder</div></pre></td></tr></table></figure>
 </li>
 </ol>
 <h2 id="开发篇"><a href="#开发篇" class="headerlink" title="开发篇"></a>开发篇</h2><ol>
-<li>配置 git 对文件名大小敏感<figure class="highlight java"><table><tr><td class="code"><pre><div class="line">git config core.ignorecase <span class="keyword">false</span></div></pre></td></tr></table></figure>
+<li>配置 git 对文件名大小敏感<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git config core.ignorecase <span class="keyword">false</span></div></pre></td></tr></table></figure>
 </li>
 </ol>
 <h2 id="提升效率的干货"><a href="#提升效率的干货" class="headerlink" title="提升效率的干货"></a>提升效率的干货</h2><p><a href="https://zhuanlan.zhihu.com/p/22673342" target="_blank" rel="external">提升你的 Mac 生产力 </a><br><a href="http://kaito-kidd.com/2016/09/26/Mac-edge-tools-dev/" target="_blank" rel="external">Mac效率利器（二）开发篇</a></p>
