@@ -59,6 +59,7 @@ public @interface Column {
 
 
 ## 实体的定义
+
 这里实体需要分开，包括 JavaBeen 和 它里面的 成员变量，他们对应于数据库的 表 和 字段 。我们的目的是 用 Java 语句 动态的生成 数据库 表语句。这个表语句是由 表名 + 字段类型 + 字段名称 来拼接的。
 
 所以我们的第一步 包装 成员变量，使之可以提供 数据名称 和 数据名称。因为 成员变量 对应于 数据库的 字段，也就是栏目 Column，所以我这里类名取之为 ColumnEntity ，但是不要误读，它里面的方法都是针对 成员变量。
@@ -135,6 +136,7 @@ TableEntity 还有一个 将 JavaBeen 转换成 ContentValues 的 方法。原�
 
 
 ## TableManager 的定义
+
 为什么要定义一个 TableManager, 前面在思考的时候也提过，反射操作在效率上不太理想，而每次我们调用 new TableEntity(Class<?> clazz) 时，都会通过反射去获取每一个 成员变量，每一个成员变量也会通过反射来获取其相关信息。所以如果我们每次增删改查都去 new TableEntity(Person.class),效率太低了，所以出现了 TableManager，单例模式，使用 HashMap 保存 表实体。
 
 表的创建 以及 查找 全部交由 TableManager 完成。这里提供了一个 register() 方法，你可以在应用开始的时候就去注册表的实体，这里还没有创建，但能为需要创建表时提高效率。
@@ -173,11 +175,49 @@ TableEntity 还有一个 将 JavaBeen 转换成 ContentValues 的 方法。原�
     }
 
 ```
+
 这里需要传入一个 DbDao，其实就是数据库具体增删改查的类了。到这里，你也应该能猜到，要在数据库中创建表，必须先获得一个 DbDao 对象，DbDao 里面必须有 SQLiteOpenHelper。
+
 
 ## Dao 的定义
 
+和你想象的一样，只有增删改查的方法，我们先来看下构造方法。
 
+```java
+    public DbDao(Context context, DbParams params, DbUpdateListener dbUpdateListener) {
+        this.mDbHelper = new DbHelper(context, params.dbName, null, params.dbVersion, dbUpdateListener);
+    }
+
+```
+DbDao 构造时需要 DbParams，这个是配置 数据库表名 以及 版本号 的类。目前存放在 DbManager 中。后面会介绍。另外一个参数 DbUpdateListener，这是一个接口，SQLiteOpenHelper 里的 onUpgrade() 方法里就是通过该接口将升级的处理回调给调用者。
+
+构造方法里初始化了一个 DbHelper，其实就是 SQLiteOpenHelper，与普通的写法没有任何区别，SQLiteOpenHelper 里面 onCreate 的方法没有任何操作，因为创建表的操作已经交由 TableManager 去执行了, TableManager 里面会组织好 SQL 语句，交给 DbDao 的 execute()方法。
+
+```java
+    public void execute(String sql, String[] bindArgs) throws Exception {
+        LogUtils.i(TAG, "准备执行SQL[ " + sql + " ]语句");
+        mDb = mDbHelper.getWritableDatabase();
+        if (mDb.isOpen()) {
+            if (!TextUtils.isEmpty(sql)) {
+                if (bindArgs != null) {
+                    mDb.execSQL(sql, bindArgs);
+                } else {
+                    mDb.execSQL(sql);
+                }
+                LogUtils.i(TAG, "执行完毕！");
+            }
+        } else {
+            throw new Exception("数据库未打开！");
+        }
+    }
+
+```
+
+其余的增删改查方法就不贴出来了，想要研究或者改造的，欢迎去 GitHub 上 fork 或者 star，地址文章开头已经给了。
+
+至此，CommonDao 的框架的核心部分都已经理了一理，剩余还有个 DbManager，这个是数据库统一配置的管理类，单例模式，提供了默认的以及可设置的数据库名称，版本号，以及升级的监听器。记得在 Application 的创建的时候初始化 该 DbManager。
+
+期待你的加入，让 CommonDao 越来越健壮。
 
 
 <br /><br /><br />
