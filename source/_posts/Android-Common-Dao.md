@@ -1,5 +1,5 @@
 ---
-title: 也许是最适合新手理解的 Android 数据库框架
+title: 个人精炼的 Android 数据库框架
 categories: Android
 toc: true
 comments: true
@@ -7,7 +7,7 @@ date: 2017-01-15 11:57:24
 tags:
 ---
 
-这个数据库框架总共只有 8 个类，非常适合想要弄懂数据库框架封装原理的新手来读。该框架是从我不断完善的 CommonAndroid 项目里单拎出来的，现决定把它单独作为一个模块来维护。欢迎各路大牛 star 或者 fork 来共同完善。数据库 [CommonDao 地址](https://github.com/mjd507/CommonDao)，Android 基本库 [CommonAndroid 地址](https://github.com/mjd507/CommonAndroid)。 
+CommonDao 总共只有 8 个类，核心类文件只有 5 个，客观来说，代码的可读性还是比较强的，但相比各大成熟的数据库框架，无论是性能或者可定制方面，亦或稳定性，都要逊色不少。算是一个学习的过程吧，最近一直在完善 CommonAndroid 基础库，刚把数据库部分弄好，决定把它单独作为一个模块来维护。欢迎各路大牛 star 或者 fork 来共同完善。数据库 [CommonDao 地址](https://github.com/mjd507/CommonDao)，Android 基本库 [CommonAndroid 地址](https://github.com/mjd507/CommonAndroid)。 
 
 <!--more-->
 
