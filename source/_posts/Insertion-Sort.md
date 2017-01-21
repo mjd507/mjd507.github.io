@@ -11,32 +11,34 @@ tags:
 
 <!--more-->
 
+##  算法描述
+
+1. 对于数组 a[n] ，默认 a[0] 已经被排序，a[1] ~ a[n-1]无序。令 i = 0； j = i + 1。
+2. 取出 j 位置的值 a[ j ] ，在已排好的元素中，从后向前依次与 a[ j ] 比较，如果该元素 a[ j - 1]  > a [ j ]，则将 a[ j - 1] 移到 j 的位置，同时 j —。一次遍历结束后，可以向已排好的数组中插入一个元素，i ++。
+3. 重复步骤 2，直到 i = n -1。
+
 ## 算法图解
 
 ![Insertion Sort](/images/Algorithm/Insertion Sort.png)
 
-##  算法描述
-
-1. 对于数组 a[n] ，默认 a[0] 已经被排序，a[1] ~ a[n-1]无序。另 i = 0； j = i + 1。
-2. 取出 j 位置的值 a[ j ] ，在已排好的元素中，从后向前依次与 a[ j ] 比较，如果该元素 a[ j - 1]  > a [ j ]，则将 a[ j - 1] 移到 j 的位置，同时 j —。一次遍历结束后，可以向已排好的数组中插入一个元素，i ++。
-3. 重复步骤 2，直到 i = n -1。
-
 ## 代码实现
 
 ```java
-public static void insertSort(int[] arr){
-	for(int i = 0; i < arr.length - 1; i ++){
-		for(int j = i + 1; j > 0; j --){
-			if(arr[j-1] > arr [j]){
-				int temp = arr[j-1];
-				arr[j-1] = arr[j];
-				arr[j] = temp;
-			}else{ //不做无用遍历
-				break;
-			}
-		}
-	}
-}
+  public static void insertSort(int[] arr){
+    for(int i = 0; i < arr.length - 1; i ++){
+      //取出 j 位置的值，与已经排好的数组元素依次比较，从后往前比较
+      for(int j = i + 1; j > 0; j --){
+        if(arr[j-1] > arr [j]){
+          int temp = arr[j-1];
+          arr[j-1] = arr[j];
+          arr[j] = temp;
+        }else{ //避免无用遍历
+          break;
+        }
+      }
+      //至此一个循环，完成了一个元素的插入
+    }
+  }
 ```
 
 ## 效率分析
@@ -61,7 +63,15 @@ public static void insertSort(int[] arr){
 执行时间为：4261ms
 ```
 
+可见 插入排序 在数据越来越大时，执行时间也明显的变多。
 
+
+
+## 非常棒的资料
+
+[麻省理工学院公开课：算法导论](http://open.163.com/special/opencourse/algorithms.html)
+
+[白话经典算法系列](http://blog.csdn.net/MoreWindows/article/category/859207)
 
 
 
