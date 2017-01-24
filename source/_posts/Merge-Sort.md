@@ -78,6 +78,9 @@ tags:
 执行时间为：1496ms
 ```
 
+与插入排序相比，归并排序在数据量越来越大时，有明显的优势。
+
+
 ## 非常棒的资料
 
 [麻省理工学院公开课：算法导论](http://open.163.com/special/opencourse/algorithms.html)
