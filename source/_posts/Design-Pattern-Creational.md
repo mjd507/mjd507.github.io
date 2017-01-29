@@ -1,5 +1,5 @@
 ---
-title: 设计模式——创建型篇
+title: 设计模式（创建型篇）
 categories: DesignPattern
 toc: true
 comments: true

@@ -1,5 +1,5 @@
 ---
-title: 插入排序
+title: 经典排序算法之一 插入排序
 categories: Algorithm
 toc: true
 comments: true

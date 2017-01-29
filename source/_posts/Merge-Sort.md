@@ -1,5 +1,5 @@
 ---
-title: 归并排序
+title: 经典排序算法之二 归并排序
 categories: Algorithm
 toc: true
 comments: true
