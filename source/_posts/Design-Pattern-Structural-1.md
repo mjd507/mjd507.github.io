@@ -7,7 +7,7 @@ date: 2017-01-31 16:51:43
 tags:
 ---
 
-结构型设计模式共有 7 个，本文简单梳理其中四个：**适配器模式**，**桥梁模式**，**组合模式**，**装饰者模式**。完整的 23 种设计模式可移步我的 [GitHub—>DesignPattern](https://github.com/mjd507/DesignPattern)。
+结构型设计模式共有 7 个，本文简单梳理其中四个：**适配器模式**，**桥梁模式**，**组合模式**，**装饰者模式**。如有不同见解，或者想补充的，欢迎评论指出。完整的 23 种设计模式可移步我的 [GitHub—>DesignPattern](https://github.com/mjd507/DesignPattern)。
 
 <!--more-->
 
