@@ -7,7 +7,7 @@ date: 2016-12-03 18:04:17
 tags:
 ---
 
-Android 内存泄漏是很有必要引起极大重视的一个话题，因为绝大部分的内存泄漏是可以避免的，如果开发者的目标只是开发出来，而不思考自己写得代码是否隐藏着风险，是否可以进一步优化，那么毫无疑问，永远无法成为高级工程师。其它的影响就不说了，下面我来梳理一下可能引起内存泄漏的代码以及相应的解决方案。
+Android 内存泄漏是很有必要引起极大重视的一个话题，因为绝大部分的内存泄漏是可以避免的，如果开发者的目标只是开发出来，而不思考自己写得代码是否隐藏着风险，是否可以进一步优化，那么毫无疑问，永远无法成为高级工程师。下面我来梳理一下可能引起内存泄漏的代码以及相应的解决方案。
 
 <!--more-->
 
@@ -16,7 +16,7 @@ Android 内存泄漏是很有必要引起极大重视的一个话题，因为绝
 先穿插一句，我所在的公司 途虎养车网 一直在与 阿里巴巴 合作进行车载系统的开发，我们的 途虎养车 需要集成到 搭载 阿里云系统（ YunOS）系统里面去，车载系统上对 app 的性能要求是极其的高。阿里那边的测试妹子也是相当厉害，对内存，CPU资源占用 这一块一直严控。我就结合着自己的项目的内存泄漏点来理一理。
 
 ## 注册的监听器
-不要太惊讶，普通的 view.setOnClickListener(this) 并不会造成内存泄漏，因为 view 与 Activity 紧紧绑在一起，当 Activity 销毁的时候，这些 listener 会成为 garbage，垃圾回收器会随时回收它们。但是有一些 listener，比如 LocationManager，它是由系统进程持有。看下面一段代码。
+一般的 view.setOnClickListener(this) 并不会造成内存泄漏，因为 view 与 Activity 紧紧绑在一起，当 Activity 销毁的时候，这些 listener 会成为 garbage，垃圾回收器会随时回收它们。但是有一种情况，比如使用了单例模式来提供注册监听器，由于单例创建后一直存在在系统中，如果没有解注册监听器，那么会一直持有引用，从而导致内存泄漏。系统的 LocationManager 也是一个道理，看下面一段代码。
 ```java
 public class LeaksActivity extends AppCompatActivity implements LocationListener {
 
@@ -84,7 +84,7 @@ public class AsyncActivity extends AppCompatActivity{
 2. 在静态内部类内部保存一个 Context 的引用。思考：是否有问题？static --> Context ?
 3. 用 弱引用 的形式 保存 Context 的引用。
 4. onDestroy() 时 取消 AsyncTask。 参见 [AsyncTask Document](http://developer.android.com/reference/android/os/AsyncTask.html)
-修改后代码如下：
+   修改后代码如下：
 ```java
 public class AsyncActivity extends AppCompatActivity{
 
@@ -126,7 +126,6 @@ public class AsyncActivity extends AppCompatActivity{
         super.onDestroy();
     }
 }
-
 ```
 匿名类和内部类一样，同样持有外部类的引用，解决方法和上面相同。我们在 用 Handler 的时候，声明在内部时经常会看到编辑器会有警告 **“handler should be static, else it is prone to memory leaks. ”** 与上面同理。
 
@@ -166,13 +165,13 @@ sBackground 与 TextView 关联起来了，而且 sBackground 是一个 静态 �
 
 ## 补充
 - 第三方库 检测内存泄漏
-[LeakCanary](https://github.com/square/leakcanary) 内存泄漏检测的一个库
+  [LeakCanary](https://github.com/square/leakcanary) 内存泄漏检测的一个库
 
 - 使用 工具 检测内存泄漏
-[基于Android Studio的内存泄漏检测与解决全攻略](http://wetest.qq.com/lab/view/?id=99&from=ads_test2_qqtips&sessionUserType=BFT.PARAMS.192844.TASKID&ADUIN=836240219&ADSESSION=1466394985&ADTAG=CLIENT.QQ.5467_.0&ADPUBNO=26558)
-[Android Activity泄漏问题解决方案](http://wetest.qq.com/lab/view/63.html?from=ads_test2_qqtips&sessionUserType=BFT.PARAMS.195040.TASKID&ADUIN=836240219&ADSESSION=1468559577&ADTAG=CLIENT.QQ.5449_.0&ADPUBNO=26525)
-[Android性能优化之内存泄漏](http://johnnyshieh.github.io/android/2016/11/18/android-memory-leak/)
-[内存分析工具 MAT 的使用](http://blog.csdn.net/aaa2832/article/details/19419679/)
+  [基于Android Studio的内存泄漏检测与解决全攻略](http://wetest.qq.com/lab/view/?id=99&from=ads_test2_qqtips&sessionUserType=BFT.PARAMS.192844.TASKID&ADUIN=836240219&ADSESSION=1466394985&ADTAG=CLIENT.QQ.5467_.0&ADPUBNO=26558)
+  [Android Activity泄漏问题解决方案](http://wetest.qq.com/lab/view/63.html?from=ads_test2_qqtips&sessionUserType=BFT.PARAMS.195040.TASKID&ADUIN=836240219&ADSESSION=1468559577&ADTAG=CLIENT.QQ.5449_.0&ADPUBNO=26525)
+  [Android性能优化之内存泄漏](http://johnnyshieh.github.io/android/2016/11/18/android-memory-leak/)
+  [内存分析工具 MAT 的使用](http://blog.csdn.net/aaa2832/article/details/19419679/)
 
 <br /><br /><br />
 
