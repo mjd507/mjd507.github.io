@@ -255,9 +255,4 @@ DiskLruCache 在缓存对象的时候，如果 key 是一个 url，最好先用 
 [LinkedHashMap的实现原理](http://zhangshixi.iteye.com/blog/673789)
 [Android DiskLruCache完全解析，硬盘缓存的最佳方案](http://blog.csdn.net/guolin_blog/article/details/28863651)
 
-<br /><br /><br />
 
-<center>
-<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/cn/"><img alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/3.0/cn/88x31.png" /></a><br />
-本作品采用 <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/cn/">知识共享署名-非商业性使用-禁止演绎 3.0 中国大陆许可协议</a> 进行许可。
-</center>

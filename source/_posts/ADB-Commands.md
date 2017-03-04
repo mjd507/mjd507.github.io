@@ -9,6 +9,7 @@ tags:
 
 Mac 下的 iTerm 终端真是炫酷到爆，而且超级好用，在调试 Android 应用的时候，在终端下使用一些 ADB 命令，能帮助我们提高不少效率，下面就整理常见的一些 ADB 操作。
 
+
 <!--more-->
 ------
 
@@ -147,16 +148,3 @@ Mac 下的 iTerm 终端真是炫酷到爆，而且超级好用，在调试 Andro
 [awesome-adb](https://github.com/mzlogin/awesome-adb)
 
 
-
-
-
-
-
-
-
-<br /><br /><br />
-
-<center>
-<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/cn/"><img alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/3.0/cn/88x31.png" /></a><br />
-本作品采用 <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/cn/">知识共享署名-非商业性使用-禁止演绎 3.0 中国大陆许可协议</a> 进行许可。
-</center>

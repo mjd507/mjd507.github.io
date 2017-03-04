@@ -291,12 +291,3 @@ public class Prototype {
 原型模式的好处：使用原型模式创建对象比直接 new 一个对象在性能上要好的多，因为Object 类的 clone 方法是一个本地方法。原型模式 的 clone 有 深克隆 和 浅克隆，实现深克隆可能需要比较复杂的代码。
 
 
-
-
-
-<br /><br /><br />
-
-<center>
-<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/cn/"><img alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/3.0/cn/88x31.png" /></a><br />
-本作品采用 <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/cn/">知识共享署名-非商业性使用-禁止演绎 3.0 中国大陆许可协议</a> 进行许可。
-</center>
