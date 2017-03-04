@@ -467,7 +467,7 @@ div {
     }
 }
 
-blockquote,.stressed {
+/*blockquote,.stressed {
     -moz-box-sizing: border-box;
     box-sizing: border-box;
     margin: 2.5em 0;
@@ -486,6 +486,26 @@ blockquote:before,.stressed-quote:before {
     line-height: 30px;
     margin-left: -50px;
     position: absolute;
+}*/
+
+/* https://github.com/tiany/maupassant-hexo/commit/c3453553343a9072425350c1d13bdef1fd2c18ef*/
+blockquote,.stressed {
+	border-left: 6px solid #dddddd;
+	padding: 0 15px;
+	color: #777777;
+	margin-left: 0px;
+	margin-right: 15px;
+	font-family: times;
+  	font-style: normal;
+  	font-weight: bold;
+  	line-height: 30px;
+	font-size: 16px;
+}
+blockquote,.stressed-quote > :first-child {
+  	margin-top: 0; 
+}
+blockquote,.stressed-quote > :last-child {
+  	margin-bottom: 0; 
 }
 strong,b,em {
     font-weight: bold;
