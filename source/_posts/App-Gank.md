@@ -13,7 +13,7 @@ tags:
 
 ## 项目动图
 
-![干货集中营](/images/gank/gank.gif)
+[点击查看 干货集中营 演示图](/images/gank/gank.gif)
 
 ## 大致说明
 
@@ -52,6 +52,6 @@ ViewPager 默认会加载左右两个 Fragment，这里就需要使用 懒加载
 
 
 ## 福利
-![](/images/gank/beauty_one.png)!
+[查看福利！](/images/gank/beauty_one.png)
 
 
