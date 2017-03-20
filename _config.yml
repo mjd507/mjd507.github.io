@@ -50,6 +50,8 @@ category_map: # 地址栏中文的映射
   算法: Algorithm
   设计模式: DesignPattern
   莲花国际的日子: life in lianhuaguoji
+  前端: Web
+
 tag_map:
 
 # Date / Time format

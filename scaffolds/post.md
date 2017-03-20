@@ -1,7 +1,7 @@
 ---
 title: {{ title }}
 date: {{ date }}
-categories: Android
+categories: Web
 toc: true
 tags:
 comments: true
