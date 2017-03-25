@@ -16,7 +16,7 @@ tags:
 ## 常见问题
 
 1. Mac 系统的一些快捷键
-   ```
+   ```java
 
    全屏截图              Command + Shift + 3
    区域截图              Command + Shift + 4
@@ -27,7 +27,6 @@ tags:
    切换到桌面           fn+f11
    输入法切换           ctr+空格       
    sublime多列操作     option+鼠标左键
-
    ```
 
 2. 提示 app 打不开 / app 已损坏
@@ -43,6 +42,26 @@ tags:
    //显示隐藏文件
    defaults write com.apple.finder AppleShowAllFiles -bool true; KillAll Finder
    ```
+
+4. 改变 LaunchPad 上应用显示的行数和列数
+
+   ```Java
+   //设置 Launchpad 的列数，对应于每一行 App 的个数
+   defaults write com.apple.dock springboard-columns -int 列数
+
+   //2. 设置 Launchpad 的行数，对应于每一列 App 的个数
+   defaults write com.apple.dock springboard-rows -int 行数
+
+   //3. 重置 Launchpad
+   defaults write com.apple.dock ResetLaunchPad -bool TRUE
+
+   //4. 重置 Dock
+   killall Dock
+   ```
+
+   ​
+
+
 
 ## 开发篇
 

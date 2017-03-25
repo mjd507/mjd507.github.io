@@ -25,50 +25,47 @@ tags:
  - 它很好的弥补了 Thread 的不足？ 可以再看下上面的图，RunnableFuture 继承了 Runnable 接口和 Future 接口，而 FutureTask 实现了 RunnableFuture 接口。所以它既可以作为 Runnable 被线程执行，又可以作为 Future 获得操作线程已经获取执行结果。
 
 3. ExecutorService + Callable<V> + FutureTask<V> 获取执行结果的 小栗子
- ```java
- class WorkerRunnable implements Callable<Integer>{
- 	@Override
- 	public Integer call() throws Exception {
- 		System.out.println("子线程在进行耗时的计算任务");
- 		Thread.sleep(3000);
- 		int sum = 0;
- 		for(int i=0;i<100;i++)
- 			sum += i;
- 		return sum;
- 	}
- }
- ```
+  ```java
+  class WorkerRunnable implements Callable<Integer>{
+  	@Override
+  	public Integer call() throws Exception {
+  		System.out.println("子线程在进行耗时的计算任务");
+  		Thread.sleep(3000);
+  		int sum = 0;
+  		for(int i=0;i<100;i++)
+  			sum += i;
+  		return sum;
+  	}
+  }
 
+  public class Test {
+  	public static void main(String[] args) {
+  		ExecutorService executor = Executors.newCachedThreadPool();
+  		WorkerRunnable mWorker = new WorkerRunnable();
+  		FutureTask<Integer> mFuture = new FutureTask<Integer>(mWorker);
+  		executor.submit(mFuture);
+  		System.out.println("主线程在执行任务");
 
-	public class Test {
-		public static void main(String[] args) {
-			ExecutorService executor = Executors.newCachedThreadPool();
-			WorkerRunnable mWorker = new WorkerRunnable();
-			FutureTask<Integer> mFuture = new FutureTask<Integer>(mWorker);
-			executor.submit(mFuture);
-			System.out.println("主线程在执行任务");
-	
-			try {
-				System.out.println("mWorker运行结果"+ mFuture.get());
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			} catch (ExecutionException e) {
-				e.printStackTrace();
-			}
-	
-			System.out.println("所有任务执行完毕");
-		}
-	}
-	
-	​```
-	运行结果：
-	​```java
-	子线程在进行耗时的计算任务
-	主线程在执行任务
-	mWorker运行结果4950
-	所有任务执行完毕
-	
-	​```
+  		try {
+  			System.out.println("mWorker运行结果"+ mFuture.get());
+  		} catch (InterruptedException e) {
+  			e.printStackTrace();
+  		} catch (ExecutionException e) {
+  			e.printStackTrace();
+  		}
+
+  		System.out.println("所有任务执行完毕");
+  	}
+  }
+
+  ​```
+  运行结果：
+  ​```html
+    子线程在进行耗时的计算任务
+    主线程在执行任务
+    mWorker运行结果4950
+    所有任务执行完毕
+  ​```
 
 4. 到这里，可以猜想一下，AsyncTask 是 获怎么运行的？
  - AsyncTask 构造时，初始化了 Callable<V> mWorker 以及 FutureTask<V> mFuture，并将 mWorker 作为参数传递给了 mFuture，这样这个 mWorker 就可以控制了，线程池 execute 的时候，会调用 mFuture.run()方法，该方法会 回调 mWorker.call() 方法，最终调用调用者的 doInBackground() 方法，大致流程就是这样。后面通过 Handler 将 执行结果回调给 调用者。
