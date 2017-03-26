@@ -1,5 +1,5 @@
 ---
-title: 
+title: 关于
 toc: true
 tags: 
 comments: false
@@ -7,7 +7,7 @@ date: 2016-06-25 15:17:03
 copyright: false
 ---
 
-> 驿旅客逢梅子雨，池亭人邑藕花风。
+> First do it, then do it right, then do it better.
 
 ------
 
