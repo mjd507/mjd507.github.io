@@ -1,7 +1,7 @@
 ---
 title: {{ title }}
 date: {{ date }}
-categories: Web
+categories: Web 前端
 toc: true
 tags:
 comments: true
