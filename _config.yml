@@ -48,6 +48,7 @@ default_category: uncategorized
 category_map: # 地址栏中文的映射
 	Android: Android
   算法: Algorithm
+  数据结构: Data Structure
   设计模式: DesignPattern
   莲花国际的日子: life in lianhuaguoji
   Web 前端: Web App
