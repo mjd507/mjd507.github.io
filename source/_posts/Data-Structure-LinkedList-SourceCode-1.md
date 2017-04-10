@@ -1,6 +1,6 @@
 ---
 title: LinkedList 源码分析（一）
-categories: Web 前端
+categories: Data Structure
 toc: true
 comments: true
 copyright: true
