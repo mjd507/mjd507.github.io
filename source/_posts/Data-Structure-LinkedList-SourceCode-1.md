@@ -1,5 +1,5 @@
 ---
-title: LinkedList 链表部分源码分析
+title: LinkedList 链表的源码分析
 categories: Data Structure
 toc: true
 comments: true
