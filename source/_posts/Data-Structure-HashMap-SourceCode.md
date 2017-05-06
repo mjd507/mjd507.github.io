@@ -44,10 +44,6 @@ public HashMap(int initialCapacity, float loadFactor) {
 
 tableSizeFor(capacity) 方法的作用就是将容量变为原来的两倍。
 
-
-
-========== 以下分析大量参考 [Java HashMap工作原理及实现](http://yikun.github.io/2015/04/01/Java-HashMap%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E5%8F%8A%E5%AE%9E%E7%8E%B0/) ，推荐移步查看 ==========
-
 ## 添加元素
 
 put(k,v) 方法的大致思路：
@@ -273,6 +269,7 @@ resize 会把容量变为原来的 2 倍，之后重新计算 index，再把节�
 
 ```
 
-## 参考文章
 
-[Java HashMap工作原理及实现](http://yikun.github.io/2015/04/01/Java-HashMap%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E5%8F%8A%E5%AE%9E%E7%8E%B0/) 
+
+本文大量参考自：[Java HashMap工作原理及实现](http://yikun.github.io/2015/04/01/Java-HashMap%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E5%8F%8A%E5%AE%9E%E7%8E%B0/) ，推荐移步查看。
+
