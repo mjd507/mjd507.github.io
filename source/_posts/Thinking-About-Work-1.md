@@ -1,7 +1,7 @@
 ---
 title: 对工作的一点思考
 categories: 莲花国际的日子
-toc: true
+toc: false
 comments: true
 copyright: true
 date: 2017-05-08 19:54:15
