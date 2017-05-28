@@ -1,5 +1,5 @@
 ---
-title: 二叉树的构造以及遍历过程
+title: 二叉树的创建以及它的遍历过程
 categories: Data Structure
 toc: true
 comments: true
