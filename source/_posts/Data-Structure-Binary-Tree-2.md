@@ -1,7 +1,7 @@
 ---
-title: 二叉树的创建（二）
+title: 通过前序遍历反向创建二叉树
 categories: Data Structure
-toc: true
+toc: false
 comments: true
 copyright: true
 date: 2017-05-28 12:43:37
