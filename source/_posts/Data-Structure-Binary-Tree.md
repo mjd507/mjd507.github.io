@@ -55,11 +55,11 @@ public class TreeNode<T> {
 TreeNode<String> root = new TreeNode(1,"A");
 
 TreeNode<String> nodeB = new TreeNode(1,"B");
-TreeNode<String> nodeC = new TreeNode(1,"C");
-TreeNode<String> nodeD = new TreeNode(1,"D");
-TreeNode<String> nodeE = new TreeNode(1,"E");
-TreeNode<String> nodeF = new TreeNode(1,"F");
-TreeNode<String> nodeG = new TreeNode(1,"G");
+TreeNode<String> nodeC = new TreeNode(2,"C");
+TreeNode<String> nodeD = new TreeNode(3,"D");
+TreeNode<String> nodeE = new TreeNode(4,"E");
+TreeNode<String> nodeF = new TreeNode(5,"F");
+TreeNode<String> nodeG = new TreeNode(6,"G");
 ```
 
 再建立节点之间的关系，将二叉树创建出来：
