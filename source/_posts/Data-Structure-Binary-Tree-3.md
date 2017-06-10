@@ -1,5 +1,5 @@
 ---
-title: 关于二叉查找树的创建
+title: 二叉查找树节添加删除节点的细节
 categories: Data Structure
 toc: true
 comments: true
@@ -46,9 +46,9 @@ tags:
 
 
 
-## 构造二叉查找树
+## 添加节点
 
-构造的过程，其实就是二叉树添加元素时如何放置的问题，所以本质上，就是定义一个 put 方法，在方法里面，实现元素的摆放位置。
+添加节点的过程，就是构造查找二叉树的过程，本质上，就是定义一个 put 方法，在方法里面，实现元素的摆放位置。
 
 先整理一下步骤：
 
@@ -100,7 +100,7 @@ tags:
 
 ```
 
-## 测试二叉查找树
+## 测试添加方法
 
 因为二叉查找树的特性就是 左孩子 < 根节点 < 右孩子，这与二叉树的中序排序一模一样，所以这里就将无序的值，构造成二叉查找树，然后中序遍历该二叉查找树的值，看是否从小到大排列。
 
@@ -134,4 +134,168 @@ public class SearchBinaryTree {
 15 30 43 45 50 65
 ```
 
-现在，二叉查找树的构造就算完成了。
+现在，二叉查找树添加元素的的过程就算完成了。
+
+
+
+## 删除节点
+
+1. 查找到要删除的节点 node
+2. 取出 node 的父节点与左右孩子节点 (可能没有)
+3. 根据要删除节点所处的位置不同情况，重新定义节点间的引用
+
+```java
+    /**
+     * 查找元素所在的节点
+     */
+    public TreeNode<Integer> searchNode(int data) {
+        if (root == null) return null;
+        TreeNode<Integer> node = root;
+        while (node != null) {
+            if (node.getData() > data) {
+                node = node.leftChild;
+            } else if (node.getData() < data) {
+                node = node.rightChild;
+            } else {
+                return node;
+            }
+        }
+        return null;
+    }
+
+```
+
+```java
+
+    /**
+     * 删除节点(根据元素值)
+     */
+    public void remove(int data) {
+        TreeNode<Integer> node = searchNode(data);
+        if (node == null) {
+            throw new RuntimeException("the data is not the in the binaryTree,remove failed");
+        }
+        TreeNode<Integer> leftNode = node.leftChild;
+        TreeNode<Integer> rightNode = node.rightChild;
+        TreeNode<Integer> parentNode = node.parent;
+        if (parentNode != null) {
+            removeUnRootNode(node, leftNode, rightNode, parentNode);
+        } else { //没有父亲
+            removeRootNode(node, leftNode, rightNode);
+        }
+    }
+
+```
+
+```java
+    /**
+     * 删除根节点
+     * @param node 根节点
+     * @param leftNode 左孩子
+     * @param rightNode 右孩子
+     */
+    private void removeRootNode(TreeNode<Integer> node, TreeNode<Integer> leftNode, TreeNode<Integer> rightNode) {
+        if (leftNode == null && rightNode == null) {
+            root = null;
+        } else if (leftNode == null && rightNode != null) {
+            rightNode.parent = null;
+            root = rightNode;
+        } else if (leftNode != null && rightNode == null) {
+            leftNode.parent = null;
+            root = leftNode;
+        } else if (leftNode != null && rightNode != null) {
+            TreeNode<Integer> bottomNode = rightNode;
+            while (bottomNode.leftChild != null) {
+                bottomNode = bottomNode.leftChild;
+            }
+            leftNode.parent = bottomNode;
+            bottomNode.leftChild = leftNode;
+            root = bottomNode;
+        }
+        node.leftChild = null;
+        node.rightChild = null;
+        node = null;
+    }
+
+```
+
+```java
+    /**
+     * 删除非根节点
+     * @param node 非根节点
+     * @param leftNode 左孩子
+     * @param rightNode 右孩子
+     */
+    private void removeUnRootNode(TreeNode<Integer> node, TreeNode<Integer> leftNode, TreeNode<Integer> rightNode, TreeNode<Integer> parentNode) {
+        if (leftNode == null && rightNode == null) { //只有父亲
+            node.parent = null;
+            if (parentNode.leftChild == node) {
+                parentNode.leftChild = null;
+            } else {
+                parentNode.rightChild = null;
+            }
+        } else if (leftNode != null && rightNode == null) { //有父亲 和 左孩子
+            leftNode.parent = parentNode;
+            if (parentNode.leftChild == node) {
+                parentNode.leftChild = leftNode;
+            } else {
+                parentNode.rightChild = leftNode;
+            }
+        } else if (leftNode == null && rightNode != null) { //有父亲 和 右孩子
+            rightNode.parent = parentNode;
+            if (parentNode.leftChild == node) {
+                parentNode.leftChild = rightNode;
+            } else {
+                parentNode.rightChild = rightNode;
+            }
+        } else if (leftNode != null && rightNode != null) { //有父亲 和 左右孩子
+            TreeNode<Integer> bottomNode = rightNode;
+            while (bottomNode.leftChild != null) {
+                bottomNode = bottomNode.leftChild;
+            }
+            leftNode.parent = bottomNode;
+            bottomNode.leftChild = leftNode;
+            rightNode.parent = parentNode;
+        }
+        node.leftChild = null;
+        node.rightChild = null;
+        node.parent = null;
+        node = null;
+    }
+
+```
+
+删除元素的代码情况比较多，感觉这里还有优化的空间。
+
+## 测试删除
+
+```java
+    public static void main(String[] args) {
+        SearchBinaryTree searchBinaryTree = new SearchBinaryTree();
+        int[] arr = {43, 15, 30, 45, 50, 65};
+        for (int a : arr) {
+            searchBinaryTree.put(a);
+        }
+        searchBinaryTree.midOrder(searchBinaryTree.root);
+
+        searchBinaryTree.remove(50);
+        System.out.println();
+        searchBinaryTree.midOrder(searchBinaryTree.root);
+    }
+```
+
+看下打印结果：
+
+```java
+15 30 43 45 50 65 
+15 30 43 45 65 
+```
+
+如果移除根节点 43，打印结果：
+
+```java
+15 30 43 45 50 65 
+15 30 45 50 65 
+```
+
+二叉查找树的删除操作就算完成了。
