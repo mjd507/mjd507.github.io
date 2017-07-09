@@ -23,9 +23,9 @@ menu:
   - page: about
     directory: about/
     icon: fa-user
-#  - page: rss
-#    directory: atom.xml
-#    icon: fa-rss
+  - page: list
+    directory: list/
+    icon: fa-th-large
 
 widgets: ## Six widgets in sidebar provided: search, category, tag, recent_posts, rencent_comments and links.
   # - search
