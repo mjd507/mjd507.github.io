@@ -49,14 +49,6 @@ tags:
 |  [ ]  |            字符类，匹配方括号之间的任何字符。             |
 | [^ ]  |          非字符类。匹配不包含方括号之间字符的任何字符          |
 
-到这里，能做的事情就比较多了。比如：
-
-- 判断内容是否都是正数  `^[0-9]+$`
-- 判断内容是否都是负数 `^-[0-9]+$`
-- 判断内容是否是数字 `^-?[0-9]+$` 
-- 判断内容是否都是小写字母 `^[a-z]+$`
-- 判断内容是否都是大写字母 `^[A-Z]+$`
-
 ## 简写字符集
 
 对于常用的字符集，正则表达式提供了简化的写法。
@@ -70,33 +62,6 @@ tags:
 |  \s  |  匹配空格 [\t\n\f\r\p{Z}]  |
 |  \S  |      匹配空格 [^ \s\]      |
 
-在举几个常用的例子：
-
-- 匹配手机号码 `^1\d{10}$`
-
-  >     移动：134、135、136、137、138、139、147、150、151、152、157、158、159、178、182、183、184、187、188
-  >     联通：130、131、132、145、155、156、175、176、185、186
-  >     电信：133、153、173、177、180、181、189
-  >     全球星：1349
-  >     虚拟运营商：170
-
-  `^((13[0-9])|(14[57])|(15[0-3|5-9])|(17[03|5-8])|(18[0-9]))\d{8}$`
-
-- 匹配邮箱地址 
-
-  > - 必须包含一个并且只有一个符号"@"           
-  > - 允许"@"前的字符中出现"＋-."  
-  > - 允许"@"后的字符出现"-."
-  > - aaa.bbb.ccc.a+b-cddd@e.ee.hh.fff.c-om
-
-  `\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*`
-
-- 匹配链接
-
-  > http://wx.tuhu.cn
-
-  `^((http|https):\/\/)?[^\s]*$`
-
 ## 标识
 
 一些标识也会影响正则匹配的输出，它们可以以任何顺序或组合使用，并且是RegExp的组成部分。
@@ -106,6 +71,151 @@ tags:
 |  i   | 匹配不区分大小写 |
 |  g   |   全局搜索   |
 |  m   |   多行搜索   |
+
+## 正向反向预查
+
+正向查找和反向查找，用于匹配特定的模式，但不包括在匹配列表中。**JavaScript 不支持反向预查**
+|  标识  |   含义   |              解释               |
+| :--: | :----: | :---------------------------: |
+|  ?=  | 正向肯定查找 |  foo(?=bar) 匹配后面跟着 bar 的 foo  |
+|  ?!  | 正向否定查找 | foo(?!bar) 匹配后面不跟着 bar 的 foo  |
+| ?<=  | 反向肯定查找 | (?<=foo)bar 匹配前面跟着 foo 的 bar  |
+| ?<！  | 反向否定查找 | (?<！foo)bar 匹配前面不跟着 foo 的 bar |
+
+> **Tips**
+>
+> 还有一种标识 **?:**  也是正向查找，与 **?=** 的区别在于：**?=** 后面的内容仅仅是作为匹配模式，但不会出现在z整体匹配结果中，**?:** 后面的内容也是作为匹配模式，但是会出现在整体的匹配结果中。
+>
+> 另外一种情况，括号内的字符可以提取，而**?:** 后面的结果不会单独匹配；举个列子:
+>
+> ```javascript
+> const reg1 = /ab(c)/;
+> const reg2 = /ab(?:c)/;
+> const str = 'abc';
+> str.match(reg1);  //["abc"]  [c]
+> str.match(reg2);  //["abc"]
+> ```
+
+## 例子（JS 实现）
+
+- 字符串`const str = "The fat cat sat on the mat."` 匹配其中的 the 
+
+  ```javascript
+  /the/.test(str);  //true
+  ```
+
+- 字符串`const str = "The car parked in the garage."` 匹配其中的 任意**单个**字符开头，以 ar 结尾的字符
+
+  ```javascript
+  const matchArr = str.match(/.ar/g);
+  ```
+
+- 字符串`const str = "The car parked in the garage."` 匹配其中的  car 或 par 或 gar 
+
+  ```javascript
+  const matchArr = str.match(/(c|p|g)ar/g);
+  ```
+
+- 匹配任意的字符串
+
+  ```javascript
+  const matchArr = str.match(/.*/);
+  ```
+
+- 字符串`const str = "The fat cat sat on the concatenation."` 匹配其中左右带有空格的 cat
+
+  ```javascript
+  const matchArr = str.match(/\scat\s/);
+  ```
+
+- 字符串`const str = "The fat cat sat on the mat."` 匹配以 c 开始，到最后一个 t 结尾
+
+  ```javascript
+  const matchArr = str.match(/c.+t/);
+  ```
+
+- ​字符串`const str = "The car is parked in the garage."` 匹配当中的 The 或 the
+
+  ```javascript
+  const matchArr = str.match(/[Tt]he/g);
+  const matchArr = str.match(/(T|t)he/g);
+  ```
+
+- 字符串`const str = "The car is parked in the garage."` 匹配当中的 The 或 he
+
+  ```javascript
+  const matchArr = str.match(/[T]?he/g);
+  ```
+
+- ​字符串`const str = "The number was 9.9997 but we rounded it off to 10.0."` 匹配当中至少两位**连续的**数字
+
+  ```javascript
+  const matchArr = str.match(/[0-9]{2,}/g);
+  ```
+
+- 字符串`const str = "The car is parked in the garage."` 判断是否以 T 开头，以.结尾
+
+  ```javascript
+  /^T.*.$/.test(str);
+  ```
+
+- 字符串`const str = "Java7 Java8  Javascript7 Javascript8"` 匹配 Java，要求是在数字 8 之前的 Java
+
+  ```javascript
+  const matchArr = str.match(/Java(?=8)/g);
+  ```
+
+- 字符串`const str = "Java7 Java8  Javascript7 Javascript8"` 匹配 Java，要求不是在数字 8 之前的 Java
+
+  ```javascript
+  const matchArr = str.match(/Java(?!8)/g);
+  ```
+
+
+- 字符串`const str = "$4.44 and $10.88 and $ and 123.45"` 匹配紧跟着 $ 后面的金额，包含小数点
+
+  ```php
+  /(?<=\$)[\d\.]+/g  //javascript 没有反向查找
+  ```
+
+
+- 字符串`const str = "$4.44 and $10.88 and $ and 123.45"` 匹配不紧跟着 $ 后面的金额，包含小数点
+
+  ```php
+  /(?<!\$)[\d\.]+/g  //javascript 没有反向查找
+  ```
+
+
+- 匹配手机号码 
+
+  ```javascript
+  /^1\d{10}$/.test('13812341234')
+  ```
+
+  > 移动：134、135、136、137、138、139、147、150、151、152、157、158、159、178、182、183、184、187、188
+  > 联通：130、131、132、145、155、156、175、176、185、186
+  > 电信：133、153、173、177、180、181、189
+  > 虚拟运营商：170
+
+  `^((13[0-9])|(14[57])|(15[0-3|5-9])|(17[03|5-8])|(18[0-9]))\d{8}$`
+
+- 匹配邮箱地址 
+
+  ```javascript
+  /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4})*$/
+  ```
+
+- 匹配链接
+
+  ```javascript
+  /^((http|https):\/\/)?[^\s]*$/
+  ```
+
+  ```javascript
+  /^(((http|https|ftp):\/\/)?([[a-zA-Z0-9]\-\.])+(\.)([[a-zA-Z0-9]]){2,4}([[a-zA-Z0-9]\/+=%&_\.~?\-]*))*$/
+  ```
+
+  ​
 
 ## 参考文章
 
