@@ -50,6 +50,8 @@ isMatch(no)->back
 
 简直好用到爆，而且配置非常灵活，又是一款效率利器。
 
+项目地址： [Sildes](https://github.com/mjd507/Sildes)
 
 有没有想立即尝试的冲动？
+
 
