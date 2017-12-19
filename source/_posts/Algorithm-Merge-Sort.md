@@ -49,7 +49,7 @@ tags:
 				temp[k++] = arr[m++];
 			}
 			for (int i = 0; i < k; i++) {
-				arr[i] = temp[i];
+				arr[i + first] = temp[i];
 			}
 		}
 	}
