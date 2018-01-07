@@ -47,6 +47,7 @@ highlight:
 default_category: uncategorized
 category_map: # 地址栏中文的映射
 	Android: Android
+  网络相关: Internet Protocol
   算法: Algorithm
   数据结构: Data Structure
   设计模式: DesignPattern

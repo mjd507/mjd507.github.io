@@ -1,7 +1,7 @@
 ---
 title: {{ title }}
 date: {{ date }}
-categories: Web 前端
+categories: 网络相关
 toc: true
 tags:
 comments: true
