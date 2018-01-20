@@ -1,5 +1,5 @@
 ---
-title: 清单列表
+title: 
 toc: true
 tags: 
 comments: false
@@ -7,27 +7,14 @@ date: 2016-06-25 15:17:03
 copyright: false
 ---
 
-
-
-> You ones said you're not like everyone. 
-> Well that's true，you're certainly not everyone. 
-> But,everyone is everyone.           
->
-> —《遗愿清单》
-
-------
-
-
-
-**读过的一些书籍**
+### 读过的一些书籍
 
 - 《富爸爸穷爸爸》
 
   这本书，对我的启发很大，关于**资产与负债**的区别，工资与欲望的循环，我们是为了钱而工作，还是为了不工作而工作。
 
 
-
-**看过的一些电影**
+### 看过的一些电影
 
 - 1994 肖申克的救赎Shawshank Redemption [美]
 
