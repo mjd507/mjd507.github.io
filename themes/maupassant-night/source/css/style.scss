@@ -301,7 +301,7 @@ div {
                 }
             }
             .caption {
-                color: #444;
+                color: #DEDEDE;
                 display: block;
                 font-size: 0.9em;
                 margin-top: 0.1em;
@@ -319,7 +319,7 @@ div {
             max-width: 100%;
             margin: auto;
             display: block;
-            background: #fff;
+            background: #E5E5E5;
         }
         ul, ol {
             border-radius: 3px;
@@ -376,6 +376,7 @@ div {
         border: 1px solid #CCC;
         text-align: center;
         &:hover {
+            color: #363B40;
             background: #DEDEDE;
             border-bottom-color: #000;
         }
@@ -881,8 +882,9 @@ pre {
         padding-left: 0.3em;
     }
     &:hover {
+        color: #363B40;
         background: #F8F8F8;
-        border-bottom-color: #D26911;
+        //border-bottom-color: #D26911;
     }
 }
 
