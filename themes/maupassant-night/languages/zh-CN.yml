@@ -21,4 +21,5 @@ belongsto: 分类于
 contents: 文章目录
 shareto: 分享到
 # add by mjd
-list: 读书清单
+readingList: 读书清单
+dailyProject: '365'

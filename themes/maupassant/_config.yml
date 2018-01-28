@@ -23,9 +23,12 @@ menu:
   - page: about
     directory: about/
     icon: fa-user
-  - page: list
-    directory: list/
+  - page: readingList
+    directory: readingList/
     icon: fa-th-large
+  - page: dailyProject
+    directory: 365/
+    icon: fa-fire
 
 widgets: ## Six widgets in sidebar provided: search, category, tag, recent_posts, rencent_comments and links.
   # - search

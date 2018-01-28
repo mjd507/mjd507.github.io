@@ -1,6 +1,13 @@
 extends base
 block title
-  title= page.title + ' | ' + config.title
+  if page.about
+     title= __('about') + ' | ' + config.title
+  if page.read_list
+     title= __('readingList') + ' | ' + config.title
+  if page.daily
+     title= '365' + ' | ' + config.title
+  else 
+     title= page.title + ' | ' + config.title
 block content
   .post
     h1.post-title= page.title

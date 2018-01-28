@@ -22,4 +22,5 @@ belongsto: 분류됨
 contents: 컨텐츠
 shareto: 공유하기
 # add by mjd
-list: Reading list
+readingList: Reading list
+dailyProject: '365'

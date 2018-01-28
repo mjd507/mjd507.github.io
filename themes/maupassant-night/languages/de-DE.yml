@@ -21,4 +21,5 @@ belongsto: kategorisiert in
 contents: Inhalte
 shareto: Aktie
 # add by mjd
-list: Reading list
+readingList: Reading list
+dailyProject: '365'
