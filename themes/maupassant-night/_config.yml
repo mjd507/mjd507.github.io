@@ -20,9 +20,9 @@ menu:
   - page: archive
     directory: archives/
     icon: fa-archive
-  - page: about
-    directory: about/
-    icon: fa-user
+  # - page: about
+  #   directory: about/
+  #   icon: fa-user
   - page: readingList
     directory: readingList/
     icon: fa-th-large
