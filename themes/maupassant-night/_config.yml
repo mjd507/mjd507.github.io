@@ -36,13 +36,16 @@ widgets: ## Six widgets in sidebar provided: search, category, tag, recent_posts
   # - tag
   - recent_posts
   # - recent_comments
-#  - links
+  - links
 
-#links:
-#  - title: stormzhang
-#    url: http://stormzhang.com/
-#  - title: 咕咚
-#    url: http://gudong.name/
+links:
+ - title: JohnnyShieh
+   url: http://johnnyshieh.me/
+ - title: 代码家
+   url: https://daimajia.com/
+ - title: 宅男潇涧
+   url: http://javayhu.me/
+
 
 timeline:
   - num: 1
