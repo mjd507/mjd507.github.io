@@ -25,12 +25,12 @@ HTTPS 与 SSH，他们都是网络通信的协议，主要作用都是加密网�
 
 ## 1. SSH 口令登录
 
-现在我在阿里云购买了一台云服务器，其 ip 地址为 123.56.0.47，我在自己电脑上，用 SSH 登录远程主机。
+现在我在阿里云购买了一台云服务器，其 ip 地址为 120.27.210.94，我在自己电脑上，用 SSH 登录远程主机。
 
 ```
-➜  ~ ssh root@123.56.0.47
-The authenticity of host '123.56.0.47 (123.56.0.47)' can't be established.
-ECDSA key fingerprint is SHA256:qiWC5vV3df+t2EXAnuE9VTmZC2uJW/QKSucWPLnC2WY.
+➜  ~ ssh root@120.27.210.94
+The authenticity of host '120.27.210.94 (120.27.210.94)' can't be established.
+ECDSA key fingerprint is SHA256:+FvnAMcSHUPuWvciMpQhvlZaITKUg9gJa/nqAyg7G/s.
 Are you sure you want to continue connecting (yes/no)?
 ```
 
@@ -38,8 +38,8 @@ Are you sure you want to continue connecting (yes/no)?
 
 ```
 Are you sure you want to continue connecting (yes/no)? yes
-Warning: Permanently added '123.56.0.47' (ECDSA) to the list of known hosts.
-root@123.56.0.47's password:
+Warning: Permanently added '120.27.210.94' (ECDSA) to the list of known hosts.
+root@120.27.210.94's password:
 ...
 Welcome to Alibaba Cloud Elastic Compute Service !
 ```
@@ -89,27 +89,27 @@ The key's randomart image is:
 现在把生成的公钥「id_rsa.pub」放在远程主机上，使用 ssh-copy-id user@host 命令。
 
 ```
-➜  ~ ssh-copy-id root@123.56.0.47
+➜  ~ ssh-copy-id root@120.27.210.94
 /usr/bin/ssh-copy-id: INFO: Source of key(s) to be installed: "/Users/mjd/.ssh/id_rsa.pub"
 /usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
 /usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
-root@123.56.0.47's password:
+root@120.27.210.94's password:
 
 Number of key(s) added:        1
 
-Now try logging into the machine, with:   "ssh 'root@123.56.0.47'"
+Now try logging into the machine, with:   "ssh 'root@120.27.210.94'"
 and check to make sure that only the key(s) you wanted were added.
 ```
 
 好了，现在本地公钥就在远程主机上安装完成了，再次登录远程主机，就不要在输入密码了。
 
 ```
-➜  ~ ssh root@123.56.0.47
-Last login: Sat Feb 10 14:24:41 2018 from 222.67.200.205
+➜  ~ ssh root@120.27.210.94
+Last login: Tue Feb 13 15:02:55 2018 from 180.126.250.177
 
 Welcome to Alibaba Cloud Elastic Compute Service !
 
-[root@iz2ze1f5i6xucozwsv8rv5z ~]#
+[root@mjd-centos ~]#
 ```
 
 ### 2.4 authorized_keys 文件
@@ -117,15 +117,15 @@ Welcome to Alibaba Cloud Elastic Compute Service !
 远程主机将本地主机的公钥放在`$HOME/.ssh/authorized_keys`文件中，用 cat 命令查看下该文件内容。
 
 ```
-[root@iz2ze1f5i6xucozwsv8rv5z ~]# cat ~/.ssh/authorized_keys
+[root@mjd-centos ~]# cat ~/.ssh/authorized_keys
 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQD4g5LVz0A3q76pXrqT0CE1XP6rvJtu2aJ9rQDFqTaEXi1hnRWKMATD524AXsv9IZmA2kzWj56WETwwXY73kQt9/OhywKzMlrwTXYNu5x5tpvDImX6A9wGxeROXyHI4iAzkaqiPc8ZqtJDOHTqZRrR2E99r+c72d4GwmZwz9ZENAzYcjrgM/z1M27t24hNlD9fxLFHp6c+SO4Q0nxw0JNETUeaZLzGyxC2nolN7ROzrRrt0j0Qv528uqk2eaSVDjKi/lbwzxM3gzY/yCTQ8HWGlJy2alqw9EcKH9F4HbYyQyrTHd3Bf/g6P+eqPSK9eWTqnjl7UI+yieqbG7E3xKEoB mjd@mjddeMacBook-Pro.local
-[root@iz2ze1f5i6xucozwsv8rv5z ~]#
+[root@mjd-centos ~]#
 ```
 
 与本地公钥的内容完全一样，所以，另一种安装公钥的方式，就是直接将本地公钥的内容 copy 到 `$HOME/.ssh/authorized_keys` 这个文件中。
 
 ```
-➜  ~ ssh root@123.56.0.47 'mkdir -p .ssh && cat >> .ssh/authorized_keys' < ~/.ssh/id_rsa.pub
+➜  ~ ssh root@120.27.210.94 'mkdir -p .ssh && cat >> .ssh/authorized_keys' < ~/.ssh/id_rsa.pub
 ```
 
 这样，同样下次登录不在需要密码。
