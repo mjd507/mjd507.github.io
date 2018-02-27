@@ -46,6 +46,7 @@ highlight:
 # Category & Tag
 default_category: uncategorized
 category_map: # 地址栏中文的映射
+  Java: Java
 	Android: Android
   网络相关: Internet Protocol
   算法: Algorithm
