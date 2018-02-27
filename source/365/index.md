@@ -14,5 +14,6 @@ daily: true
 
 1. [让我们来谈谈死亡](https://www.ted.com/talks/peter_saul_let_s_talk_about_dying) 
 2. [我的儿子是校园抢手](https://www.ted.com/talks/sue_klebold_my_son_was_a_columbine_shooter_this_is_my_story)
-3. [我是怎样迷上看星星的](https://www.ted.com/talks/jedidah_isler_how_i_fell_in_love_with_quasars_blazars_and_our_incredible_universe#t-4099)
+3. [The mind behind Linux](https://www.ted.com/talks/linus_torvalds_the_mind_behind_linux#t-121539)
+
 
