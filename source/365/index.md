@@ -16,7 +16,6 @@ daily: true
 
 2. [我的儿子是校园抢手](https://www.ted.com/talks/sue_klebold_my_son_was_a_columbine_shooter_this_is_my_story)
 
-
 3. [The mind behind Linux](https://www.ted.com/talks/linus_torvalds_the_mind_behind_linux#t-121539)
 
    - the understand of open source and how it lead to the development of Linux.
@@ -29,5 +28,5 @@ daily: true
 
    - I am not a visionary. I do not have a five-year plan. I'm an engineer. And I think it's really -- I mean -- I'm perfectly happy with all the people who are walking around and just staring at the clouds and looking at the stars and saying, "I want to go there." But I'm looking at the ground, and I want to fix the pothole that's right in front of me before I fall in. This is the kind of person I am.
 
-     ​
+
 
