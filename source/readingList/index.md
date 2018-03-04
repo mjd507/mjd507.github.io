@@ -2,7 +2,7 @@
 title: 
 toc: true
 tags: 
-comments: false
+comments: true
 date: 2016-06-25 15:17:03
 copyright: false
 read_list: true
