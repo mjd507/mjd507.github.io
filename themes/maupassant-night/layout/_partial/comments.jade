@@ -14,3 +14,32 @@ if theme.disqus
         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
       })();
     script(id='dsq-count-scr', src='//#{theme.disqus}.disqus.com/count.js', async)
+
+if theme.gitalk.enable
+  #container
+  link(rel='stylesheet', type='text/css', href='//unpkg.com/gitalk/dist/gitalk.css')
+  script(type='text/javascript' src='//unpkg.com/gitalk/dist/gitalk.min.js')
+  script(type='text/javascript' src='//cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.min.js')
+  script.
+    var path_name = location.pathname;
+
+    // 解决普通文章在微信浏览器中 url 上自动添加参数的问题
+    var path_rule = path_name.match(/\/\d{4}\/\d{2}\/\d{2}\/[^\/]+\//);
+    if(path_rule && path_rule[0])
+      path_name = path_rule[0]
+    else
+      //解决菜单文章在微信浏览器中 url 上自动添加参数的问题
+      var path_rule_2 = path_name.match(/\/[^\/]+\//);
+        if(path_rule_2 && path_rule_2[0])
+          path_name = path_rule_2[0]
+
+    var gitalk = new Gitalk({
+      clientID: '#{theme.gitalk.client_id}',
+      clientSecret: '#{theme.gitalk.client_secret}',
+      repo: '#{theme.gitalk.repo}',
+      owner: '#{theme.gitalk.owner}',
+      admin: ['#{theme.gitalk.admin}'],
+      id: md5(path_name),
+      distractionFreeMode: '#{theme.gitalk.distractionFreeMode}',
+    })
+    gitalk.render('container')
