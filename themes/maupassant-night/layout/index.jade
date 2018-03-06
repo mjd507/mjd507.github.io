@@ -9,7 +9,7 @@ block title
 block content
 
   for post in page.posts.toArray()
-    if post.visible === 'hide'
+    if post.visible === false
       - continue
     .post
       h2.post-title

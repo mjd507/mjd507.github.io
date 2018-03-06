@@ -17,7 +17,8 @@ if theme.disqus
 
 if theme.gitalk.enable
   #container
-  link(rel='stylesheet', type='text/css', href='//unpkg.com/gitalk/dist/gitalk.css')
+  // link(rel='stylesheet', type='text/css', href='//unpkg.com/gitalk/dist/gitalk.css')
+  link(rel='stylesheet', type='text/css', href=url_for(theme.css) + '/gitalk-night.css')
   script(type='text/javascript' src='//unpkg.com/gitalk/dist/gitalk.min.js')
   script(type='text/javascript' src='//cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.min.js')
   script.
