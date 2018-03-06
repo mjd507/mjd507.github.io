@@ -17,6 +17,8 @@ block content
           h2= -year
           ul.listing
             for post in posts
+              if post.visible === 'hide'
+                - continue
               li
                 span.date= post.date.format('YYYY/MM/DD')
                 a(href=url_for(post.path), title=post.title)
