@@ -34,6 +34,8 @@ ECDSA key fingerprint is SHA256:+FvnAMcSHUPuWvciMpQhvlZaITKUg9gJa/nqAyg7G/s.
 Are you sure you want to continue connecting (yes/no)?
 ```
 
+ssh 默认的端口号为 22，如果远程主机 ssh 端口号不是 22，比如是 27037，那么就这样指定 `ssh -p 27037 root@120.27.210.94`
+
 由于是第一次登录，为了防止中间人攻击，远程主机显示了自己的公钥指纹，确认没问题后，输入确认建立连接。
 
 ```
@@ -101,6 +103,8 @@ Now try logging into the machine, with:   "ssh 'root@120.27.210.94'"
 and check to make sure that only the key(s) you wanted were added.
 ```
 
+PS: 如果远程主机 ssh 端口号不是默认的 22，比如说是 27037，那么就应该这样指定 `ssh-copy-id root@120.27.210.94 -p 27037`
+
 好了，现在本地公钥就在远程主机上安装完成了，再次登录远程主机，就不要在输入密码了。
 
 ```
@@ -111,6 +115,8 @@ Welcome to Alibaba Cloud Elastic Compute Service !
 
 [root@mjd-centos ~]#
 ```
+
+
 
 ### 2.4 authorized_keys 文件
 
