@@ -11,13 +11,13 @@ visible:
 
 这篇开始，会尝试性的在首部增加一张与文章无关的图片，没有其他目的，只是希望自己在整理记录时，能保持内心的平静。
 
-这次的图片是「湖边古朴的山村」，来自 Dahee Son，摄影于 哈尔施塔特，奥地利。千年盐矿，木屋古镇，2015 年仅有 1221名居民，又被称作「世界上最美的小镇」。
+这次的图片是「湖边古朴的山村」，来自 Dahee Son，摄影于「奥地利 · 哈尔施塔特」。千年盐矿，木屋古镇，2015 年仅有 1221名居民，又被称作「世界上最美的小镇」。
 
 <!--more-->
 
 ![Quaint mountain village over a lake <br/> Location: Hallstatt, Austria.  By Dahee Son](http://ohlah9bje.bkt.clouddn.com/dahee-son-204737-unsplash.jpg?imageView2/0/w/750)
 
-
+------
 
 ## slf4j 简介
 

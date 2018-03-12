@@ -22,9 +22,5 @@ daily: true
    - the sign of people I really want to work with is that they have good taste
    - I am not a visionary. I do not have a five-year plan. I'm an engineer. And I think it's really -- I mean -- I'm perfectly happy with all the people who are walking around and just staring at the clouds and looking at the stars and saying, "I want to go there." But I'm looking at the ground, and I want to fix the pothole that's right in front of me before I fall in. This is the kind of person I am.
 4. [Be humble -- and other lessons from the philosophy of water](https://www.ted.com/talks/raymond_tang_be_humble_and_other_lessons_from_the_philosophy_of_water)
-
-
-   - The first lesson is about humility. instead of acting like I know what I'm doing or I have all the answers, it's perfectly OK to say, "I don't know. I want to learn more, and I need your help.
-   - The second lesson I learned is about harmony. stopped fighting with myself, and learned to work with my environment to solve its problems.
-   - The third lesson I learned from the philosophy of water is about openness. We can no longer expect to work to a static job description or follow a single career path. We, too, are expected to constantly reinvent and refresh our skills to stay relevant.
+   - humility, harmony, openness
 5. [Teach girls bravery, not perfection](https://www.ted.com/talks/reshma_saujani_teach_girls_bravery_not_perfection)
