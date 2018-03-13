@@ -15,7 +15,7 @@ visible:
 
 <!--more-->
 
-![Quaint mountain village over a lake <br/> Location: Hallstatt, Austria.  By Dahee Son](http://ohlah9bje.bkt.clouddn.com/dahee-son-204737-unsplash.jpg?imageView2/0/w/750)
+![Quaint mountain village over a lake <br/> Location: Hallstatt, Austria.  By Dahee Son](/unsplash/dahee-son-204737-unsplash.jpg)
 
 ------
 
@@ -93,4 +93,121 @@ slf4j-simple 中对 MDC 默认也是空的实现，所以在实际项目中，�
 
 ## MDC
 
-MDC 全称 Mapped Diagnostic Context，映射调试上下文。目的是为了便于我们诊断线上问题而出现的工具类。
+MDC 全称 Mapped Diagnostic Context，映射调试上下文。目的是为了便于我们诊断线上问题而出现的工具类。在多个客户端并发访问的情况下，通过给每个客户端的请求指定一个唯一标记，从而方便日志排查。这里以 Logback 为例，介绍下 里面的 MDC。
+
+### MDC 基本使用
+
+```java
+static final Logger logger = LoggerFactory.getLogger(LogTest.class);
+
+public static void main(String args[]) {
+  MDC.put("name", "john");
+  MDC.put("age", "20");
+  logger.info("Hello,I am john. I was 20");
+
+  MDC.put("name", "jay");
+  MDC.put("age", "24");
+  logger.info("I am jay. I love programming.");
+}
+
+// logback.xml 部分配置
+<Pattern>[%thread] %-5level %logger{36} %X{name} %X{age} - %msg%n</Pattern>
+
+// 输出结果
+[main] INFO  LogTest john 20 - Hello,I am john. I was 20
+[main] INFO  LogTest jay 24 - I am jay. I love programming.
+    
+```
+
+在 logback.xml 配置文件中，通过 %X 标记符来记录 MDC 中指定的值。
+
+### MDC 高级使用
+
+MDC 上下文是以每个线程为基础进行管理的，允许每个服务器为线程设置不同的 MDC 标记。比如 put 和 get 之类的方法仅影响当前线程的 MDC 以及 **当前线程的子线程**，具体涉及到 ThreadLocal 和 InheritableThreadLocal 两个类，我们在使用 MDC 时不必担心线程安全性或同步问题。
+
+```java
+public class LogTest {
+
+  public static void main(String args[]) {
+    ServerHandler serverHandler1 = new ServerHandler("192.168.1.1");
+    serverHandler1.handleRequest();
+    ServerHandler serverHandler2 = new ServerHandler("192.168.2.2");
+    serverHandler2.handleRequest();
+  }
+
+  // 服务器对请求的处理
+  static class ServerHandler {
+    private Logger logger = LoggerFactory.getLogger(ServerHandler.class);
+    ServerHandler(String IP) {
+      MDC.put("IP", IP); //将 IP 保存到 MDC 中
+    }
+    void handleRequest() {
+      logger.info("before processing the request...");
+      new Thread(new ServerService()).start();
+      logger.info("after processing the request...");
+      MDC.remove("IP");
+    }
+  }
+
+  static class ServerService implements Runnable {
+    private Logger logger = LoggerFactory.getLogger(ServerHandler.class);
+    private Map<String, String> contextMap = MDC.getCopyOfContextMap(); // 获取 MDC 上下文副本
+
+    @Override
+    public void run() {
+      MDC.setContextMap(contextMap); // 将父线程的 MDC 环境设置进来
+      logger.info("the server is processing the request...");
+    }
+  }
+}
+// logback.xml 部分配置
+<Pattern>[%-8thread] %-5level %logger{36} %X{IP} - %msg%n</Pattern>
+// 输出结果
+[main    ] INFO  LogTest$ServerHandler 192.168.1.1 - before processing the request...
+[main    ] INFO  LogTest$ServerHandler 192.168.1.1 - after processing the request...
+[main    ] INFO  LogTest$ServerHandler 192.168.2.2 - before processing the request...
+[Thread-0] INFO  LogTest$ServerHandler 192.168.1.1 - the server is processing the request...
+[main    ] INFO  LogTest$ServerHandler 192.168.2.2 - after processing the request...
+[Thread-1] INFO  LogTest$ServerHandler 192.168.2.2 - the server is processing the request...
+
+```
+
+这里我模拟了两个请求，当服务端接收到请求后，使用 MDC 保存了每个请求的 IP，并开启一个子线程来处理请求，通过打印日志，可以看到通过 MDC 能区分每个请求的日志，以及一个请求在多个线程中处理的日志。
+
+### MDC 使用场景
+
+在校验用户身份的时候，可以声明一个 Filter，当请求进来时，获取用户 token，并保存到 mdc 中，后续操作，全都依赖 mdc 中的用户 token，当执行完毕后，清除 mdc 中的用户身份。
+
+```java
+@Override
+public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+    throws IOException, ServletException {
+  try {
+    HttpServletRequest httpReq = (HttpServletRequest) request;
+    String token = httpReq.getHeader(USER_TOKEN);
+    MDC.put(USER_TOKEN, token);
+    chain.doFilter(request, response);
+  } finally {
+    MDC.remove(USER_TOKEN);
+  }
+}
+```
+
+logback 的 MDC 也提供了一个过滤器 **MDCInsertingServletFilter**，可以获取 hostname、request uri、user-agent 等 HTTP 请求中的内容，在 web.xml 作如下配置
+
+```xml
+<filter>
+  <filter-name>MDCInsertingServletFilter</filter-name>
+  <filter-class>
+    ch.qos.logback.classic.helpers.MDCInsertingServletFilter
+  </filter-class>
+</filter>
+<filter-mapping>
+  <filter-name>MDCInsertingServletFilter</filter-name>
+  <url-pattern>/*</url-pattern>
+</filter-mapping> 
+```
+
+确保 MDCInsertingServletFilter 过滤器声明在其它过滤器之前。
+
+logback.xml 中日志格式加上 %X{req.remoteHost} %X{req.requestURI} 等需要记录的标记即可。
