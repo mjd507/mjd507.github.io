@@ -13,5 +13,5 @@ visible:
 
 <!--more-->
 
-![xxx <br/> Location: xxx.  By xx](?imageView2/0/w/750)
+![xxx <br/> Location: xxx.  By xx](/unsplash/xxx.jpg)
 

@@ -1502,7 +1502,7 @@ figure.highlight,
     // XML, HTML
     &.xml {
         .tag {
-            color: #333;
+            color: #dedede;
         }
         .value {
             color: #183691;
@@ -1513,7 +1513,7 @@ figure.highlight,
         }
         .title,
         .name {
-            color: #8C8EF0;
+            color: #7df46a;
         }
     }
     // Puppet
@@ -1697,7 +1697,7 @@ figure.highlight,
 .toc-article {
   border: 1px solid #bbb;
   border-radius: 7px;
-  margin: 1.1em 0 0 2em;
+  margin: 1.1em 0 1em 2em;
   padding: 0.7em 0.7em 0 0.7em;
   max-width: 40%;
 }
