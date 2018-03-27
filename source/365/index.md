@@ -18,4 +18,6 @@ daily: true
 4. [Be humble -- and other lessons from the philosophy of water](https://www.ted.com/talks/raymond_tang_be_humble_and_other_lessons_from_the_philosophy_of_water)
 5. [Teach girls bravery, not perfection](https://www.ted.com/talks/reshma_saujani_teach_girls_bravery_not_perfection)
 6. [The Great Migration and the power of a single decision](https://www.ted.com/talks/isabel_wilkerson_the_great_migration_and_the_power_of_a_single_decision)
+7. [How to tame your wandering mind](https://www.ted.com/talks/amishi_jha_how_to_tame_your_wandering_mind)
+
 
