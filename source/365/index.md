@@ -19,5 +19,7 @@ daily: true
 5. [Teach girls bravery, not perfection](https://www.ted.com/talks/reshma_saujani_teach_girls_bravery_not_perfection)
 6. [The Great Migration and the power of a single decision](https://www.ted.com/talks/isabel_wilkerson_the_great_migration_and_the_power_of_a_single_decision)
 7. [How to tame your wandering mind](https://www.ted.com/talks/amishi_jha_how_to_tame_your_wandering_mind)
+8. [How to raise successful kids -- without over-parenting](https://www.ted.com/talks/julie_lythcott_haims_how_to_raise_successful_kids_without_over_parenting)
+9. [What if we ended the injustice of bail?](https://www.ted.com/talks/robin_steinberg_what_if_we_ended_the_injustice_of_bail)
 
 
