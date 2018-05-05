@@ -21,5 +21,6 @@ daily: true
 7. [How to tame your wandering mind](https://www.ted.com/talks/amishi_jha_how_to_tame_your_wandering_mind)
 8. [How to raise successful kids -- without over-parenting](https://www.ted.com/talks/julie_lythcott_haims_how_to_raise_successful_kids_without_over_parenting)
 9. [What if we ended the injustice of bail?](https://www.ted.com/talks/robin_steinberg_what_if_we_ended_the_injustice_of_bail)
+10. [What I've learned about parenting as a stay-at-home dad](https://www.ted.com/talks/glen_henry_what_i_ve_learned_being_a_stay_at_home_dad)
 
 
