@@ -21,13 +21,24 @@ visible:
 
 第三方平台一般会分配给平台商户一个密钥 key，该 key 每个商户唯一，请求端用这个 key 来生成签名，三方后台用此 key 来验证签名。
 
-## 百度钱包
+## 微信 & 百度钱包
 
 百度钱包接入很方便，后台直接采用分配给商家的 key 通过 MD5 加密请求参数来验证签名。
 
 ```java
 String sign = MD5.encode(reqParam = xxx & key = key);
 GET https://payUrl?payParams=xx&sign=sign
+```
+
+## 支付宝
+
+支付宝采用 RSA 非对称加密，最新接入的采用 RSA2 加密。
+
+```java
+String detailParams = "xxxx";
+String sign = RSA.sign(detailParams, key, "UTF-8");
+// 根据请求参数， sign签名 和 具体的 RSA 算法，生成支付链接
+...
 ```
 
 ## 翼支付
@@ -65,15 +76,4 @@ GET https://payUrl?payParams=xx&sign=sign
    ```
 
    翼支付 H5 的收营台，做的非常严谨，有对称和非对称加密，并且考虑到非对称的性能问题，采用 32 位随机数方案，翼支付后台先用私钥解出 32 位随机数，再用该随机数解出下单参数。
-
-## 支付宝
-
-支付宝采用 RSA 非对称加密，最新接入的采用 RSA2 加密。
-
-```java
-String detailParams = "xxxx";
-String sign = RSA.sign(detailParams, key, "UTF-8");
-// 根据请求参数， sign签名 和 具体的 RSA 算法，生成支付链接
-...
-```
 

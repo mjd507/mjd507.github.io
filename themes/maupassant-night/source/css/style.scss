@@ -273,10 +273,12 @@ div {
             margin: 1em 0 0.5em;
             // border-bottom: 1px solid #eee;
             overflow: hidden;
-            color: #DEDEDE;
+            color: #F0F0F0;
+            font-weight: bold;
         }
         h3 {
-            margin: 1.4em 0 1.1em;
+            margin: 0.5em 0 0.5em;
+            color: #dedede;
         }
         pre code {
             padding: 0 2em;
@@ -1050,7 +1052,7 @@ figure.highlight,
     color:          #333;
     padding-top:    10px;
     overflow:       hidden;
-    border: 1px solid #dedede;
+    border: 1px solid #b8bfc6;
 
     table {
         display:    block;
@@ -1735,12 +1737,12 @@ table {
     th {
         font-weight: bold;
         padding: 5px 10px;
-        border: 1px solid #dedede;
+        border: 1px solid #474d54;
         color: #dedede;
     }
     td {
         padding: 5px 10px;
-        border : 1px solid #dedede;
+        border : 1px solid #474d54;
     }
     tr {
 
