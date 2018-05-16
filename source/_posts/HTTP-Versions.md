@@ -41,7 +41,7 @@ HTTP/0.9 只有 GET 方法，并且响应只能是 HTML，而 1.0 增加了更�
 
 ```
 GET / HTTP/1.0
-Host:tuhu.cn
+Host:baidu.cn
 User-Agent:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_2)
 Accept:*/*
 ```

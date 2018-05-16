@@ -172,24 +172,24 @@ interface CarBuilder{
 	Car build();
 }
 
-class TuHuCarBuilder implements CarBuilder{
-	private TuHuCar car = new TuHuCar();
+class SpecificCarBuilder implements CarBuilder{
+	private SpecificCar car = new SpecificCar();
 
 	@Override
 	public CarBuilder buildFDJ() {
-		System.out.println("设置了途虎发动机");
+		System.out.println("设置了某公司发动机");
 		return this;
 	}
 
 	@Override
 	public CarBuilder buildLunTai() {
-		System.out.println("设置了途虎轮胎");
+		System.out.println("设置了某公司轮胎");
 		return this;
 	}
 
 	@Override
 	public CarBuilder buildWaiGuan() {
-		System.out.println("设置了途虎汽车造型");
+		System.out.println("设置了某公司汽车造型");
 		return this;
 	}
 
@@ -207,7 +207,7 @@ interface Car{
 	void setWaiGuan();
 }
 
-class TuHuCar implements Car{
+class SpecificCar implements Car{
 
 	@Override
 	public void setFDJ() {
@@ -240,7 +240,7 @@ class CarProvider{
 public class Builder {
 
 	public static void main(String[] args) {
-		CarBuilder builder = new TuHuCarBuilder();
+		CarBuilder builder = new SpecificCarBuilder();
 		CarProvider carProvider = new CarProvider(builder);
 		carProvider.getCar();
 	}
@@ -269,16 +269,16 @@ class CarProto implements Cloneable{
 	}
 }  
 
-class TuHUCarProto extends CarProto{
+class SpecificCarProto extends CarProto{
 	public void show(){
-		System.out.println("this is a tuhu car proto");
+		System.out.println("this is a Specific car proto");
 	}
 }
 
 public class Prototype {
 	public static void main(String[] args) throws CloneNotSupportedException {
-		TuHUCarProto carProto = new TuHUCarProto();
-		TuHUCarProto clone = (TuHUCarProto) carProto.clone();
+		SpecificCarProto carProto = new SpecificCarProto();
+		SpecificCarProto clone = (SpecificCarProto) carProto.clone();
 		clone.show();
 		System.out.println(carProto == clone);
 	}

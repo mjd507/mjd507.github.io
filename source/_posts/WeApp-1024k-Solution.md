@@ -33,7 +33,7 @@ tags:
  * 安全渲染的工具类
  * 解决的问题：分页加载时，数组拼接起来在渲染，当数据超过 1M 后，无法再加载
  * @example
- * import SafeRenderUtil from '@tuhu/weapp-tuhu/lib/safeRenderUtil';
+ * import SafeRenderUtil from '@xxx/lib/safeRenderUtil';
  * // 初始化
  * this.SafeRenderUtil = new SafeRenderUtil({
  *   arrName: 'arrName',

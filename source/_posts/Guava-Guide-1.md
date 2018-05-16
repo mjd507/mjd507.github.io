@@ -1,5 +1,5 @@
 ---
-title: Guava 1 - Basic Utilities
+title: Guava 1 - Basic Utilities & EventBus
 categories: Java
 toc: true
 comments: true
@@ -11,7 +11,7 @@ visible:
 
 Guava，官方解释：「Google core libraries for Java」，Guava 是一组核心库，包括新的集合类型（如 multimap 和multiset），不可变集合，图形库，函数类型，内存缓存，以及用于并发，I / O，哈希，原始类型数据，反射，字符串处理等 API 。
 
-我按照其 wiki 文档，阅读其源代码，整理出几篇列表，方便使用。这篇是 guava 基本的实用功能。
+我按照其 wiki 文档，阅读其源代码，整理出几篇列表，方便使用。这篇是 guava 基本的实用功能以及事件通信组件 EventBus。
 
 <!--more-->
 
@@ -63,6 +63,32 @@ Java 8 以后可以使用 Stream 来代替 Ordering 的大部分功能
 | ComparisonChain | start().compare() .compare() .result() | 链式比较                 |
 
 ## Throwables
+
+个人没理解 guava 的作者们对 Throwables 进行 Propagation 的意义，暂不整理。可参见其官方 wiki ：https://github.com/google/guava/wiki/ThrowablesExplained
+
+## EventBus
+
+- EventBus 在设计上，没有使用单例，允许实例化多个 bus 。
+- 使用 @Subscribe 注解来标记事件订阅的处理方法；并将这些方法缓存；该方法只能有一个参数。
+- register(obj) 和 post(obj) 参数都是 Object 类型，register 的 obj 需包含带有注解的事件处理方法，以及具体的事件对象参数，post 的 obj 只需要具体的事件对象。We see this as a feature, not a bug :)
+- 如果 register 事件，但没有任何处理函数，那么什么也不会发生；可以使用 DeadEvent，在里面注册一个处理没有订阅的方法，简单打印下没注册的事件。
+
+```java
+// Class is typically registered by the container.
+class EventBusChangeRecorder {
+  @Subscribe 
+  public void recordCustomerChange(ChangeEvent e) {
+    recordChange(e.getChange());
+  }
+}
+// somewhere during initialization
+eventBus.register(new EventBusChangeRecorder());
+// much later
+public void changeCustomer()
+  ChangeEvent event = getChangeEvent();
+  eventBus.post(event);
+}
+```
 
 
 

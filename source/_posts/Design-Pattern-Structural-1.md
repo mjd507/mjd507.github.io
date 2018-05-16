@@ -14,24 +14,24 @@ tags:
 ## 适配器模式
 ```java
 /**
- * 背景：途虎app天气接口使用的是中国气象网的，后来与阿里巴巴合作，需要改用阿里的天气
+ * 背景：某公司app天气接口使用的是中国气象网的，后来与阿里巴巴合作，需要改用阿里的天气
  */
 
 /**
- * 途虎数据接口
+ * 某公司数据接口
  */
-interface TuHuData{
+interface ThirdData{
 	String getWeatherFromChina();
 }
 
 /**
- * 途虎app实现该接口获取中国气象网天气
+ * 某公司app实现该接口获取中国气象网天气
  */
-class TuHuApp implements TuHuData{
+class ThirdApp implements ThirdData{
 
 	@Override
 	public String getWeatherFromChina() {
-		return "TuHuWeather：上海：25℃...";
+		return "ThirdWeather：上海：25℃...";
 	}
 
 }
@@ -54,10 +54,10 @@ class AliBaBaServer implements AliBaBaDate{
 }
 
 /**
- * 途虎使用了适配器，不改变原有业务逻辑的基础上，使用阿里的天气数据
+ * 某公司使用了适配器，不改变原有业务逻辑的基础上，使用阿里的天气数据
  */
 //类的适配器模式
-class TuHuWeatherAdapter extends AliBaBaServer implements TuHuData{
+class ThirdWeatherAdapter extends AliBaBaServer implements ThirdData{
 
 	@Override
 	public String getWeatherFromChina() {
@@ -67,9 +67,9 @@ class TuHuWeatherAdapter extends AliBaBaServer implements TuHuData{
 }
 
 //对象的适配器模式
-class TuHuWeatherAdapter2 implements TuHuData{
+class ThirdWeatherAdapter2 implements ThirdData{
 	AliBaBaServer aliBaBaServer;
-	public TuHuWeatherAdapter2(AliBaBaServer aliBaBaServe) {
+	public ThirdWeatherAdapter2(AliBaBaServer aliBaBaServe) {
 		this.aliBaBaServer = aliBaBaServe;
 	}
 	@Override

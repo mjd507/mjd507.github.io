@@ -19,7 +19,7 @@ tags:
 关于图片的动态裁剪，这里我司采用的是七牛的图片裁剪功能，看下例子。
 
 ```javascript
-“https://img1.tuhu.org/xxx.jpg@100w_100h_90q.webp”，
+“https://img1.util.org/xxx.jpg@100w_100h_90q.webp”，
 代表需要一张宽（w）100px、高（h）100px、相对质量（q）90% webp 格式的图片。
 
 w、h、q三个参数都是可以选传的，比如只限宽，高度等比缩放，就只要传100w 不写 h 就好了。
@@ -66,7 +66,7 @@ getImgSrc(src, width) {
     ratio = 2;
   }
 
-  if (['wifi', '4g'].indexOf(wx.tuhu.getNetWork()) < 0) {
+  if (['wifi', '4g'].indexOf(wx.util.getNetWork()) < 0) {
     ratio = 1;
   }
 
