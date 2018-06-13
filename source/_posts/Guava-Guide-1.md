@@ -15,56 +15,101 @@ Guava，官方解释：「Google core libraries for Java」，Guava 是一组核
 
 <!--more-->
 
-## Preconditions 预言
+## 关于 null 的处理
 
 ```java
-// 在执行程序之前，进行预检查
-checkArgument(i >= 0, "Argument was %s but expected nonnegative", i);
-checkNotNull(value);
-checkState(boolean);
-...
+// -------------------------------Preconditions--------------------------------- //
+// 空对象，不为 true 的表达式，违法参数，程序多数直接不处理，一般的做法
+if (obj == null) {
+  return;
+}
+if (!expression) {
+  return false;
+}
+// guava 使用 Preconditions 预检查，封装成一句话
+checkNotNull(value, "value is null"); // 如果不满足，throw NullPointerException
+checkArgument(i >= 0, "Argument was %s but expected nonnegative", i); // 如果不满足，throw IllegalArgumentException
+checkState(expression); // 如果不满足，throw IllegalStateException
+
+// -------------------------------Strings--------------------------------- //
+// 对于字符串的空的情况，一般做法
+string == null || string.isEmpty();
+// guava 提供了 Strings 类，对字符串空检查和转换
+isNullOrEmpty(String string) // 判断空或""
+nullToEmpty(String string) // null -> ""
+emptyToNull(String string) // "" -> null
+
+// -------------------------------Optional--------------------------------- //
+// guava 提供了 Optional 赋予 null 语义，促使开发者关注 null 时的情况。
+List resList = Optional.fromNullable(list).or(new ArrayList<String>()); // list 若为 null,则新建一个 ArrayList 返回
+boolean present = Optional.fromNullable(list).isPresent(); // list 若为 null, 则返回 true
+
+// -------------------------------MoreObjects--------------------------------- //
+MoreObjects.firstNonNull(list1,list2); // 返回第一个不为 null 的对象，若都为 null, throw NullPointerException
 ```
 
-## Using/Avoiding Null
 
-Optional 使用 Absent 和 Present 两个对象来区分给定对象是否为 null ，并提供简单的调用，促使开发者思考 null 时的含义。
-
-| 方法                     | 描述                                                       |
-| :----------------------- | :--------------------------------------------------------- |
-| Optional.of(T)           | 将一个非空对象的引用放进 Optional 中，若为空，则报错       |
-| Optional.absent()        | 将一个空对象放进 Optional 中，没有任何引用                 |
-| Optional.fromNullable(T) | 将一个可能为空的对象放进 Optional 中                       |
-| isPresent()              | 对象是否非空                                               |
-| T get()                  | 获取非空对象，若为空，则报错                               |
-| T or(T)                  | 返回当前非空对象，若当前对象为空，则放回给定对象           |
-| T orNull()               | 返回当前非空对象，若当前对象为空，则返回 null              |
-| Set asSet()              | 返回当前对象的 Set 集合，若当前对象为空，则返回空 Set 集合 |
-
-## Ordering
-
-```java
-// 排序操作
-Ordering<Foo> ordering = Ordering.natural().nullsFirst().onResultOf(sortKeyFunction);
-```
-
-Java 8 以后可以使用 Stream 来代替 Ordering 的大部分功能
-
-| 排序类别          |                         |                    |                       |
-| :---------------- | :---------------------- | :----------------- | :-------------------- |
-| NaturalOrdering   | ExplicitOrdering        | AllEqualOrdering   | UsingToStringOrdering |
-| ArbitraryOrdering | ReverseOrdering         | NullsFirstOrdering | NullsLastOrdering     |
-| CompoundOrdering  | LexicographicalOrdering | ByFunctionOrdering |                       |
 
 ## Object Method
 
-| 类              | 方法                                   | 描述                     |
-| :-------------- | :------------------------------------- | :----------------------- |
-| MoreObjects     | toStringHelper                         | 串联多个对象并打印其内容 |
-| ComparisonChain | start().compare() .compare() .result() | 链式比较                 |
+```java
+// -------------------------------ComparisonChain--------------------------------- //
+// 一般可比较对象的 compareTo 写法
+public class Person implements Comparable<Person> {
+  private String lastName;
+  private String firstName;
+  private int zipCode;
+  @Override
+  public int compareTo(Person other) {
+    int cmp = lastName.compareTo(other.lastName);
+    if (cmp != 0) {
+      return cmp;
+    }
+    cmp = firstName.compareTo(other.firstName);
+    if (cmp != 0) {
+      return cmp;
+    }
+    return Integer.compare(zipCode, other.zipCode);
+  }
+}
+// guava 提供了 ComparisonChain 链式比较
+@Override
+public int compareTo(Person other) {
+  return ComparisonChain.start()
+    .compare(lastName, other.lastName)
+    .compare(firstName, other.firstName)
+    .compare(zipCode, other.zipCode)
+    .result();
+}
+// -------------------------------toStringHelper--------------------------------- //
+// Returns "ClassName{x=1}"
+MoreObjects.toStringHelper(this).add("x", 1).toString();
+// Returns "MyObject{x=1}"
+MoreObjects.toStringHelper("MyObject").add("x", 1).toString();
+
+```
+
+
+
+## Ordering
+
+guava 提供的排序功能，这里更推荐 Java 8 中的 Stream() 和 Comparator 里面提供的比较器来代替。
+
+```java
+// -------------------------------Stream & Comparator--------------------------------- //
+list.stream().sorted(); // 自然排序
+list.stream().sorted(Comparator.reverseOrder()); // 自然逆序排序
+list.stream().sorted(Comparator.comparing(Student::getAge)); // 按年龄排序
+list.stream().sorted(Comparator.comparing(Student::getAge).reversed()); // 按年龄逆序排序
+```
+
+
 
 ## Throwables
 
 个人没理解 guava 的作者们对 Throwables 进行 Propagation 的意义，暂不整理。可参见其官方 wiki ：https://github.com/google/guava/wiki/ThrowablesExplained
+
+
 
 ## EventBus
 
@@ -74,6 +119,7 @@ Java 8 以后可以使用 Stream 来代替 Ordering 的大部分功能
 - 如果 register 事件，但没有任何处理函数，那么什么也不会发生；可以使用 DeadEvent，在里面注册一个处理没有订阅的方法，简单打印下没注册的事件。
 
 ```java
+// 官方精简示例
 // Class is typically registered by the container.
 class EventBusChangeRecorder {
   @Subscribe 
@@ -87,6 +133,35 @@ eventBus.register(new EventBusChangeRecorder());
 public void changeCustomer()
   ChangeEvent event = getChangeEvent();
   eventBus.post(event);
+}
+```
+
+```java
+// 自己测试示例
+public static void main(String args[]) {
+  EventBus bus = new EventBus();
+  bus.register((UserListener) userInfoEvent -> {
+    String userInfo = userInfoEvent.getUserInfo();
+    System.out.println(userInfo);
+  });
+  bus.post(new UserInfoEvent("jay"));
+  bus.post(new UserInfoEvent("kit"));
+  bus.post(new UserInfoEvent("luck"));
+}
+
+interface UserListener {
+  @Subscribe
+  void refreshUser(UserInfoEvent userInfo);
+}
+
+static class UserInfoEvent {
+  String userInfo;
+  public UserInfoEvent(String userInfo) {
+    this.userInfo = userInfo;
+  }
+  public String getUserInfo() {
+    return userInfo;
+  }
 }
 ```
 
