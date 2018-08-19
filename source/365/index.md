@@ -24,5 +24,13 @@ daily: true
 10. [What I've learned about parenting as a stay-at-home dad](https://www.ted.com/talks/glen_henry_what_i_ve_learned_being_a_stay_at_home_dad)
 11. [Why some of us don't have one true calling](https://www.ted.com/talks/emilie_wapnick_why_some_of_us_don_t_have_one_true_calling#t-368988)
 12. [Are China and the US doomed to conflict](https://www.ted.com/talks/kevin_rudd_are_china_and_the_us_doomed_to_conflict)
+13. [Where is cybercrime really coming from?](https://www.ted.com/talks/caleb_barlow_where_is_cybercrime_really_coming_from)
+14. [The voices of China's workers](https://www.ted.com/talks/leslie_t_chang_the_voices_of_china_s_workers)
+15. [Everyday cybercrime — and what you can do about it](https://www.ted.com/talks/james_lyne_everyday_cybercrime_and_what_you_can_do_about_it)
+16. [The surprising habits of original thinkers](https://www.ted.com/talks/adam_grant_the_surprising_habits_of_original_thinkers)
+17. [Understanding the rise of China](https://www.ted.com/talks/martin_jacques_understanding_the_rise_of_china)
+18. [How to speak so that people want to listen](https://www.ted.com/talks/julian_treasure_how_to_speak_so_that_people_want_to_listen)
+19. [10 ways to have a better conversation](https://www.ted.com/talks/celeste_headlee_10_ways_to_have_a_better_conversation)
+20. [The little risks you can take to increase your luck](https://www.ted.com/talks/tina_seelig_the_little_risks_you_can_take_to_increase_your_luck)
 
 

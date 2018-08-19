@@ -16,7 +16,7 @@ visible:
 ## Monitor
 
 ```java
-// 多个线程之间锁的唤醒
+// 多个线程之间的等待和唤醒
 
 // 1. 使用 synchronized 配合 Object 对象的 wait() 和 notifyAll()
 public class SafeBox<T> {
@@ -43,7 +43,6 @@ public class SafeBox<T> {
 
 // 2. 使用 ReentrantLock 以及它自带的 Condition，Condition 提供了 await() 和 signal() 方法，性能更好
 public class SafeBox<T> {
-
   private T value;
   private final ReentrantLock lock = new ReentrantLock();
   private final Condition valuePresent = lock.newCondition(); // 有值时的控制条件
@@ -115,6 +114,10 @@ public class SafeBox<T> {
 }
 
 ```
+
+
+
+## Service & ServiceManager
 
 
 

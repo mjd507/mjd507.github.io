@@ -1,12 +1,12 @@
 ---
-title: {{ title }}
-date: {{ date }}
+title: Guava 6 - Reflection
 categories: Java
 toc: true
-tags:
 comments: true
 copyright: true
-visible: true
+visible: false
+date: 2018-08-05 15:41:33
+tags:
 ---
 
 
