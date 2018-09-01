@@ -117,7 +117,7 @@ public class SafeBox<T> {
 
 
 
-## Service & ServiceManager
+## Service
 
 
 

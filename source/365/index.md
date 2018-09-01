@@ -32,5 +32,6 @@ daily: true
 18. [How to speak so that people want to listen](https://www.ted.com/talks/julian_treasure_how_to_speak_so_that_people_want_to_listen)
 19. [10 ways to have a better conversation](https://www.ted.com/talks/celeste_headlee_10_ways_to_have_a_better_conversation)
 20. [The little risks you can take to increase your luck](https://www.ted.com/talks/tina_seelig_the_little_risks_you_can_take_to_increase_your_luck)
+21. [How AI can save our humanity](https://www.ted.com/talks/kai_fu_lee_how_ai_can_save_our_humanity)
 
 
