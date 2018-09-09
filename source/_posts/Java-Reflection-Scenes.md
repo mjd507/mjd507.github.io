@@ -54,21 +54,23 @@ public static <S, T> T copyProperties(S s, Class<T> t) throws IllegalAccessExcep
 
 Spring 的 BeanUtils 的 copyProperties 思路类似，处理的比较细致，使用了 PropertyDescriptor 来读写属性。
 
-## 反射 + 注解
+## 依赖注入（反射 + 注解）
 
 半年前整理过一篇注解入门的文章，很基础，现在回看还可以，贴下链接：https://mjd507.github.io/2018/03/02/Java-Annotation/ 当反射配合上注解，使用的场景就更多了。
 
 1. 单元测试的 @Test 注解，相当于测试的一个入口，使用反射来解析，获取到测试的方法，从而 invoke 该方法。
+
 2. Spring 的依赖注入。@Component，@Autowired 等。以及 Google 的 Guice 依赖注入框架。
 
-```java
-// 最常见的 @Autowired ，可以基于成员变量注入，基于构造方法注入，基于 set 方法注入
-@Autowired
-private MessageService service;
+   ```java
+   // 最常见的 @Autowired ，可以基于成员变量注入，基于构造方法注入，基于 set 方法注入
+   @Autowired
+   private MessageService service;
+   
+   // 如果不利用注解和反射去注入，那就需要手动 new 对象
+   private  MessageService service = new MessageServiceImpl();
+   ```
 
-// 如果不利用注解和反射去注入，那就需要手动 new 对象
-private  MessageService service = new MessageServiceImpl();
-```
+## Aop （反射 + 注解 + 动态代理）
 
-
-
+配合动态代理使用更广，与 Spring AOP 等切面编程一致，在日志处理，用户鉴权，全局异常处理等业务无关方面能提供统一的处理方式。

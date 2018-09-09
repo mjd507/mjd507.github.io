@@ -6,6 +6,25 @@
  * @link http://chopstack.com
  */
 
+/**
+ * 折叠样式
+ */
+.hider_title {
+    font-family: "Microsoft Yahei";
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 18px;
+    color: #dedede;
+}
+
+// .close:after {
+//    content: "▼";
+// }
+
+// .open:after {
+//     content: "▲";
+// }
+
 /*
 pure css setting
 When setting the primary font stack, apply it to the Pure grid units along
