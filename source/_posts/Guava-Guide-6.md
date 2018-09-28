@@ -4,7 +4,7 @@ categories: Java
 toc: true
 comments: true
 copyright: true
-visible: false
+visible: true
 date: 2018-08-05 15:41:33
 tags:
 ---
@@ -12,6 +12,27 @@ tags:
 Guava 对反射相关的操作提供封装。
 
 <!--more-->
+
+## 运行时捕获类型
+
+```java
+// Java 会在运行时擦除泛型
+List<String> stringList = Lists.newArrayList();
+List<Integer> intList = Lists.newArrayList();
+boolean result = stringList.getClass().isAssignableFrom(intList.getClass());
+assertTrue(result);
+
+// Guava 提供 TypeToken (基于反射获取泛型方法返回类型，ParameterizedType 表示 List<T>)
+TypeToken<List<String>> stringListToken = new TypeToken<List<String>>() {};
+TypeToken<List<Integer>> integerListToken = new TypeToken<List<Integer>>() {};
+TypeToken<List<? extends Number>> numberTypeToken = new TypeToken<List<? extends Number>>() {};
+
+assertFalse(stringListToken.isSubtypeOf(integerListToken));
+assertFalse(numberTypeToken.isSubtypeOf(integerListToken));
+assertTrue(integerListToken.isSubtypeOf(numberTypeToken)); //an Integer class extends a Number class.
+```
+
+
 
 ## Invokable
 
@@ -40,6 +61,8 @@ return false;
 // Guava:
 invokable.getParameters().get(0).isAnnotationPresent(Nullable.class);
 ```
+
+
 
 ## Dynamic Proxies
 
