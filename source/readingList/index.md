@@ -12,6 +12,148 @@ read_list: true
 
 9月初报了一休读书，60 天读 30 本，以下为阅读记录
 
+{% fold 《娱乐至死》%}
+
+{% endfold %}
+
+
+
+{% fold 《小程序时代》%}
+
+{% endfold %}
+
+
+
+{% fold 《复盘》%}
+
+{% endfold %}
+
+
+
+{% fold 《乌合之众》%}
+
+{% endfold %}
+
+
+
+{% fold 《创业维艰》%}
+
+{% endfold %}
+
+
+
+{% fold 《动机与人格》%}
+
+{% endfold %}
+
+
+
+{% fold 《数字黄金》%}
+
+{% endfold %}
+
+
+
+{% fold 《计算广告》%}
+
+{% endfold %}
+
+
+
+{% fold 《影响力》%}
+
+{% endfold %}
+
+
+
+{% fold 《终极算法》%}
+
+{% endfold %}
+
+
+
+{% fold 《阿里传》%}
+
+{% endfold %}
+
+
+
+{% fold 《流量池》%}
+
+{% endfold %}
+
+
+
+{% fold 《头脑风暴如何扼杀了创新》%}
+
+{% endfold %}
+
+
+
+{% fold 《增长黑客》%}
+
+{% endfold %}
+
+
+
+{% fold 《运营之光》%}
+
+{% endfold %}
+
+
+
+{% fold 《番茄工作法》%}
+
+{% endfold %}
+
+
+
+{% fold 《心理学与生活》%}
+
+{% endfold %}
+
+
+
+{% fold 《校园市场》%}
+
+{% endfold %}
+
+
+
+{% fold 《清单革命》%}
+
+{% endfold %}
+
+
+
+{% fold 《大数据时代》%}
+
+{% endfold %}
+
+
+
+{% fold 《重新定义团队》%}
+
+{% endfold %}
+
+
+
+{% fold 《腾讯传》%}
+
+{% endfold %}
+
+
+
+{% fold 《新媒体营销概论》%}
+
+{% endfold %}
+
+
+
+{% fold 《黑客与画家》%}
+
+{% endfold %}
+
 
 
 {% fold 《上瘾》%}
@@ -210,11 +352,12 @@ read_list: true
 
 
 
-
 ## 2017
 
-- 《富爸爸穷爸爸》
+{% fold 《富爸爸穷爸爸》%}
 
-  这本书，对我的启发很大，**资产与负债**的区别，工资与欲望的循环，我们工作的最终目的，就是不工作。
+- 这本书，对我的启发很大，**资产与负债**的区别，工资与欲望的循环，我们工作的最终目的，就是不工作。
+
+{% endfold %}
 
 

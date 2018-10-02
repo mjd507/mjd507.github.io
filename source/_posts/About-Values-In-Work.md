@@ -6,7 +6,7 @@ comments: true
 copyright: false
 date: 2018-04-13 21:05:53
 tags:
-visible:
+visible: false
 ---
 
 这次的图片是「水，树，小孩，自然」，来自 [Cristina Gottardi](https://unsplash.com/@cristina_gottardi) 之手，摄影于「Lago di Cei · 意大利」。原来是一个大湖，后来该湖所在的盆地流失，剩下两块小的湖泊。
