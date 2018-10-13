@@ -9,13 +9,11 @@ date: 2018-10-02 13:50:50
 tags:
 ---
 
-![生态湖 · 浦软大厦 · 上海](http://blog.mjd507.cn/2018-09-23-ShengTaiHu.jpeg?imageView2/0/w/750/format/jpg/q/75|imageslim)
+javap 是一个能将 class 文件，反编成我们可读格式的工具。
 
 <!--more-->
 
-## javap 查看字节码
-
-javap 是一个能将 class 文件，反编成我们可读格式的工具。
+## 查看字节码
 
 假设有一个编译后的字节码文件 Foo.class
 ```shell

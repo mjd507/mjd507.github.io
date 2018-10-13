@@ -14,7 +14,7 @@ tags:
 <!--more-->
 
 ## JDK Proxy （基于接口的代理）
-
+------
 ```java
 interface Hello {
   void sayHello();
