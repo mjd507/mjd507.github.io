@@ -7,6 +7,7 @@ copyright: true
 visible: true
 date: 2018-10-14 00:24:16
 tags:
+mathjax: true
 ---
 
 设计好数学模型，才能带入算法。
@@ -202,12 +203,144 @@ private static void swap(char[] chars, int s, int i) {
 
 ### 迭代法
 
+迭代的基本点是迭代公式（递推公式）。
+
+迭代的基本思想：1. 确定迭代变量 2. 确定迭代递推关系 3. 确定迭代终止条件
+
+计算一个数的平方根。牛顿迭代法 $ x_{n+1} = \frac{1}{2}\left(x_n + \frac{a}{x_n}\right)$
+```c++
+std::pair<bool, double> cl_root(double a, double eps)
+{
+    double xi = a / 2.0; //初始值用a的一半，很多人的选择
+    double xt;
+    int count = 0;
+    do
+    {
+        xt = xi;
+        xi = (xt + (a / xt)) / 2.0;
+        count++; //用于检查是否收敛的计数器
+        if (count >= LOOP_LIMIT)
+        {
+            return {false, 0.0}; //不收敛，返回失败 
+        }
+    } while (std::fabs(xi - xt) > eps);
+
+    return { true, xi };
+}
+```
+
+### 动态规划
+
+与分治法类似，将问题分解为多个子问题，由每个子问题的解组合出原问题得解；区别在于，分治法每个子问题是相互独立的，而动态规划的子问题有堆叠关系。
+
+动态规划的原理就是把多阶段决策过程转化为一系列的单阶段决策问题。
+
+最长公共子序列 LCS(Longest Common Subsequence)
+```java
+一个序列 S，如果分别是两个或多个已知序列的子序列，且是符合此条件的子序列中最长的，则称 S 为已知序列的最长公共子序列。(这里实现对子序列没有连续性要求的算法)
+```
+
+```java
+public static int lcs(char[] str1, char[] str2) {
+  int[][] arr = new int[str1.length + 1][str2.length + 1];
+  for (int i = 1; i <= str1.length; i++) {
+    arr[i][0] = 0;
+  }
+  for (int j = 1; j <= str2.length; j++) {
+    arr[0][j] = 0;
+  }
+  for (int i = 1; i <= str1.length; i++) {
+    for (int j = 1; j <= str2.length; j++) {
+      if (str1[i - 1] == (str2[j - 1])) {
+        arr[i][j] = arr[i - 1][j - 1] + 1;
+      } else {
+        int a = arr[i - 1][j];
+        int b = arr[i][j - 1];
+        arr[i][j] = Math.max(a, b);
+      }
+    }
+  }
+  return arr[str1.length][str2.length];
+}
+
+```
+
+### 穷举法
+
+```java
+一百个钱买一百只鸡，是个典型的穷举法应用。问题描述：每只大公鸡值 5 个钱，每只母鸡值 3 个钱，每 3 只小鸡值 1 个钱，现在有 100 个钱，想买 100 只鸡，问如何买？有多少种方法？
+```
+
+```java
+public static void buy() {
+  for (int i = 0; i <= 20; i++) {
+    for (int j = 0; j <= 33; j++) {
+      int k = 100 - i - j; //小鸡数量
+      if (k % 3 == 0 && (5 * i + 3 * j + k / 3) == 100) {
+        System.out.println("买法：" + i + "只公鸡，" + j + "只母鸡，" + k + "只小鸡");
+      }
+    }
+  }
+}
+```
+
 
 ## 迭代和递推
 
+### 求平发根（二分逼近法）
+```java
+
+  public static double sqrt(int num) {
+    return dichotomyEquation(num, 2);
+  }
+
+  public static double dichotomyEquation(int num, int n) {
+    double a = 0, b = num;
+    double mid = (a + b) / 2.0;
+    double PRECISION = 0.000000001;
+    while (b - a > PRECISION) {
+      if (fun(num, n, mid) < 0.0) {
+        a = mid;
+      } else {
+        b = mid;
+      }
+      mid = (a + b) / 2.0;
+    }
+    return mid;
+  }
+
+  public static double fun(int num, int n, double x) {
+    double res = 1.0;
+    for (int i = 0; i < n; i++) {
+      res = res * x;
+    }
+    return res - num;
+  }
+
+
+```
+
+### 求平方根（牛顿迭代法）
+```java
+
+```
 
 ## 穷举搜索
 
+### 装配线与工作站
+
+### 三个水桶等分八升水
+
+```java
+有三个分别是 3 升、5 升和 8 升容积的水桶，其中容积为 8 升的水桶中装满了水，
+容积为 3 升和容积为 5 升的水桶是空的，三个水桶都没有体积刻度。
+现在需要把大水桶中的 8 升水等分成两份，每份都是 4 升水，
+附加条件是只能使用这 8 升水和另外两个空水桶，不能借助其他容器或更多的水。
+```
+
+```java
+
+```
 
 ## 动态规划
 
