@@ -339,6 +339,14 @@ public static void buy() {
 ```
 
 ```java
+class Bucket {
+  int water;
+  int capacity;
+}
+
+class BucketState {
+  
+}
 
 ```
 
