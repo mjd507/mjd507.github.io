@@ -108,7 +108,7 @@ JDK 和 cglib 代理都是在运行期生成字节码，JDK 是直接写 Class �
 
 JDK 调用代理方法，是通过反射机制调用，cglib 是通过 FastClass 机制直接调用刚发，cglib 执行效率更高。
 
-![Spring 创建 bean](https://user-images.githubusercontent.com/8939151/45362760-46494280-b608-11e8-9aa7-c874ac3b5e56.png)
+![Spring 创建 bean 代理](https://user-images.githubusercontent.com/8939151/45362760-46494280-b608-11e8-9aa7-c874ac3b5e56.png)
 
 ```java
 // DefaultAopProxyFactory.java
