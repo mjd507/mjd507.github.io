@@ -1,6 +1,6 @@
 ---
 title: Spring 的事务
-categories: Java
+categories: Spring
 toc: true
 comments: true
 copyright: true

@@ -1,6 +1,6 @@
 ---
 title: redis 分布式锁
-categories: Java
+categories: System Design
 toc: true
 comments: true
 copyright: true

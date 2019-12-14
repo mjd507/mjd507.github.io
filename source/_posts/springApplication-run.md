@@ -1,6 +1,6 @@
 ---
 title: Spring 启动流程
-categories: Java
+categories: Spring
 toc: true
 comments: true
 copyright: true

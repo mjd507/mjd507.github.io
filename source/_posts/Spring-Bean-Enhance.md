@@ -1,6 +1,6 @@
 ---
 title: Spring Bean 增强
-categories: Java
+categories: Spring
 toc: true
 comments: true
 copyright: true

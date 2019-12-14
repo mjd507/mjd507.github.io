@@ -1,6 +1,6 @@
 ---
 title: Spring AOP
-categories: Java
+categories: Spring
 toc: true
 comments: true
 copyright: true

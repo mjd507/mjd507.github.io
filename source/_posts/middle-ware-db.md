@@ -1,6 +1,6 @@
 ---
 title: 数据库中间件基础
-categories: Java
+categories: System Design
 toc: true
 comments: true
 copyright: true
