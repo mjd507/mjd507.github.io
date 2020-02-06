@@ -18,6 +18,7 @@ gitalk:
   enable: true
   client_id: 'fa8d49cc90698365347d'
   client_secret: 'ad101f458b7f3950fccc09b931977c106cd2c467'
+  accessToken: '012ef8837b779b95b2546ce96b63d7c66dcebb81'
   repo: 'mjd507.github.io'
   owner: 'mjd507'
   admin: 'mjd507'
