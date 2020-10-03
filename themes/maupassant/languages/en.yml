@@ -10,7 +10,7 @@ recent: Recent
 next: Next
 previous: Previous
 notitle: No Title
-blogroll: Blogroll
+blogroll: Links
 history: History
 rss: RSS
 guestbook: Guestbook
@@ -20,6 +20,17 @@ Readmore: Read More
 belongsto: Categorized in
 contents: Contents
 shareto: Share
-# add by mjd
-readingList: Reading list
-dailyProject: '365'
+Discuss: Discuss
+Comment: Comment
+Hits: Hits
+copyright_title_prefix: "Title: "
+copyright_date_prefix: "Date: "
+copyright_update_prefix: "Last Update: "
+copyright_author_prefix: "Author: "
+copyright_link_prefix: "Blog Link: "
+copyright_declare_prefix: "Copyright Declaration: "
+copyright_default_text: "The author owns the copyright. Please indicate the source reproduced!"
+word_cnt: Words
+read_time: Minutes
+copy_success_text: "Copy Successed!"
+Copy_address_and_show_QRCode: "Copy address and show QRCode"
