@@ -1,6 +1,6 @@
 ---
 title: 一款提高开发效率的插件
-categories: Web 前端
+categories: Big-Front-End
 toc: false
 comments: true
 copyright: true

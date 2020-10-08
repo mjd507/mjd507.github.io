@@ -1,6 +1,6 @@
 ---
 title: HashMap 源码分析（一）
-categories: Data Structure
+categories: Data Structure & Algorithm
 toc: true
 comments: true
 copyright: true

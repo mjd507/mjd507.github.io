@@ -1,6 +1,6 @@
 ---
-title: 一个细小的用户体验问题
-categories: Web 前端
+title: 商品详情页图片加载优化
+categories: Big-Front-End
 toc: false
 comments: true
 copyright: true

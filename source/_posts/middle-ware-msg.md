@@ -1,6 +1,6 @@
 ---
 title: 消息中间件基础
-categories: System Design
+categories: Back-End
 toc: true
 comments: true
 copyright: true

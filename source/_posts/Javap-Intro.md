@@ -1,6 +1,6 @@
 ---
 title: javap 小记
-categories: Java
+categories: Java & Android
 toc: true
 comments: true
 copyright: true

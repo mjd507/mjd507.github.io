@@ -1,6 +1,6 @@
 ---
 title: 经典排序算法之四 冒泡排序
-categories: Algorithm
+categories: Data Structure & Algorithm
 toc: true
 comments: true
 copyright: true

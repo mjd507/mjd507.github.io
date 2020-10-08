@@ -1,6 +1,6 @@
 ---
 title: ArrayList 源码分析
-categories: Data Structure
+categories: Data Structure & Algorithm
 toc: true
 comments: true
 copyright: true

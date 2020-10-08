@@ -1,6 +1,6 @@
 ---
 title: EventBus 探索 （JS）
-categories: Web 前端
+categories: Big-Front-End
 toc: true
 comments: true
 copyright: true

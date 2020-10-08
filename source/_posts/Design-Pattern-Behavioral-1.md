@@ -1,6 +1,6 @@
 ---
 title: 设计模式（行为型篇 一）
-categories: DesignPattern
+categories: Data Structure & Algorithm
 toc: true
 comments: true
 date: 2017-02-04 16:07:13

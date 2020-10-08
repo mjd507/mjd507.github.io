@@ -1,6 +1,6 @@
 ---
 title: 谈谈 Handler 机制
-categories: Android
+categories: Java & Android
 toc: true
 comments: true
 date: 2016-12-08 10:11:59

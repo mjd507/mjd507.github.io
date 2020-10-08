@@ -1,6 +1,6 @@
 ---
 title: Android 内存泄漏 的解决方案
-categories: Android
+categories: Java & Android
 toc: true
 comments: true
 date: 2016-12-03 18:04:17

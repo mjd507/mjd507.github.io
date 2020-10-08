@@ -1,6 +1,6 @@
 ---
 title: Java 日志框架 slf4j
-categories: Java
+categories: Java & Android
 toc: true
 comments: true
 copyright: true

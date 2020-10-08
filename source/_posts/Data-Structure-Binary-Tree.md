@@ -1,6 +1,6 @@
 ---
 title: 二叉树的创建以及它的遍历过程
-categories: Data Structure
+categories: Data Structure & Algorithm
 toc: true
 comments: true
 copyright: true

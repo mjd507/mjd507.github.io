@@ -1,6 +1,6 @@
 ---
 title: 使用 netcat 读写 TCP UDP 数据包
-categories: 网络相关
+categories: Network
 toc: true
 comments: true
 copyright: true

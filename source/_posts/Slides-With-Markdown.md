@@ -1,6 +1,6 @@
 ---
 title: 制作 PPT 和流程图的超酷姿势
-categories: 莲花国际的日子
+categories: 其他
 toc: true
 comments: true
 copyright: true

@@ -1,6 +1,6 @@
 ---
 title: 算法储备
-categories: Algorithm
+categories: Data Structure & Algorithm
 toc: true
 comments: true
 copyright: true

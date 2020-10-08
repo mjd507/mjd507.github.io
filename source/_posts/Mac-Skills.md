@@ -1,6 +1,6 @@
 ---
 title: Mac OS 上的一些疑问的解决方法
-categories: Mac
+categories: 其他
 toc: true
 comments: true
 date: 2016-12-01 18:42:16

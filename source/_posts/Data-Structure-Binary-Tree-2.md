@@ -1,6 +1,6 @@
 ---
 title: 通过前序遍历反向创建二叉树
-categories: Data Structure
+categories: Data Structure & Algorithm
 toc: false
 comments: true
 copyright: true

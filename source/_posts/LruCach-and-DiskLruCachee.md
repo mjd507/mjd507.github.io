@@ -1,6 +1,6 @@
 ---
 title: Android 中 Lru 缓存算法分析
-categories: Android
+categories: Java & Android
 toc: true
 comments: true
 date: 2016-12-14 15:09:19

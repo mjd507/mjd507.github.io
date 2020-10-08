@@ -1,6 +1,6 @@
 ---
 title: SSH 使用以及与 HTTPS 的对比
-categories: 网络相关
+categories: Network
 toc: false
 comments: true
 copyright: true

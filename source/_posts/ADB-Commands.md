@@ -1,6 +1,6 @@
 ---
 title: ADB 常见命令
-categories: Android
+categories: Java & Android
 toc: false
 comments: true
 date: 2016-12-10 20:44:37

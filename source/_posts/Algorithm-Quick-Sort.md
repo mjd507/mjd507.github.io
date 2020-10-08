@@ -1,6 +1,6 @@
 ---
 title: 经典排序算法之三 快速排序
-categories: Algorithm
+categories: Data Structure & Algorithm
 toc: true
 comments: true
 date: 2017-02-06 17:24:48

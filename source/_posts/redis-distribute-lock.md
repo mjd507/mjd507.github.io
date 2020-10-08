@@ -1,6 +1,6 @@
 ---
 title: redis 分布式锁
-categories: System Design
+categories: Back-End
 toc: true
 comments: true
 copyright: true

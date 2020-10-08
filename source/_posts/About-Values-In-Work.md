@@ -1,6 +1,6 @@
 ---
 title: 关于职业中的价值观
-categories: 莲花国际的日子
+categories: 其他
 toc: true
 comments: true
 copyright: false

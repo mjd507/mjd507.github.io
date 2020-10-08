@@ -1,6 +1,6 @@
 ---
 title: JDK 7 中的 Try-With-Resource
-categories: Java
+categories: Java & Android
 toc: false
 comments: true
 copyright: true

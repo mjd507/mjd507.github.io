@@ -1,6 +1,6 @@
 ---
 title: 小程序渲染数据超过 1024k 的解决办法
-categories: Web 前端
+categories: Big-Front-End
 toc: false
 comments: true
 copyright: true

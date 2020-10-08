@@ -1,7 +1,7 @@
 ---
 title: {{ title }}
 date: {{ date }}
-categories: Java
+categories: OS
 toc: true
 tags:
 comments: true

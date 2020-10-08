@@ -1,6 +1,6 @@
 ---
 title: 工作与认知
-categories: 莲花国际的日子
+categories: 其他
 toc: true
 comments: true
 copyright: true

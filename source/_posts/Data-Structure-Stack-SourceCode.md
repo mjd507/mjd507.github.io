@@ -1,6 +1,6 @@
 ---
 title: 基于 Vector 的栈的源码分析
-categories: Data Structure
+categories: Data Structure & Algorithm
 toc: true
 comments: true
 copyright: true

@@ -1,6 +1,6 @@
 ---
 title: Guava 5 - Concurrency
-categories: Java
+categories: Java & Android
 toc: true
 comments: true
 copyright: true

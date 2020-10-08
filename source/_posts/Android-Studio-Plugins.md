@@ -1,6 +1,6 @@
 ---
 title: Android Studio 插件
-categories: Android
+categories: Java & Android
 toc: true
 comments: true
 date: 2017-03-04 19:13:24

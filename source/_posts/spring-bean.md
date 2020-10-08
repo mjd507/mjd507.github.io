@@ -1,6 +1,6 @@
 ---
 title: spring bean 的加载
-categories: Spring
+categories: Back-End
 toc: true
 comments: true
 copyright: true

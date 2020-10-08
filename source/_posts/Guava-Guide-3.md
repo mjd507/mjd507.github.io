@@ -1,6 +1,6 @@
 ---
 title: Guava 3 - Collections - 1
-categories: Java
+categories: Java & Android
 toc: true
 comments: true
 copyright: true

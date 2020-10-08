@@ -1,6 +1,6 @@
 ---
 title: 两数三数四数求和问题总结
-categories: Algorithm
+categories: Data Structure & Algorithm
 toc: true
 comments: true
 copyright: true

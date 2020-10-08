@@ -1,6 +1,6 @@
 ---
 title: Guava 6 - Reflection
-categories: Java
+categories: Java & Android
 toc: true
 comments: true
 copyright: true

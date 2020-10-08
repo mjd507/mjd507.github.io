@@ -1,6 +1,6 @@
 ---
 title: 说说线程池
-categories: Android
+categories: Java & Android
 toc: true
 comments: true
 date: 2016-11-30 09:02:37

@@ -1,6 +1,6 @@
 ---
 title: 经典排序算法之二 归并排序
-categories: Algorithm
+categories: Data Structure & Algorithm
 toc: true
 comments: true
 date: 2017-01-24 16:38:56

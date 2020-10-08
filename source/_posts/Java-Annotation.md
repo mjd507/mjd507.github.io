@@ -1,6 +1,6 @@
 ---
 title: Java 注解入门
-categories: Java
+categories: Java & Android
 toc: true
 comments: true
 copyright: true

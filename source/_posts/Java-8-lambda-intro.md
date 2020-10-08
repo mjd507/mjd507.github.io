@@ -1,6 +1,6 @@
 ---
 title: Java8 中的 lambda 表达式入门
-categories: Java
+categories: Java & Android
 toc: true
 comments: true
 copyright: true

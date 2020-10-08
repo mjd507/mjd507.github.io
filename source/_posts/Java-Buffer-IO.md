@@ -1,6 +1,6 @@
 ---
 title: IO 流的一些优化
-categories: Java
+categories: Java & Android
 toc: true
 comments: true
 copyright: true

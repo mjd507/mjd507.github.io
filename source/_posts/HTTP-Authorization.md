@@ -1,6 +1,6 @@
 ---
 title: HTTP 授权认证
-categories: 网络相关
+categories: Network
 toc: false
 comments: true
 copyright: true

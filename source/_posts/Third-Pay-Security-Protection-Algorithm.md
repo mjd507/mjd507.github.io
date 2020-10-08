@@ -1,6 +1,6 @@
 ---
 title: 接入各三方支付的验签算法
-categories: Java
+categories: Java & Android
 toc: true
 comments: true
 copyright: true

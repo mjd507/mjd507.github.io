@@ -1,6 +1,6 @@
 ---
 title: redis 2.2 源码阅读
-categories: Java
+categories: Back-End
 toc: true
 comments: true
 copyright: true

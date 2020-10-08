@@ -1,6 +1,6 @@
 ---
 title: View 的 事件分发体系 及 滑动冲突解决方案
-categories: Android
+categories: Java & Android
 toc: true
 comments: true
 date: 2016-12-20 15:20:18

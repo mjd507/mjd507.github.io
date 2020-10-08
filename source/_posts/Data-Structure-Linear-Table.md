@@ -1,6 +1,6 @@
 ---
 title: 线性表
-categories: Data Structure
+categories: Data Structure & Algorithm
 toc: true
 comments: true
 copyright: true

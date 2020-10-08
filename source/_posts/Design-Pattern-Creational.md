@@ -1,6 +1,6 @@
 ---
 title: 设计模式（创建型篇）
-categories: DesignPattern
+categories: Data Structure & Algorithm
 toc: true
 comments: true
 date: 2017-01-08 11:43:48

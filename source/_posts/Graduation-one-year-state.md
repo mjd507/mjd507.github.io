@@ -1,6 +1,6 @@
 ---
 title: 毕业一年，真实的生活状态
-categories: 莲花国际的日子
+categories: 其他
 toc: false
 comments: true
 copyright: true

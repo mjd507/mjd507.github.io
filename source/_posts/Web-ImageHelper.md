@@ -1,6 +1,6 @@
 ---
 title: 关于前端图片处理的一些分享
-categories: Web 前端
+categories: Big-Front-End
 toc: false
 comments: true
 copyright: true

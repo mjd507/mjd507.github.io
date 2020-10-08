@@ -1,6 +1,6 @@
 ---
 title: 转战 Web 前端
-categories: 莲花国际的日子
+categories: Big-Front-End
 toc: true
 comments: true
 copyright: true

@@ -1,6 +1,6 @@
 ---
 title: HTTP 缓存
-categories: 网络相关
+categories: Network
 toc: true
 comments: true
 copyright: true

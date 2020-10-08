@@ -1,6 +1,6 @@
 ---
 title: HTTP 协议各版本特性
-categories: 网络相关
+categories: Network
 toc: false
 comments: true
 copyright: true

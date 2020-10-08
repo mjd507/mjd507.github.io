@@ -1,6 +1,6 @@
 ---
 title: 设计一个 kv 缓存系统
-categories: System Design
+categories: Back-End
 toc: true
 comments: true
 copyright: true

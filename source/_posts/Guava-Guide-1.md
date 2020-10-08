@@ -1,6 +1,6 @@
 ---
 title: Guava 1 - Basic Utilities & EventBus
-categories: Java
+categories: Java & Android
 toc: true
 comments: true
 copyright: true

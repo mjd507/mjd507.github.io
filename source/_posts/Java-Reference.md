@@ -1,6 +1,6 @@
 ---
 title: 谈谈 Java 的引用类型
-categories: Android
+categories: Java & Android
 toc: true
 comments: true
 date: 2016-12-13 14:49:57

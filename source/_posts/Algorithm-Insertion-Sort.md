@@ -1,6 +1,6 @@
 ---
 title: 经典排序算法之一 插入排序
-categories: Algorithm
+categories: Data Structure & Algorithm
 toc: true
 comments: true
 date: 2017-01-21 09:05:44

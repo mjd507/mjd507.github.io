@@ -1,6 +1,6 @@
 ---
 title: TCP/IP 协议入门
-categories: 网络相关
+categories: Network
 toc: false
 comments: true
 copyright: true
