@@ -1,48 +1,116 @@
 ---
-title: 计算机组成原理 - 理解内存
+title: Linux 内核技术 - Page Cache 观测
 categories: Operation System
 toc: true
 comments: true
 copyright: true
 visible: true
-date: 2020-11-28 16:25:29
+date: 2020-12-27 16:25:29
 tags:
 ---
 
-计算机最重要的是 CPU，除此之外，第二重要的就是内存，内存属于计算机五大组成部分中的存储器，我们的指令和数据，都要先加载到内存，才会被 CPU 拿去执行。
+Page Cache 管理不当，不仅会增加系统 I/O 吞吐，还会引起业务性能抖动，我们在工作中遇到的一些场景比如：
 
-之前有篇提到过，程序并不能直接访问物理内存，而是通过虚拟内存地址转换到物理内存地址，从而加载数据，那么虚拟地址究竟如何转换成物理内存地址的呢？
+1. 机器 load 飚高
+2. 机器 I/O 吞吐飚高
+3. 业务响应时延出现较大的毛刺
+4. 业务平均响应时延明显增加
+
+这都很可能与 Page Cache 相关。
 
 <!--more-->
 
-## 简单页表
+## Page Cache 是什么
 
-最简单的方法，就是建立一张映射表，计算机里面叫页表。页表可以编号，我们其实只需保存虚拟地址的页号与物理地址页号之间的映射，同时虚拟地址需要携带偏移量，这样我们就可根据内存地址找到页号，在根据偏移量定位到具体物理地址。
+先来看张图：
+![](https://static001.geekbang.org/resource/image/f3/1b/f344917f3cacd5bc06ae7c743a217f1b.png)
 
-![](https://static001.geekbang.org/resource/image/22/0f/22bb79129f6363ac26be47b35748500f.jpeg)
+Page Cache 是内核管理的一块内存，不属于用户态。
 
-总结一下，对于一个内存地址转换，其实就是这样三个步骤：
+如何观察Page Cache 呢？方式有很多，包括/proc/meminfo、free 、/proc/vmstat命令等，它们的内容其实是一致的。
 
-1. 把虚拟内存地址，切分成页号和偏移量的组合
-2. 从页表里面，查询出虚拟页号，对应的物理页号
-3. 直接拿物理页号，加上前面的偏移量，就得到了物理内存地址
+我们以 /proc/meminfo 为例来看。less /proc/meminfo
 
-这种简单页表容易理解，但是有个问题，内存占用比较大。
+```
+...
+Buffers:            9000 kB
+Cached:           287204 kB
+SwapCached:            0 kB
+Active:           313512 kB
+Inactive:         212828 kB
+Active(anon):     225076 kB
+Inactive(anon):     5924 kB
+Active(file):      88436 kB
+Inactive(file):   206904 kB
+...
+Shmem:               860 kB
+...
+```
 
-以一个页的大小是4K字节（4KB）为例，我们需要20位的高位，12位的低位。32位的内存地址空间，页表一共需要记录2^20个到物理页号的映射关系。这个存储关系，就好比一个2^20大小的数组。一个页号是完整的32位的4字节（Byte），这样一个页表就需要4MB的空间。如果每一个进程都有这样一个页表，内存占用就更大了。
+根据上面数据，可以得到这样一个公式：
 
-为解决这个问题，我们采用的是一种叫作多级页表（Multi-Level Page Table）的解决方案。
+**Buffers + Cached + SwapCached  =  Active(file) + Inactive(file) + Shmem + SwapCached**
 
-## 多级页表
+而等式两边就是 Page Cache 包括的内容。等式右边这些项把 Buffers 和 Cached 做了一下细分，分为了 Active(file)，Inactive(file) 和 Shmem，我们从等式右边来分析。
 
-多级页表就像一个多叉树的数据结构，所以我们常常称它为页表树（Page Table Tree）。因为虚拟内存地址分布的连续性，树的第一层节点的指针，很多就是空的，也就不需要有对应的子树了。所谓不需要子树，其实就是不需要对应的2级、3级的页表。找到最终的物理页号，就好像通过一个特定的访问路径，走到树最底层的叶子节点。
+Active(file) + Inactive(file) 是 File-backed page（与文件对应的内存页），我们平时用的 mmap() 内存映射方式和 buffered I/O 来消耗的内存就属于这部分，最重要的是，这部分在真实的生产环境上最容易产生问题。
 
-![](https://static001.geekbang.org/resource/image/61/76/614034116a840ef565feda078d73cb76.jpeg)
+Shmem 是指匿名共享映射这种方式分配的内存（free 命令中 shared 这一项），比如 tmpfs（临时文件系统），这部分在真实的生产环境中产生的问题比较少。不过多关注。
 
-以这样的分成4级的多级页表来看，每一级如果都用5个比特表示。那么每一张某1级的页表，只需要2^5=32个条目。如果每个条目还是4个字节，那么一共需要128个字节。而一个1级索引表，对应32个4KB的也就是128KB的大小。一个填满的2级索引表，对应的就是32个1级索引表，也就是4MB的大小。
+SwapCached 是在打开了 Swap 分区后，把 Inactive(anon) + Active(anon) 这两项里的匿名页给交换到磁盘（swap out），然后再读入到内存（swap in）后分配的内存。由于读入到内存后原来的 Swap File还 在，所以 SwapCached 也可以认为是 File-backed page，即属于 Page Cache。这样做的目的也是为了减少I/O。
 
-我们可以一起来测算一下，一个进程如果占用了8MB的内存空间，分成了2个4MB的连续空间。那么，它一共需要2个独立的、填满的2级索引表，也就意味着64个1级索引表，2个独立的3级索引表，1个4级索引表。一共需要69个索引表，每个128字节，大概就是9KB的空间。比起4MB来说，只有差不多1/500。
+建议你在生产环境中关闭Swap分区，因为Swap过程产生的I/O会很容易引起性能抖动。
 
-多级页表它其实是一个“以时间换空间”的策略。原本我们进行一次地址转换，只需要访问一次内存就能找到物理页号，算出物理内存地址。但是，用了4级页表，我们就需要访问4次内存，才能找到物理页号了。
+free 命令也可以查询 Page Cache，会根据 buff/cache 判断存在多少Page Cache。 free 命令也是通过解析 /proc/meminfo 得出这些统计数据，开源的 [procfs](https://gitlab.com/procps-ng/procps) free.c 源码文件可以看看。
+
+```
+sh-4.4# free -k
+              total        used        free      shared  buff/cache   available
+Mem:        2047132      276744     1453236         860      317152     1630316
+Swap:       1048572           0     1048572
+```
+
+通过 procfs 源码里面的 proc/sysinfo.c 这个文件，你可以发现 buff/cache 包括下面这几项：
+
+**buff/cache = Buffers + Cached + SReclaimablei**
+
+ps: 在做比较的过程中，一定要考虑到这些数据是动态变化的，而且执行命令本身也会带来内存开销，所以这个等式未必会严格相等，不过你不必怀疑它的正确性。
+
+buff/cache 是由 Buffers、Cached 和 SReclaimable 这三项组成的，它强调的是内存的可回收性，也就是说，可以被回收的内存会统计在这一项。其中 SReclaimable是 指可以被回收的内核内存，包括 dentry 和 inode 等，比较细节，不多说。
+
+## 为什么需要Page Cache
+
+我们看一个具体的例子。首先，我们来生成一个1G大小的新文件，然后把Page Cache清空，确保文件内容不在内存中，以此来比较第一次读文件和第二次读文件耗时的差异。具体的流程如下。
+
+1. 先生成一个1G的文件：
+
+    dd if=/dev/zero of=/home/dd.out bs=4096 count=$((1024*256))
+
+2. 清空 Page Cache，需要先执行一下 sync 来将脏页同步到磁盘再去 drop cache。
+
+    sync && echo 3 > /proc/sys/vm/drop_caches
+
+3. 第一次读取文件的耗时如下
+
+    ```
+    sh-4.4# time cat /home/dd.out &> /dev/null
+
+    real  0m1.774s
+    user  0m0.020s
+    sys 0m0.970s
+    ```
+
+4. 再次读取文件的耗时如下
+
+    ```
+    sh-4.4# time cat /home/dd.out &> /dev/null
+
+    real  0m0.212s
+    user  0m0.020s
+    sys 0m0.180s
+    ```
+
+可以看到，第二次读取文件的耗时远小于第一次的耗时，这是因为第一次是从磁盘来读取的内容，磁盘I/O是比较耗时的，而第二次读取的时候由于文件内容已经在第一次读取时被读到内存了，所以是直接从内存读取的数据，内存相比磁盘速度是快很多的。这就是Page Cache存在的意义：减少I/O，提升应用的I/O速度。
+
 
 
