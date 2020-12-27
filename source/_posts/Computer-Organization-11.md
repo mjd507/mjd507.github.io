@@ -1,7 +1,7 @@
 ---
-title: 计算机组成原理 - DMA
+title: Linux 内核技术 - Page Cache 观测
 categories: Operation System
-toc: false
+toc: true
 comments: true
 copyright: true
 visible: true
@@ -9,84 +9,108 @@ date: 2020-12-15 16:25:29
 tags:
 ---
 
-我们对于 I/O 设备的大量操作，多数类似文件复制，把硬盘数据拷贝到内存，再把内存数据传输到I/O设备。这种情况，如果所有数据都要经过 CPU，实在有点太浪费时间了，因为 CPU 速度很快，大部分都在傻等硬盘读写。
+Page Cache 管理不当，不仅会增加系统 I/O 吞吐，还会引起业务性能抖动，我们在工作中遇到的一些场景比如：
 
-因此，计算机工程师们，发明了 DMA 技术，即**直接内存访问（Direct Memory Access）技术**，来减少 CPU 的等待。 
+1. 机器 load 飚高
+2. 机器 I/O 吞吐飚高
+3. 业务响应时延出现较大的毛刺
+4. 业务平均响应时延明显增加
+
+这都很可能与 Page Cache 相关。
 
 <!--more-->
 
-## DMAC 协处理器
+## Page Cache 是什么
 
-DMA 技术就是在主板上放一块独立的芯片，当进行内存和 I/O 设备的数据传输时，不再通过 CPU 来控制传输，而直接通过 DMA 控制器(DMAC),  这块芯片，就可以称之为协处理器。
+先来看张图：
+![](https://static001.geekbang.org/resource/image/f3/1b/f344917f3cacd5bc06ae7c743a217f1b.png)
 
-DMAC 最大的作用在于，当要传输的数据特别大，速度特别快，或传输的数据特别小，速度特别慢的时候。
+Page Cache 是内核管理的一块内存，不属于用户态。
 
-比如，我们用千兆网卡或者硬盘传输大量数据的时候，如果都用 CPU，那可定忙不过来。而当我们数据传输很慢，DMAC 就可以等数据到齐了，再发送信号，给到 CPU 处理。
+如何观察Page Cache 呢？方式有很多，包括/proc/meminfo、free 、/proc/vmstat命令等，它们的内容其实是一致的。
 
-再说说为什么 DMAC 是一块「协处理器芯片」呢？
-
-因为 DMAC 实在协助 CPU ，完成对应数据的传输工作，写死 DMAC 控制数据传输的过程中，我们还是需要 CPU 的。
-
-此外，DMAC 是一个特殊的 I/O 设备，一般连接到总线上的设备，有两种类型，一种是主设备，一种是从设备。只有主设备可以主动发起数据传输，从设备只能接受数据传输。从设备一般通过发送控制信号告诉 CPU ，让 CPU 主动去读或写。
-
-而 DMAC 既是主设备，又是从设备。对于 CPU 来说，它是从设备，对于硬盘来说，它是主设备。
-
-来看看使用 DMAC 进行数据传输的具体过程。
-
-1. CPU 向 DMAC 设备发起请求。其实就是在 DMAC 里修改配置寄存器。
-2. CPU 修改 DMAC 的配置时候，会告诉 DMAC 几个信息
-    - 源地址的初始值，以及传输的时候地址增减方式。
-    - 目标地址初始值，以及传输的时候地址增减方式。
-    - 要传输的数据长度。
-3. 设置完这些信息，DMAC 就好变成一个空闲的状态。
-4. 如果我们要从硬盘往内存加载数据，硬盘就会像 DMAC 发起一个数据传输请求。这个请求不通过总线，而是一个额外的连线。
-5. 然后我们的 DMAC 需要在通过一个额外的连线响应这个申请。
-6. 于是，DMAC这个芯片，就向硬盘的接口发起要总线读的传输请求。数据就从硬盘里面，读到了DMAC的控制器里面。
-7. 然后，DMAC再向我们的内存发起总线写的数据传输请求，把数据写入到内存里面。
-8. DMAC会反复进行上面第6、7步的操作，直到DMAC的寄存器里面设置的数据长度传输完成。
-9. 数据传输完成之后，DMAC重新回到第3步的空闲状态。
-
-所以整个数据传输过程，我们不是通过 CPU 来搬运数据，而是有DMAC 来搬运。但是 CPU 在这个过程也是必不可少的。因为传输什么数据，从哪传到哪，还是由 CPU 设置。这也是为什么，DMAC 被称为协处理器。
-
-## kafka 与 DMA
-
-kafka 是一个用来处理实时数据的管道，常用来做消息队列，或者收集和落地海量的日志。作为实时数据和日志的管道，瓶颈自然在 I/O 层面。
-
-有两种常见的情况，一是从网络中接收上游的数据，落地到本地磁盘上；二是从本地磁盘读取出来，通过网络发送出去。
-
-先来看有一种情况，从磁盘读数据发送到网络上去。如果我们自己写程序，最直观的就是用一个文件读操作，从磁盘把数据读到内存里来，然后再用一个 socket，把数据发送到网络上去。
+我们以 /proc/meminfo 为例来看。less /proc/meminfo
 
 ```
-File.read(fileDesc, buf, len);
-Socket.send(socket, buf, len);
+...
+Buffers:            9000 kB
+Cached:           287204 kB
+SwapCached:            0 kB
+Active:           313512 kB
+Inactive:         212828 kB
+Active(anon):     225076 kB
+Inactive(anon):     5924 kB
+Active(file):      88436 kB
+Inactive(file):   206904 kB
+...
+Shmem:               860 kB
+...
 ```
 
-这个过程，一共发生了四次数据传输，两次是 DMA 传输，另外两次，是 CPU 控制的传输，来看下这个过程。
+根据上面数据，可以得到这样一个公式：
 
-1. 从硬盘读到操作系统内核的缓冲区里，通过 DMA 搬运
-2. 从内核缓冲区复制到应用内存里，通过 CPU 搬运
-3. 从应用内存里，再写到操作系统的 Socket 缓冲区里，通过 CPU 搬运
-4. 从 Socket 缓冲区写到网卡的缓冲区里，通过 DMA 搬运
+**Buffers + Cached + SwapCached  =  Active(file) + Inactive(file) + Shmem + SwapCached**
 
-我们只是搬运一份数据，却经过了四次操作。而且 2、3 两步相当于绕了一圈，特没效率。
+而等式两边就是 Page Cache 包括的内容。等式右边这些项把 Buffers 和 Cached 做了一下细分，分为了 Active(file)，Inactive(file) 和 Shmem，我们从等式右边来分析。
 
-对于 kafka 这种专注搬运数据的事儿，就需要尽可能少的搬运。kafka 将数据搬运从 4 次减少为 2 次，并且只有 DMA 来进行数据搬运，不需要 CPU。
+Active(file) + Inactive(file) 是 File-backed page（与文件对应的内存页），我们平时用的 mmap() 内存映射方式和 buffered I/O 来消耗的内存就属于这部分，最重要的是，这部分在真实的生产环境上最容易产生问题。
+
+Shmem 是指匿名共享映射这种方式分配的内存（free 命令中 shared 这一项），比如 tmpfs（临时文件系统），这部分在真实的生产环境中产生的问题比较少。不过多关注。
+
+SwapCached 是在打开了 Swap 分区后，把 Inactive(anon) + Active(anon) 这两项里的匿名页给交换到磁盘（swap out），然后再读入到内存（swap in）后分配的内存。由于读入到内存后原来的 Swap File还 在，所以 SwapCached 也可以认为是 File-backed page，即属于 Page Cache。这样做的目的也是为了减少I/O。
+
+建议你在生产环境中关闭Swap分区，因为Swap过程产生的I/O会很容易引起性能抖动。
+
+free 命令也可以查询 Page Cache，会根据 buff/cache 判断存在多少Page Cache。 free 命令也是通过解析 /proc/meminfo 得出这些统计数据，开源的 [procfs](https://gitlab.com/procps-ng/procps) free.c 源码文件可以看看。
 
 ```
-@Override
-public long transferFrom(FileChannel fileChannel, long position, long count) throws IOException {
-    return fileChannel.transferTo(position, count, socketChannel);
-}
+sh-4.4# free -k
+              total        used        free      shared  buff/cache   available
+Mem:        2047132      276744     1453236         860      317152     1630316
+Swap:       1048572           0     1048572
 ```
 
-kafka 通过调用 Java 的 NIO 库，具体是 FileChannel 里的 transferTo 方法，数据没有读到中间的应用内存里，而是直接通过 channel,写到对应的网络设备里。并且对于 Socket 操作，也不是写到 Socket Buffer 里，而是直接通过描述符写到网卡的缓冲区里面。
+通过 procfs 源码里面的 proc/sysinfo.c 这个文件，你可以发现 buff/cache 包括下面这几项：
 
-第一次，是通过DMA，从硬盘直接读到操作系统内核的读缓冲区里面。第二次，则是根据Socket的描述符信息，直接从读缓冲区里面，写入到网卡的缓冲区里面。
+**buff/cache = Buffers + Cached + SReclaimablei**
 
-这个方法，没有在内存层面去复制数据，因此也称为**零拷贝（Zero-Copy）**
+ps: 在做比较的过程中，一定要考虑到这些数据是动态变化的，而且执行命令本身也会带来内存开销，所以这个等式未必会严格相等，不过你不必怀疑它的正确性。
 
-在使用了这样的零拷贝的方法之后呢，我们传输同样数据的时间，可以缩减为原来的1/3，相当于提升了3倍的吞吐率。
+buff/cache 是由 Buffers、Cached 和 SReclaimable 这三项组成的，它强调的是内存的可回收性，也就是说，可以被回收的内存会统计在这一项。其中 SReclaimable是 指可以被回收的内核内存，包括 dentry 和 inode 等，比较细节，不多说。
 
+## 为什么需要Page Cache
+
+我们看一个具体的例子。首先，我们来生成一个1G大小的新文件，然后把Page Cache清空，确保文件内容不在内存中，以此来比较第一次读文件和第二次读文件耗时的差异。具体的流程如下。
+
+1. 先生成一个1G的文件：
+
+    dd if=/dev/zero of=/home/dd.out bs=4096 count=$((1024*256))
+
+2. 清空 Page Cache，需要先执行一下 sync 来将脏页同步到磁盘再去 drop cache。
+
+    sync && echo 3 > /proc/sys/vm/drop_caches
+
+3. 第一次读取文件的耗时如下
+
+    ```
+    sh-4.4# time cat /home/dd.out &> /dev/null
+
+    real	0m1.774s
+    user	0m0.020s
+    sys	0m0.970s
+    ```
+
+4. 再次读取文件的耗时如下
+
+    ```
+    sh-4.4# time cat /home/dd.out &> /dev/null
+
+    real	0m0.212s
+    user	0m0.020s
+    sys	0m0.180s
+    ```
+
+可以看到，第二次读取文件的耗时远小于第一次的耗时，这是因为第一次是从磁盘来读取的内容，磁盘I/O是比较耗时的，而第二次读取的时候由于文件内容已经在第一次读取时被读到内存了，所以是直接从内存读取的数据，内存相比磁盘速度是快很多的。这就是Page Cache存在的意义：减少I/O，提升应用的I/O速度。
 
 
 
