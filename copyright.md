@@ -11,4 +11,4 @@
 
 **补充 ：为方便面试或者跳槽的小伙伴，我创建了一个公众号「 Daily Problem 」 ，每天推送一道算法题，可以扫以下二维码关注。**
 
-![](https://picturebook-s3.alo7.com/website/asserts/qrcode_for_gh.jpg)
+![](https://user-images.githubusercontent.com/8939151/111026177-fb505600-8423-11eb-89e5-687b94b156a0.png)
