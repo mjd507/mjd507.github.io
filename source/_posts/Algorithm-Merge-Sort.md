@@ -21,7 +21,7 @@ tags:
 
 ## 算法图解
 
-![Merge Sort](/images/Algorithm/MergeSort.png)
+![Merge Sort](https://user-images.githubusercontent.com/8939151/111022690-5035a180-840f-11eb-8ae6-71c8af80afcc.png)
 
 ## 代码实现
 

@@ -15,7 +15,7 @@ tags:
 
 ## FutureTask
 先来看一张 FutureTask 的 UML 关系图
-![FutureTask](/images/FutureTask.png)
+![FutureTask](https://user-images.githubusercontent.com/8939151/111024926-2fc01400-841c-11eb-9bc9-cbf8199c6298.png)
 简单解释一下：
 1. Callable<V> 这个类与 Runnable 类似，里面的 call() 方法也是设计在 子线程 调用的，优势是可以返回结果或者抛出异常。
  - call() 方法什么时候会执行呢？既然在子线程跑，肯定得有线程，所以，Callable<V> 一般是传递到 ExecutorService 当中去的，通过 submit(Callable<V> task) ，最终调用 execute() 方法去执行。
@@ -312,7 +312,7 @@ tags:
 
 ## 流程图
 整个 AsyncTask 都是以代码在理流程，这里放几张 网上找的非常好的流程图，看完印象更加深刻
-![AsyncTask流程图](/images/AsyncTask.png)
+![AsyncTask流程图](https://user-images.githubusercontent.com/8939151/111024881-f5567700-841b-11eb-840e-f515ff5216b2.png)
 
 
 ## 非常棒的文章

@@ -89,7 +89,7 @@ class CarMaintenaceCardRefresher{
 
 ```
 
-![Facade](/images/DesignPattern/structural/Facade.png)
+![Facade](https://user-images.githubusercontent.com/8939151/111023284-0ea6f580-8413-11eb-9630-dbdeb3696034.png)
 
 外观模式又称门面模式，该模式的好处在于：调用者使用起来更加容易，无需关心每个子系统具体的处理逻辑。
 
@@ -132,7 +132,7 @@ class ConcreteFlyWeight extends AbsFlyWeight{
 }
 ```
 
-![Flyweight](/images/DesignPattern/structural/Flyweight.png)
+![Flyweight](https://user-images.githubusercontent.com/8939151/111023293-1bc3e480-8413-11eb-8906-39ad0acfd403.png)
 
 享元模式的优点在于：它能够极大的减少系统中对象的个数。缺点在于：为了使对象可以共享，需要将一些状态外部化，使得程序的逻辑复杂化。状态外部化，读取外部状态使得运行时间稍微变长。
 
@@ -173,7 +173,7 @@ class WangPo implements Women{
 }
 ```
 
-![Proxy](/images/DesignPattern/structural/Proxy.png)
+![Proxy](https://user-images.githubusercontent.com/8939151/111023298-29796a00-8413-11eb-947f-be6c552ae984.png)
 
 代理模式的好处在于：起到一个中介的作用，保护了目标对象。
 

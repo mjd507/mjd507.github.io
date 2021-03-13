@@ -22,7 +22,7 @@ tags:
 
 ## 算法图解
 
-![BubbleSort](/images/Algorithm/BubbleSort.png)
+![BubbleSort](https://user-images.githubusercontent.com/8939151/111022665-182e5e80-840f-11eb-976a-f4548e18f9c9.png)
 
 ## 代码实现
 

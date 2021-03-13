@@ -12,8 +12,8 @@ tags:
 
 <!--more-->
 先来看两张图，对栈有个形象的认识
-![顺序存储](/images/Structure/stack_seq.png)
-![链式存储](/images/Structure/stack_link.png)
+![顺序存储](https://user-images.githubusercontent.com/8939151/111024284-e621fa00-8418-11eb-9e90-e7734cd225c9.png)
+![链式存储](https://user-images.githubusercontent.com/8939151/111024289-f3d77f80-8418-11eb-9771-319447d56b69.png)
 
 栈是有顺序存储结构和链式存储结构的，本篇分析的是顺序存储结构的栈，先从构造方法开始。
 ## 构造方法

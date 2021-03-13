@@ -51,9 +51,9 @@ tags:
 
 为了避免除法的误差，这里先计算乘法再除法即：1100 * 110001111 ／1010
 
-![二进制 乘法](/images/Binary_Chengfa.png)
+![二进制 乘法](https://user-images.githubusercontent.com/8939151/111024899-0acba100-841c-11eb-9a9e-b4fb68e86009.png)
 
-![二进制 除法](/images/Binary_Chufa.png)
+![二进制 除法](https://user-images.githubusercontent.com/8939151/111024910-1919bd00-841c-11eb-9c94-15ef9a8d2db4.png)
 
 可以看到，最后的结果是除不尽的，为 1 1 1 0 1 1 1 1 0 .1 1 0 0 1 1 0 0 1 1 0 0 …...
 

@@ -13,7 +13,7 @@ tags:
 
 ## 项目动图
 
-[点击查看 干货集中营 演示图](/images/gank/gank.gif)
+[点击查看 干货集中营 演示图](https://raw.githubusercontent.com/mjd507/Gank-Android/692a36055d0ad776df96387194690b5b14e94706/gank.gif)
 
 ## 大致说明
 
@@ -49,9 +49,5 @@ ViewPager 里面嵌套了 Fragment，Fragment 的布局使用 SwipeRefreshLayout
 ViewPager 默认会加载左右两个 Fragment，这里就需要使用 懒加载，具体可看项目的 BaseFragment 以及它的实现类 BaseTagFragment。
 
 主题换肤 是本地实现的，预先定义了四种主题颜色，根据本地配置去加载相应的布局，实现更改也是通过代码设定布局的属性来实现的。这里使用的是 [hehonghui/Colorful](https://github.com/hehonghui/Colorful)开源的主题换肤。
-
-
-## 福利
-[查看福利！](/images/gank/beauty_one.png)
 
 

@@ -33,7 +33,9 @@ public class Singleton {
 
 }
 ```
-![SingleTon](/images/DesignPattern/creational/Singleton.png)
+
+![SingleTon](https://user-images.githubusercontent.com/8939151/111023109-0ef2c100-8412-11eb-8201-1fbebffb4e8e.png)
+
 
 单例模式的好处在于保证了一个类在系统内存中只有一个实例对象，对于一些需要频繁地创建和销毁的对象来说使用单例可以提高系统性能。但使用单例时，要注意一些对象的引用及时释放，避免造成内存泄漏等问题。
 
@@ -95,7 +97,8 @@ public class FactoryMethod {
 	}
 }
 ```
-![FactoryMethod](/images/DesignPattern/creational/FactoryMethod.png)
+
+![FactoryMethod](https://user-images.githubusercontent.com/8939151/111023125-2a5dcc00-8412-11eb-9f99-d87d5fca9761.png)
 工厂方法模式好处在于：完全屏蔽了对象创建的过程，交由对应的工厂来完成。当对象增加，工厂代码依然清晰。这种模式的不足在于：当对象越来越多时，会使工厂类也相应的增多，造成代码类成倍地增加。
 
 ## 抽象工厂模式
@@ -158,7 +161,7 @@ public class FactoryAbstract {
 }
 ```
 
-![AbstractFactory](/images/DesignPattern/creational/FactoryAbstract.png)
+![AbstractFactory](https://user-images.githubusercontent.com/8939151/111023139-42355000-8412-11eb-8f17-647ef5cb800a.png)
 
 抽象工厂模式的好处在于：屏蔽对象产品的创建细节；当产品族很多时，能够确保使用的是同一产品族中的对象；新增具体的产品族和工厂很方便。缺点就在于：新增产品对象时很不方便，需要对抽象工厂及其所有子类工厂类进行更改，这是灾难。
 
@@ -248,7 +251,7 @@ public class Builder {
 
 ```
 
-![Builder](/images/DesignPattern/creational/Builder.png)
+![Builder](https://user-images.githubusercontent.com/8939151/111023161-62fda580-8412-11eb-8b0b-453e2903a926.png)
 
 建造者模式将一个复杂对象的构建与它的表示分离，使得同样的构建过程可以创建不同的表示。Effective Java 中，还提到使用 Builder 模式处理需要很多参数的构造函数，常见于 JavaBeen 中。
 
@@ -286,7 +289,7 @@ public class Prototype {
 
 ```
 
-![Prototype](/images/DesignPattern/creational/Prototype.png)
+![Prototype](https://user-images.githubusercontent.com/8939151/111023167-73158500-8412-11eb-87c4-6365b471a164.png)
 
 原型模式的好处：使用原型模式创建对象比直接 new 一个对象在性能上要好的多，因为Object 类的 clone 方法是一个本地方法。原型模式 的 clone 有 深克隆 和 浅克隆，实现深克隆可能需要比较复杂的代码。
 

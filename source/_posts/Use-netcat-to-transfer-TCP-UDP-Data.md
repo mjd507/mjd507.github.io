@@ -34,7 +34,7 @@ nc 127.0.0.1 1234
 
 这样，连接就已经建立起来了，默认是 TCP 连接，现在在任意一个控制台输入内容，另一个控制台都会收到，此时，nc 已不关心谁是客户端，谁是服务端了。
 
-![nc cs 模型](/images/TCP-IP/nc_cs_model.png)
+![nc cs 模型](https://user-images.githubusercontent.com/8939151/111024794-94c73a00-841b-11eb-9ff0-8f69adce6ce9.png)
 
 
 
@@ -54,7 +54,7 @@ nc -l 1234 > out.txt
 nc 127.0.0.1 1234 < in.txt
 ```
 
-![nc 数据传输](/images/TCP-IP/nc_data_transfer.png)
+![nc 数据传输](https://user-images.githubusercontent.com/8939151/111024806-a0b2fc00-841b-11eb-9dc1-09dd866626b3.png)
 
 
 
@@ -80,7 +80,7 @@ nc www.baidu.com 80
 echo -n "GET / HTTP/1.0\r\n\r\n" | nc -p 1234 www.baidu.com 80
 ```
 
-![访问百度](/images/TCP-IP/nc_talk_2_baidu.png)
+![访问百度](https://user-images.githubusercontent.com/8939151/111024833-b7f1e980-841b-11eb-97c8-cb350c13fa7a.png)
 
 
 上面用法也可以这样写:
@@ -106,9 +106,9 @@ GET / HTTP/1.0
 nc 127.0.0.1 -z 8088-8090
 ```
 
-![](/images/TCP-IP/nc_port_scan.png)
+![](https://user-images.githubusercontent.com/8939151/111024846-c93af600-841b-11eb-9e67-b009da510060.png)
 
-![](/images/TCP-IP/nc_port_scan_2.png)
+![](https://user-images.githubusercontent.com/8939151/111024855-d2c45e00-841b-11eb-81fb-b39b6f2f4312.png)
 
 可以看到，只有 8090 端口是开启的。
 

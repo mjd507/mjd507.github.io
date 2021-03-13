@@ -124,6 +124,6 @@ BlockQueue 有几个常用的实现类
 
 ## 线程池的流程图
 
-![ThreadPool](/images/ThreadPool.png)
+![ThreadPool](https://user-images.githubusercontent.com/8939151/111025272-f8eafd80-841d-11eb-9583-21aff120c0f6.png)
 
 

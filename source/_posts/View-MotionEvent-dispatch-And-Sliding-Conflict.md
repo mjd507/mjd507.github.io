@@ -16,7 +16,7 @@ Android 中 当遇到滑动冲突的问题，就会涉及到事件的分发与�
 
 ## View 的事件分发体系
 先来看一张 事件分发 的流程图（搜刮自网络）
-![Touch 事件传递流程图](/images/Touch-Event-Dispatch.png)
+![Touch 事件传递流程图](https://user-images.githubusercontent.com/8939151/111025296-23d55180-841e-11eb-9f5e-4fde21d59080.png)
 
 图里表现的非常清楚，当 view 产生一个 touch 事件后，如果 该 view 是一个 ViewGroup, 则去判断 ViewGroup 里面的 onInterceptTouchEvent() 方法，表示是否拦截事件，默认是返回 false，表示不拦截，让事件传递给 子view，子view 如果还是 ViewGroup，默认仍然继续向下传递，直到 子 view 不是 ViewGroup，则直接调用 子view 的 onTouchEvent() 方法，return true 表示消费了此事件，传递过程结束，false 则将事件向上(ViewGroup)传，都不处理的话，最终会传递到 Activity，此时，Activity 的 onTouchEvent() 将被调用。
 

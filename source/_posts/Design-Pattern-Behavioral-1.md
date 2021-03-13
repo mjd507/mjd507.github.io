@@ -89,7 +89,7 @@ class HRHandler extends RequestHandler{
 
 ```
 
-![Chain](/images/DesignPattern/behavioral/Chain.png)
+![Chain](https://user-images.githubusercontent.com/8939151/111022749-b15d7500-840f-11eb-9793-94df15d5109d.png)
 
 责任链模式的好处在于：责任的分担。每个类只需要处理自己该处理的工作（不该处理的传递给下一个对象完成），提高系统的灵活性和可扩展性。缺点： 因为处理时以链的形式在对象间传递消息，根据实现方式不同，有可能会影响处理的速度。
 
@@ -142,7 +142,8 @@ class ConcreteTask implements TaskCommand{
 }
 ```
 
-![Command](/images/DesignPattern/behavioral/Command.png)
+![Command](https://user-images.githubusercontent.com/8939151/111022757-c508db80-840f-11eb-9185-9efe32d44d34.png)
+
 
 命令模式的好处在于：1.降低对象之间的耦合度。2.新的命令可以很容易地加入到系统中。3.可以比较容易地设计一个组合命令。4.调用同一方法实现不同的功能
 缺点在于：可能会导致某些系统有过多的具体命令类。因为针对每一个命令都需要设计一个具体命令类，因此某些系统可能需要大量具体命令类，这将影响命令模式的使用。
@@ -196,7 +197,7 @@ class Not implements Expression{
 }
 ```
 
-![Interpreter](/images/DesignPattern/behavioral/Interpreter.png)
+![Interpreter](https://user-images.githubusercontent.com/8939151/111022766-d3ef8e00-840f-11eb-8b8a-48f0574ba203.png)
 
 解释器模式的好处在于：扩展性。缺点在于：会引起类膨胀以及效率问题。
 
@@ -271,7 +272,7 @@ class EmployeeIterator implements java.util.Iterator<Employees>{
 }
 ```
 
-![Iterator](/images/DesignPattern/behavioral/Iterator.png)
+![Iterator](https://user-images.githubusercontent.com/8939151/111022780-e5389a80-840f-11eb-8b49-185c15ab2318.png)
 
 迭代器模式的好处在于：分离了聚合对象的遍历行为，抽象出一个迭代器来负责这样既可以做到不暴露集合的内部结构，又可让外部代码透明的访问集合内部数据。
 

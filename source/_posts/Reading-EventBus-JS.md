@@ -54,7 +54,7 @@ Eventbus 库非常精简，它仅有以下 5 个方法。
 
 假使现在一个页面有三个 tab，点击每一个 tab 切换一个页面，用事件通知来处理 tab 切换。
 
-![](/images/eventbus-example-1.png)
+![](https://user-images.githubusercontent.com/8939151/111025287-115b1800-841e-11eb-9bdc-5bddb49717d3.png)
 
 1. 定义事件类型 & 事件监听器
 

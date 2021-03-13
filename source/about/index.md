@@ -30,10 +30,6 @@ about: true
 
 
 
-![](/images/wx_qrcode.jpg)
-
-
-
 ### 联系我
 
 [GitHub](https://github.com/mjd507) 

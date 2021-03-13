@@ -125,7 +125,7 @@ add()方法还有一个重载方法，可以指定位置插入，也顺道来看
 找到指定位置的节点 succ 了，在获取它的前一个节点 pred ，与此同时，new 一个新节点 newNode ，将 newNode 前驱指向 pred，后继指向该 succ ，至此形成一个单链，再将 succ 的前驱指向 newNode ，如果 pred 不为空，将 pred 的后继指向 newNode ，至此形成一个双向链表，如果 pred 为空，那么将 newNode 设为头结点，将集合 size ++；
 
 这里说的有点绕，来张简单的图帮助理解一下，其实就是各种指针的指向引用问题。
-![插入过程](/images/Structure/double_list_add.png)
+![插入过程](https://user-images.githubusercontent.com/8939151/111024082-bfaf8f00-8417-11eb-86ae-2c7f99480c02.png)
 
 ## 删除元素
 ```java
@@ -166,8 +166,7 @@ add()方法还有一个重载方法，可以指定位置插入，也顺道来看
 如果 prev 为空，将 next 设为头节点，如果 next 为空，将 prev 设为尾节点；
 
 删除的过程，也画了一张图
-![删除过程](/images/Structure/double_list_delete.png)
-
+![删除过程](https://user-images.githubusercontent.com/8939151/111024209-5419f180-8418-11eb-99e6-b20a6bbc6672.png)
 
 至此，可以看出，链表的插入和删除操作非常的简单，只需要改变一下指针的指向问题就 ok 了。
 

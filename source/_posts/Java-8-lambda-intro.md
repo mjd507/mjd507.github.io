@@ -13,7 +13,7 @@ visible:
 
 <!--more-->
 
-![White Desert <br/> Location: Braies Lake, Italy.  By Riccardo Chiarini](/unsplash/riccardo-chiarini-508721-unsplash.jpg)
+![White Desert <br/> Location: Braies Lake, Italy.  By Riccardo Chiarini](https://user-images.githubusercontent.com/8939151/111025327-6565fc80-841e-11eb-89e3-9885581ca748.png)
 
 
 

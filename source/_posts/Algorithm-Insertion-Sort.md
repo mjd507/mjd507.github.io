@@ -19,7 +19,7 @@ tags:
 
 ## 算法图解
 
-![Insertion Sort](/images/Algorithm/InsertionSort.png)
+![Insertion Sort](https://user-images.githubusercontent.com/8939151/111022676-34320000-840f-11eb-86b3-307ca7cfe894.png)
 
 ## 代码实现
 

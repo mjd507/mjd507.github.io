@@ -56,7 +56,7 @@ Welcome to Alibaba Cloud Elastic Compute Service !
 
 ### 2.1 原理图
 
-![图片来自(https://www.git-tower.com/learn/git/ebook/cn/command-line/advanced-topics/ssh-public-keys)](/images/TCP-IP/ssh-auth-workflow.png)
+![图片来自(https://www.git-tower.com/learn/git/ebook/cn/command-line/advanced-topics/ssh-public-keys)](https://user-images.githubusercontent.com/8939151/111024408-9ee83900-8419-11eb-86a3-36cde5a1358e.png)
 
 ### 2.2 本地生成公钥私钥
 

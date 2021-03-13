@@ -13,9 +13,9 @@ tags:
 <!--more-->
 
 队列也有顺序和链式的存储结构，先看三张图，对队列的形象有一个了解。
-![顺序存储](/images/Structure/queue_seq.png)
-![循环队列](/images/Structure/queue_seq_cycle.png)
-![链式存储](/images/Structure/single_cycle_linked_list.png)
+![顺序存储](https://user-images.githubusercontent.com/8939151/111024229-7449b080-8418-11eb-9dc0-28bd4d4a7c2d.png)
+![循环队列](https://user-images.githubusercontent.com/8939151/111024255-a0fdc800-8418-11eb-95d4-56925ce53d12.png)
+![链式存储](https://user-images.githubusercontent.com/8939151/111024063-9db60c80-8417-11eb-82b2-82f9c72337fa.png)
 
 可以看到，顺序存储，队列每插入一个元素，长度就增加，而从队头移除元素时，并没有像 ArrayList 那样重新调整长度，所以会造成假溢出的现象，可以使用循环队列来解决这种假溢出。
 

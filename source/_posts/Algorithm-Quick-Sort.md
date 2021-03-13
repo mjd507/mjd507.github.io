@@ -20,8 +20,7 @@ tags:
 
 ## 算法图解
 
-![Quick Sort](/images/Algorithm/QuickSort.png)
-
+![Quick Sort](https://user-images.githubusercontent.com/8939151/111022705-65aacb80-840f-11eb-8598-1806d78e1e1e.png)
 
 ## 代码实现
 

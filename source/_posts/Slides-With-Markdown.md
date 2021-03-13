@@ -36,7 +36,7 @@ isMatch(no)->back
 ```
 
 上面代码在能识别流程图 Markdown 的编辑器里面的效果是这样的：
-![自动生成的流程图](/images/markdown_lct.png)
+![自动生成的流程图](https://user-images.githubusercontent.com/8939151/111025209-9eea3800-841d-11eb-9c8f-403d89c312fa.png)
 
 十几行代码画出一张流程图，真特么爽。下面这个就更厉害了。
 
@@ -44,9 +44,7 @@ isMatch(no)->back
 
 当要做一个分享，多数需要做一个 PPT，之前做 PPT 的方式无外乎 Windows 上的 PowerPoint，Mac 上的 Keynote，一开始我就很排斥这种 PPT 的方式，需要花很多时间在排版，调字体，调颜色，做动画上面。
 
-而现在有了 Markdown，再加上 revealjs，可以十分钟就完成一个超酷的 PPT，给你们看下我花了两分钟做的 PPT Demo。
-
-[点击查看 ppt](/md-ppt-demo/demo.html)
+而现在有了 Markdown，再加上 revealjs，可以十分钟就完成一个超酷的 PPT。
 
 简直好用到爆，而且配置非常灵活，又是一款效率利器。
 

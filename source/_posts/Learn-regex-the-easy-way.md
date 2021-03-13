@@ -14,7 +14,7 @@ tags:
 
 假设一个网站的用户名成由小写字母，数字下划线和横杠组成，并且只能有3到15个字符，那么该如何写出这个正则表达式？
 
-![](/images/regex_username.png)
+![](https://user-images.githubusercontent.com/8939151/111025160-69454f00-841d-11eb-83f9-a921dbd92017.png)
 
 ## 基本匹配
 

@@ -20,7 +20,7 @@ tags:
 
 ## 算法图解
 
-![SelectionSort](/images/Algorithm/SelectionSort.png)
+![SelectionSort](https://user-images.githubusercontent.com/8939151/111022721-7a875f00-840f-11eb-9d5a-e1f80f4cc2c1.png)
 
 ## 代码实现
 

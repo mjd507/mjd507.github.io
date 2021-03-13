@@ -16,7 +16,7 @@ tags:
 
 我们可以看下面的图：
 
-![一](/images/Structure/binary_tree_sample_1.png) ![二](/images/Structure/binary_tree_sample_2.png)
+![一](https://user-images.githubusercontent.com/8939151/111023764-d6ed7d00-8415-11eb-8bc1-6b959d24918f.png) ![二](https://user-images.githubusercontent.com/8939151/111023789-ea98e380-8415-11eb-8a4b-e94aefdfb31d.png)
 
 这两张图的先序排列顺序都是 ABDC，因为没法知道 D 是左孩子还是右孩子，故这里约定，当节点没有左孩子或右孩子的时候，用 # 表示。上图给定的排序分别应是：ABD#C 和 AB#DC。
 
@@ -24,7 +24,8 @@ tags:
 
 我们先将二叉树画出来
 
-![](/images/Structure/binary_tree_sample_3.png)
+![](https://user-images.githubusercontent.com/8939151/111023801-f71d3c00-8415-11eb-95ce-89f9c96479ec.png)
+
 
 开始编码：
 

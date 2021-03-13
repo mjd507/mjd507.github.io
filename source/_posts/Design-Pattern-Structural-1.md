@@ -80,7 +80,9 @@ class ThirdWeatherAdapter2 implements ThirdData{
 }
 
 ```
-![Adapter](/images/DesignPattern/structural/Adapter.png)
+
+![Adapter](https://user-images.githubusercontent.com/8939151/111023224-c8519680-8412-11eb-9f7d-ab8374635d05.png)
+
 
 适配器模式主要在程序扩展时使用，一般不会在系统设计时采用。该模式的好处在于扩展时能减少原有代码的修改，使风险降低。
 
@@ -150,7 +152,7 @@ class WindowsVideoPlayer extends VideoPlayer{
 }
 ```
 
-![Bridge](/images/DesignPattern/structural/Bridge.png)
+![Bridge](https://user-images.githubusercontent.com/8939151/111023243-db646680-8412-11eb-8071-050bc2891482.png)
 
 桥梁模式的好处在于：隔离了抽象和实现，两边都能自由扩展。缺点在于：聚合关系建立在抽象层，增加系统的理解与设计难度。
 
@@ -219,7 +221,7 @@ class MarketControler extends Market{
 }
 ```
 
-![Composite](/images/DesignPattern/structural/Composite.png)
+![Composite](https://user-images.githubusercontent.com/8939151/111023250-ea4b1900-8412-11eb-978f-7a3e105a9e44.png)
 
 组合模式的优点在于：可以很容易的增加新的构件。
 缺点在于：控制树枝构件的类型不太容易。用继承的方法来增加新的行为很困难。
@@ -278,7 +280,7 @@ class HouseDecorator implements House{
 
 ```
 
-![Decorator](/images/DesignPattern/structural/Decorator.png)
+![Decorator](https://user-images.githubusercontent.com/8939151/111023266-fdf67f80-8412-11eb-923d-52d1c2d806d7.png)
 
 装饰者模式的好处在于：比起继承，包装对象的功能更加灵活。运行时选择不同的装饰器，可以实现不同的功能。缺点：会导致设计中出现许多小类，如果过度使用，会使程序变得很复杂。
 

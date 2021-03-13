@@ -13,7 +13,7 @@ HashMap 被设计成专门用来存储键值对（key-value）形式的数据，
 <!--more-->
 先来看一张图，对 HashMap 的结构留个印象。
 
-![HashMap](/images/Structure/HashMap.png)
+![HashMap](https://user-images.githubusercontent.com/8939151/111023940-f507ad00-8416-11eb-9f9b-07d2e5341efe.png)
 
 上次听到这么一个例子，来解释 HashMap 很形象，说：微信里的通讯录，联系人是按照字典顺序排好的，A - Z 就像是一个固定的数组，联系人按照自己的首字母的拼音放在对应的数组里，如果拼音相同，则以类似链表的形式放在该位置后面；真的好形象，只不过HashMap 是以 key 的 hash 值来决定在数组的位置的。
 
@@ -174,7 +174,7 @@ get(key) 方法的大致思路：
 
 整个计算的过程如下图（图片来自参考文章里）：
 
-![index 计算过程](/images/Structure/HashMap_hash.png)
+![index 计算过程](https://user-images.githubusercontent.com/8939151/111024023-5b8ccb00-8417-11eb-92b0-339db1945723.png)
 
 在 Java 8 之前的实现中是用链表的，在产生碰撞的情况下，进行 get 时，两步的时间复杂度是O(1) + O(n)。因此，当碰撞很厉害的时候 n 很大，O(n) 的速度显然是影响速度的。
 

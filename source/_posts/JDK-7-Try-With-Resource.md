@@ -13,7 +13,7 @@ visible:
 
 <!--more-->
 
-![Mountain hiker in snow <br/> Location: Aletsch Glacier, Fieschertal, Switzerland. <br/>  By Dino Reichmuth](/unsplash/dino-reichmuth-84359-unsplash.jpg)
+![Mountain hiker in snow <br/> Location: Aletsch Glacier, Fieschertal, Switzerland. <br/>  By Dino Reichmuth](https://user-images.githubusercontent.com/8939151/111025383-af4ee280-841e-11eb-82cd-267cbb99c53e.png)
 
 ------
 

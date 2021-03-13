@@ -289,7 +289,7 @@ message 的 callback 是一个 Runnable() 接口，那怎样设置 Message 的 c
 至此，Handler 机制 已经分析的差不多了，下面贴一张流程图加深一下印象。
 
 ## 流程图
-![Handler Looper Message](/images/Handler Looper Message.png)
+![Handler Looper Message](https://user-images.githubusercontent.com/8939151/111025188-88dc7780-841d-11eb-86c5-58b78af93bdb.png)
 
 
 ## 非常棒的文章

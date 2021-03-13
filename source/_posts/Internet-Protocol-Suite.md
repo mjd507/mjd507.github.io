@@ -50,7 +50,7 @@ TCP/IP 对于物理层并没有作出定义，因此，有些地方将物理层�
 
 以太网是众多数据链路中，使用比较广泛的一种。其「帧」个格式包含：以太网首部，数据包和尾部。首部又包含目标 Mac 地址，源 Mac 地址，上层协议类型。数据包能容纳的数据范围为 46 ~ 1500 个字节。帧尾是一个 FCS （帧检验序列），占 4 个字节。
 
-![以太网帧结构](/images/TCP-IP/link_frame_ytw.png)
+![以太网帧结构](https://user-images.githubusercontent.com/8939151/111024423-b32c3600-8419-11eb-92da-36dcb226bf0f.png)
 
 在总线型与环路型网络中，以太网发送数据，是发向本网络所有的主机中，让每台主机自己去判断，是否为接受方。判断的依据就是自己的 Mac 地址与接受到的 Mac 地址是否相同。
 
@@ -72,9 +72,9 @@ IP 面向无连接。即在发包之前，不需要建立与对端目标地址�
 
 通过 IP 进行通信时，需要在数据的前面加入 IP 首部信息。IP 有 IPv4 和 IPv6 两种。IPv6 包的转发效率更高，省略了首部校验和字段，减轻了路由器的压力。
 
-![IPv4 首部](/images/TCP-IP/ip4_header.png)
+![IPv4 首部](https://user-images.githubusercontent.com/8939151/111024478-f4bce100-8419-11eb-85a7-549edc34103c.png)
 
-![IPv6 首部](/images/TCP-IP/ip6_header.png)
+![IPv6 首部](https://user-images.githubusercontent.com/8939151/111024486-00100c80-841a-11eb-9787-60a54c4607a1.png)
 
 ### 4.2 路由控制
 
@@ -82,7 +82,7 @@ IP 之所以能点对点通信，靠的是路由控制。IP 数据在每个区�
 
 网络层与数据链路层的关系。就像旅行时的行程表和火车票。每一张票只负责特地区间的运输，而行程表指导了运输的方向。
 
-![点对点通信](/images/TCP-IP/ip_and_link.png)
+![点对点通信](https://user-images.githubusercontent.com/8939151/111024496-0bfbce80-841a-11eb-9c3c-f7e780ca5e17.png)
 
 数据链路层的作用是在互连同一种数据链路的节点直接进行包传递，而一旦跨越多种数据链路，就需要借助路由。
 
@@ -104,13 +104,13 @@ UDP 不提供复杂的控制机制，利用 IP 提供面向无连接的通信服
 
 UDP 的使用场景多数在即时通信这块，随时发送数据，简单高效。
 
-![UPD 首部](/images/TCP-IP/udp_header.png)
+![UPD 首部](https://user-images.githubusercontent.com/8939151/111024503-1918bd80-841a-11eb-9149-c185310d7390.png)
 
 ### 5.2 TCP
 
 TCP 与 UDP 不同，区别相当大，TCP 可以说是对 「传输、发送、通信」进行控制的协议。
 
-![TCP 首部](/images/TCP-IP/tcp_header.png)
+![TCP 首部](https://user-images.githubusercontent.com/8939151/111024520-28980680-841a-11eb-896a-55d84da38be0.png)
 
 #### 5.2.1 序列号
 
@@ -132,7 +132,7 @@ Unix 以及 Windows 系统中，超时都以 0.5 秒为单位进行控制，因�
 
 TCP 连接与断开的过程，正常至少需要 7 个包才能完成，三次握手和四次挥手。
 
-![三次握手四次挥手](/images/TCP-IP/tcp_3_4.png)
+![三次握手四次挥手](https://user-images.githubusercontent.com/8939151/111024530-3a79a980-841a-11eb-9d6f-b704f71776fb.png)
 
 #### 5.2.4 发送数据的长度
 
@@ -142,13 +142,13 @@ TCP 在传输大量数据时，以 MSS 的大小将数据进行分割；重发�
 
 MSS 是在三次握手时，在两端主机之间被计算得出，两端主机在建立连接的请求时，会在 TCP 首部写入 MSS 选项，高度对方自己的接口能够适应的 MSS 的大小。然后会在两者之间选择一个较小的值使用。
 
-![TCP以段为单位发生数据](/images/TCP-IP/tcp_data_unit.png)
+![TCP以段为单位发生数据](https://user-images.githubusercontent.com/8939151/111024751-719c8a80-841b-11eb-81bb-8d1e10c7b3d9.png)
 
 #### 5.2.5 利用窗口提速
 
 TCP 以段为单位，为每个数据包进行确认应答，如果包的往返时间越长，通信性能越低，网络的吞吐量越差。为此，TCP 引入了窗口。确认应答不在是以每个分段，而是以更大的单位进行确认，转发时间会被大幅度缩短。简单讲，就是发送端主机，在发送了一个段之后，可以继续发送，而不必要一直等到确认应答再发送。
 
-![TCP窗口缓冲](/images/TCP-IP/tcp_window.png)
+![TCP窗口缓冲](https://user-images.githubusercontent.com/8939151/111024767-811bd380-841b-11eb-9ad0-ee00a9372e94.png)
 
 窗口对丢包重发的管理更加的高效和灵活，在窗口比较大，有出现报文丢失的情况下，同一个序号的确认应答会被重复不断地返回，如果发送端主机连续三次收到同一个确认应答，就会将其对应的数据进行重发。
 

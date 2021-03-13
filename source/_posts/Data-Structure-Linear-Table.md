@@ -15,7 +15,8 @@ tags:
 
 先来看一张图，了解下线性表的概念
 
-![](/images/Structure/linear_table.png)
+
+![](https://user-images.githubusercontent.com/8939151/111024037-72cbb880-8417-11eb-992d-1ac9db42a90c.png)
 a1 是 a2 的前驱，a(i+1) 是 a(i) 的后继，a1 没有前驱，a(n) 没有后继；
 n 为线性表的长度，若 n = 0，线性表为空表。
 
@@ -26,8 +27,7 @@ n 为线性表的长度，若 n = 0，线性表为空表。
 
 顺序存储本质上是一组**地址连续**的存储单元，使用数组实现，数组的大小需指定或者动态分配。
 
-![顺序表](/images/Structure/sequential_storage.png)
-
+![顺序表](https://user-images.githubusercontent.com/8939151/111024048-82e39800-8417-11eb-84b9-d97d86a52089.png)
 
 顺序存储需要预分配一定的空间，后期空间不够可动态添加；
 
@@ -43,16 +43,16 @@ n 为线性表的长度，若 n = 0，线性表为空表。
 
 
 
-![单链表](/images/Structure/single_linked_list.png)
+![单链表](https://user-images.githubusercontent.com/8939151/111024054-90991d80-8417-11eb-9a9d-6abbc432e749.png)
 
 将单链表中的终端结点的指针端由空指针改为向头结点，使得整个单链表形成一个环，这种头尾相连的单链表称为单循环链表，简称循环链表。
 
-![循环链表](/images/Structure/single_cycle_linked_list.png)
+
+![循环链表](https://user-images.githubusercontent.com/8939151/111024063-9db60c80-8417-11eb-82b2-82f9c72337fa.png)
 
 在单循环链表的基础上，为每一个元素添加一个指向其前驱结点的指针域，就形成了一个双向循环链表。
 
-![双向循环链表](/images/Structure/double_cycle_linked_list.png)
-
+![双向循环链表](https://user-images.githubusercontent.com/8939151/111024069-ac042880-8417-11eb-8858-3a43c544dd87.png)
 
 链式存储不需要分配空间，存储元素个数也不限制；
 
