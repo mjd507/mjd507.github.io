@@ -1,0 +1,105 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>说说线程池 | mjd507</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="/css/dark.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/normalize.css/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/purecss/build/pure-min.min.css"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/purecss/build/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = 'https://hm.baidu.com/hm.js?' + '1c847d4fb515d19b6108f15a5387f1d6';
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+  })();
+</script><script type="text/javascript" src="//cdn.jsdelivr.net/npm/clipboard/dist/clipboard.min.js"></script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/codeseven/toastr/build/toastr.min.js"></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/codeseven/toastr/build/toastr.min.css"><meta name="generator" content="Hexo 5.4.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">说说线程池</h1><a id="logo" href="/.">mjd507</a><p class="description">Stop stopping</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">说说线程池</h1><div class="post-meta">2016-11-30<span> | </span><span class="category"><a href="/categories/Java-Android/">Java &amp; Android</a></span></div><div class="clear"><div class="toc-article" id="toc"><div class="toc-title">文章目录</div><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BA%BF%E7%A8%8B%E6%B1%A0%E7%9A%84%E5%A5%BD%E5%A4%84"><span class="toc-number">1.</span> <span class="toc-text">线程池的好处</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BA%BF%E7%A8%8B%E6%B1%A0%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">线程池的使用方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E7%BA%BF%E7%A8%8B%E6%B1%A0"><span class="toc-number">3.</span> <span class="toc-text">自定义线程池</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Doug-Lea-%E7%9A%84%E8%AE%BE%E8%AE%A1%E9%80%BB%E8%BE%91"><span class="toc-number">4.</span> <span class="toc-text">Doug Lea 的设计逻辑</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%A0%E4%B8%AA%E7%B1%BB%E7%9A%84%E8%AF%B4%E6%98%8E"><span class="toc-number">5.</span> <span class="toc-text">几个类的说明</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ThreadFactory-%E2%80%94-%E7%BA%BF%E7%A8%8B%E5%B7%A5%E5%8E%82"><span class="toc-number">5.1.</span> <span class="toc-text">ThreadFactory — 线程工厂</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BlockingQueue-%E2%80%94-%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97"><span class="toc-number">5.2.</span> <span class="toc-text">BlockingQueue — 阻塞队列</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BA%BF%E7%A8%8B%E6%B1%A0%E7%9A%84%E6%B5%81%E7%A8%8B%E5%9B%BE"><span class="toc-number">6.</span> <span class="toc-text">线程池的流程图</span></a></li></ol></div></div><div class="post-content"><p>线程池就好比一个部门，部门一般都有一个项目经理，他有一系列的项目需要安排手下去完成，当人手不够的时候，就去招人，人手够了，大家都紧锣密鼓的工作了，几天后，项目经理发现任务比较多，心里考虑着先把多余的任务排列好，等大家忙完再分配，又过了几天，任务越来越多了，需要动态的再招几个人备用，终于人手差不多了，这个时候，如果项目任务还是很多，项目经理就该考虑挡住一些任务了。</p>
+<span id="more"></span>
+
+<p>哈哈，上面只是模仿线程池的设计硬举的一个例子。言归正传，为什么要使用线程池呢？</p>
+<h2 id="线程池的好处"><a href="#线程池的好处" class="headerlink" title="线程池的好处"></a>线程池的好处</h2><p>由于创建或者销毁一个线程都是需要时间的，而且现在用户的操作像请求网络，读写文件等频率很高，如果频繁的去创建销毁线程，必然导致系统性能不佳，用户体验不好。 这个时候使用线程池就能很好的去调度线程，让系统处于一个资源利用相对平衡的状态。线程池不是新技术，之前就有，但是在 Java 1.5 之后 Doug Lea 编写了并发包（java.util.concurrent），让开发者对线程池的使用更加的方便。</p>
+<h2 id="线程池的使用方法"><a href="#线程池的使用方法" class="headerlink" title="线程池的使用方法"></a>线程池的使用方法</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> Executor cachePool = Executors.newCachedThreadPool(); <span class="comment">//缓存线程池</span></span><br><span class="line"><span class="keyword">static</span> Executor fixedPool = Executors.newFixedThreadPool(<span class="number">5</span>); <span class="comment">// 固定线程个数的线程池</span></span><br><span class="line"><span class="keyword">static</span> Executor schePool = Executors.newScheduledThreadPool(<span class="number">4</span>); <span class="comment">//计划任务线程池</span></span><br><span class="line"><span class="keyword">static</span> Executor singlePool = Executors.newSingleThreadExecutor(); <span class="comment">//单个线程</span></span><br><span class="line"></span><br><span class="line">fixedPool.execute(Runnable r);</span><br></pre></td></tr></table></figure>
+
+<p>用起来非常简单，JDK 提供了几种不同的线程池，根据实际情况选择，获取到线程池的执行者之后，调用它的   execute() 方法，将任务传进去，交给线程执行。使用很简单，但是对于线程池的设计以及他的原理还是很有必要深入一下的。先自己定义一个简单得线程池跑一跑。</p>
+<h2 id="自定义线程池"><a href="#自定义线程池" class="headerlink" title="自定义线程池"></a>自定义线程池</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//100 是该容器（任务队列）的最大上限</span></span><br><span class="line">BlockingQueue&lt;Runnable&gt; blockingQueue = <span class="keyword">new</span> LinkedBlockingQueue&lt;&gt;(<span class="number">100</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//创建线程工厂</span></span><br><span class="line">ThreadFactory threadFactory = <span class="keyword">new</span> ThreadFactory() &#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> Thread <span class="title">newThread</span><span class="params">(Runnable r)</span> </span>&#123;</span><br><span class="line">		AtomicInteger atomicInteger = <span class="keyword">new</span> AtomicInteger(<span class="number">0</span>);</span><br><span class="line">		Thread thread = <span class="keyword">new</span> Thread(r);</span><br><span class="line">		thread.setName(<span class="string">&quot;MyThread = &quot;</span>+ atomicInteger.getAndIncrement());</span><br><span class="line">		<span class="keyword">return</span> thread;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> corePoolSize 核心池个数 Google 工程师推荐 线程的个数 = CPU核心数 + 1  </span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> maximumPoolSize 最大池个数</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> keepAliveTime 执行完后，线程存活时间</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> unit 时间单位</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> workQueue 工作队列</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> threadFactory 线程工厂</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">ThreadPoolExecutor executor = <span class="keyword">new</span> ThreadPoolExecutor(<span class="number">5</span>, <span class="number">100</span>, <span class="number">1</span>, TimeUnit.SECONDS, blockingQueue, threadFactory);</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++)&#123;</span><br><span class="line">	executor.execute(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line"></span><br><span class="line">		<span class="meta">@Override</span></span><br><span class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">			<span class="comment">//do something such as net file...</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;);</span><br><span class="line">&#125;</span><br><span class="line">executor.shutdown();</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Doug-Lea-的设计逻辑"><a href="#Doug-Lea-的设计逻辑" class="headerlink" title="Doug Lea 的设计逻辑"></a>Doug Lea 的设计逻辑</h2><p>Doug Lea 设计线程池的逻辑与开头例子的描述几乎一致，整理如下：</p>
+<blockquote>
+<p>如果当前池大小 poolSize 小于 corePoolSize ，则创建新线程执行任务。</p>
+</blockquote>
+<blockquote>
+<p>如果当前池大小 poolSize 大于 corePoolSize ，小于 maximumPoolSize ，且等待队列未满，则进入等待队列</p>
+</blockquote>
+<blockquote>
+<p>如果当前池大小 poolSize 大于 corePoolSize ，小于 maximumPoolSize ，且等待队列已满，则创建新线程执行任务。</p>
+</blockquote>
+<blockquote>
+<p>如果当前池大小 poolSize 大于 corePoolSize 且大于 maximumPoolSize ，且等待队列已满，则调用拒绝策略来处理该任务。</p>
+</blockquote>
+<blockquote>
+<p>线程池里的每个线程执行完任务后不会立刻退出，而是会去检查下等待队列里是否还有线程任务需要执行，如果在 keepAliveTime 里等不到新的任务了，那么线程就会退出。</p>
+</blockquote>
+<h2 id="几个类的说明"><a href="#几个类的说明" class="headerlink" title="几个类的说明"></a>几个类的说明</h2><h3 id="ThreadFactory-—-线程工厂"><a href="#ThreadFactory-—-线程工厂" class="headerlink" title="ThreadFactory — 线程工厂"></a>ThreadFactory — 线程工厂</h3><p>它是一个接口，专门负责创建线程。在线程初始化的时候可以设置优先级，线程名称，守护进程状态，线程组等。</p>
+<h3 id="BlockingQueue-—-阻塞队列"><a href="#BlockingQueue-—-阻塞队列" class="headerlink" title="BlockingQueue — 阻塞队列"></a>BlockingQueue — 阻塞队列</h3><p>队列公有的方法 增加/移除/检索 元素，该队列为操作提供了四种处理形式。</p>
+<ol>
+<li>抛异常</li>
+<li>返回 null 或 false </li>
+<li>阻塞线程直到操作完成 </li>
+<li>阻塞（指定时间）</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th></th>
+<th align="center">Throws exception</th>
+<th align="center">Special Value</th>
+<th align="center">Blocks</th>
+<th align="center">Times Out</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Insert</td>
+<td align="center">add(e)</td>
+<td align="center">offer(e)</td>
+<td align="center">put(e)</td>
+<td align="center">offer(e,time,unit)</td>
+</tr>
+<tr>
+<td>Remove</td>
+<td align="center">remove()</td>
+<td align="center">poll()</td>
+<td align="center">take()</td>
+<td align="center">poll(time,unit)</td>
+</tr>
+<tr>
+<td>Examine</td>
+<td align="center">Element</td>
+<td align="center">peek()</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+</tbody></table>
+<p>BlockQueue 不接受 null 元素。否则会抛空指针异常<br>BlockQueue 容量是可以设定的，如果没有设定，则容量为 Integer.MAX_VALUE<br>BlockQueue 的实现是线程安全的。<br>BlockQueue 本质上不支持关闭，如果需要可以通过插入特定的结束标记 来让调用者中断。</p>
+<p>BlockQueue 有几个常用的实现类</p>
+<ul>
+<li>LinkedBlockingQueue 链表队列</li>
+<li>ArrayBlockingQueue 数组队列</li>
+<li>SynchronousQueue 同步队列（插入操作必须等待另一个线程的删除操作之后，反之亦然）</li>
+<li>BlockDeque 它是个双端队列，可以两从两端插入/获取。 BlockQueue 是单端队列</li>
+</ul>
+<h2 id="线程池的流程图"><a href="#线程池的流程图" class="headerlink" title="线程池的流程图"></a>线程池的流程图</h2><p><img src="https://user-images.githubusercontent.com/8939151/111025272-f8eafd80-841d-11eb-9583-21aff120c0f6.png" alt="ThreadPool"></p>
+</br>
+
+<p>以上</p>
+</br>
+
+</br>
+
+<p><strong>声明 ：本站主要是用来整理不懂的知识，大部分内容我都没有完全掌握，请谨慎参考。</strong><br><strong>版权 ：可以转载，但请在文章显著位置注明出处 ！ <a href="https://mjd507.github.io/">https://mjd507.github.io</a></strong></p>
+<p><strong>补充 ：为方便面试或者跳槽的小伙伴，我创建了一个公众号「 Daily Problem 」 ，每天推送一道算法题，可以扫以下二维码关注。</strong></p>
+<p><img src="https://user-images.githubusercontent.com/8939151/111026177-fb505600-8423-11eb-89e5-687b94b156a0.png"></p>
+</div><div class="tags"></div><div class="post-nav"><a class="pre" href="/2016/12/02/Mac-Skills/">Mac OS 上的一些疑问的解决方法</a><a class="next" href="/2016/06/25/MyGraduation/">毕业季</a></div><div id="container"></div><link rel="stylesheet" type="text/css" href="//unpkg.com/gitalk/dist/gitalk.css?v=0.0.0"><script type="text/javascript" src="//cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.js?v=0.0.0"></script><script type="text/javascript" src="//unpkg.com/gitalk/dist/gitalk.min.js?v=0.0.0"></script><script>var gitalk = new Gitalk({
+  clientID: 'fa8d49cc90698365347d',
+  clientSecret: 'ad101f458b7f3950fccc09b931977c106cd2c467',
+  repo: 'mjd507.github.io',
+  owner: 'mjd507',
+  admin: ['mjd507'],
+  id: md5(location.pathname),
+  distractionFreeMode: false
+})
+gitalk.render('container')
+</script></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Back-End/">Back-End</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Big-Front-End/">Big-Front-End</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Data-Structure-Algorithm/">Data Structure & Algorithm</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java-Android/">Java & Android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Network/">Network</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Operation-System/">Operation System</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Story/">Story</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="http://johnnyshieh.me/" title="JohnnyShieh" target="_blank">JohnnyShieh</a><ul></ul><a href="https://daimajia.com/" title="代码家" target="_blank">代码家</a><ul></ul><a href="https://imququ.com/" title="Jerry Qu" target="_blank">Jerry Qu</a><ul></ul><a href="https://sivers.org/" title="Derek Sivers" target="_blank">Derek Sivers</a><ul></ul><a href="https://www.alispit.tel/#/" title="alispittel" target="_blank">alispittel</a><ul></ul><a href="http://www.hugogu.cn/" title="Hugo Gu" target="_blank">Hugo Gu</a><ul></ul><a href="https://weekly.75team.com/" title="奇舞周刊" target="_blank">奇舞周刊</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2021 <a href="/." rel="nofollow">mjd507.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox/dist/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox/dist/jquery.fancybox.min.css"><script type="text/javascript" src="/js/copycode.js" successtext="复制成功!"></script><link rel="stylesheet" type="text/css" href="/css/copycode.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script></div></body></html>

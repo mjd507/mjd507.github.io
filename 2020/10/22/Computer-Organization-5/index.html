@@ -1,0 +1,53 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>计算机组成原理 - 二进制编码，电路 | mjd507</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="/css/dark.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/normalize.css/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/purecss/build/pure-min.min.css"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/purecss/build/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = 'https://hm.baidu.com/hm.js?' + '1c847d4fb515d19b6108f15a5387f1d6';
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+  })();
+</script><script type="text/javascript" src="//cdn.jsdelivr.net/npm/clipboard/dist/clipboard.min.js"></script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/codeseven/toastr/build/toastr.min.js"></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/codeseven/toastr/build/toastr.min.css"><meta name="generator" content="Hexo 5.4.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">计算机组成原理 - 二进制编码，电路</h1><a id="logo" href="/.">mjd507</a><p class="description">Stop stopping</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">计算机组成原理 - 二进制编码，电路</h1><div class="post-meta">2020-10-22<span> | </span><span class="category"><a href="/categories/Operation-System/">Operation System</a></span></div><div class="clear"><div class="toc-article" id="toc"><div class="toc-title">文章目录</div><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E8%BF%9B%E5%88%B6%E7%BC%96%E7%A0%81"><span class="toc-number">1.</span> <span class="toc-text">二进制编码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%B5%E8%B7%AF"><span class="toc-number">2.</span> <span class="toc-text">电路</span></a></li></ol></div></div><div class="post-content"><p>所有数据，字符串，整数等一切事物在计算机里，都是通过 0 和 1 来组成，也就是用二进制表示。二进制的特点就是「逢二进一」。</p>
+<p>同时为了应对负数，采用了补码表示法，即第一位既作为符号位，同时也参与运算。比如 4 位二进制数，从 1000 到 0111，表示的范围在 -8 到 7 之间的 16 个数，不会浪费任何一个位。</p>
+<p>有了补码表示负数，整数相加也变得很容易，不需要做任何特殊处理，只是把它当成普通的二进制相加，就能得到正确的结果。</p>
+<span id="more"></span>
+
+<h2 id="二进制编码"><a href="#二进制编码" class="headerlink" title="二进制编码"></a>二进制编码</h2><p>最早计算机只需要使用英文字符，加上数字和一些特殊符号，然后用 8 位的二进制，就能表示我们日常需要的所有字符了，这个就是我们常常说的 ASCII 码。</p>
+<p><img src="https://static001.geekbang.org/resource/image/be/05/bee81480de3f6e7181cb7bb5f55cc805.png" alt="ASCII 码"></p>
+<p>8 位二进制能表示 128 个不同的数，然后映射到 128 个不同的字符里。ASCII 编码就相当于一本字典，存放二进制值与对应字符的映射关系。</p>
+<p>多数中间件在序列化时，会直接用二进制来序列化，你知道为什么吗？</p>
+<p>假设我们要序列化一个数字 15，如果采用 json 或者 csv 等文本格式存储起来在序列化，那么 15 就需要通过连续两个字符 1 和 5 来表示，对照 ASCII 码表，即 0011 0001 和 0011 0101，需要用两个 8 位来表示。</p>
+<p>而如果直接用二进制来序列化，15 只需一个 8 位二进制码表示，同样的值，序列化方式不同，存储上就多了一位，如果这个不够明显，你可以想想 int 类型的最大值，二进制表示就 32 位，但换成字符串，每个字符 8 位，10 个字符得 80 位，整整 2.5 倍，所以采用二进制序列化会比存储文本省下不少空间。</p>
+<p>随着越来越多的不同国家的人都用上了计算机，ASCII 码不够用了，比如中文怎么表示？</p>
+<p>这时各个国家工程师开始各显神通，给自己国家创建字符集和字符编码。</p>
+<p>字符集：字符的一个集合。比如所有中文汉字就是一个字符集。日常说的 Unicode，也是一个字符集，包含了 150 种语言的 14 万个不同的字符。</p>
+<p>字符编码：对于字符集里的这些字符，怎么一一用二进制表示出来的一个字典。上面说的 Unicode，就可以用 UTF-8、UTF-16，乃至 UTF-32 来进行编码，存储成二进制。</p>
+<p>有了字符集和字符编码，我们各个国家就知道计算机里传递的这些二进制究竟是什么数据了。</p>
+<p>不过这只是逻辑上的对应关系，在硬件层面，这些二进制数值和我们的晶体管和电路怎么关联的呢。</p>
+<h2 id="电路"><a href="#电路" class="headerlink" title="电路"></a>电路</h2><p>古代信号传递，通过烽火台和灯塔，后来有了电报，现在有了电路。所以电路就是用来传递数据的。</p>
+<p>电路通信一般是拉一条电线，连成通路，但这里有个问题，比如北京到上海，电线太长，电压不够，导致信号衰弱，无法传递。</p>
+<p>为解决这个问题，我们可以每隔一小段距离铺设一个线路，或者一个电驿站，将上一段线路发送过来的信息信号增强一下，发到下一个电站去，实现接力传输，这就是<strong>继电器</strong>。</p>
+<p>继电器类应用非常广。比如家里 WIFI 信号不足，可在增加一个路由器，接受原来 WIFI 信号，增强后在传输出去。再比如我们的光纤，都是每隔一段距离，增加一个放大原有信号的中继。</p>
+<p>信号输出端，除了供人观察信号，还可以作为后续线路的输入信号，我们通过各种开关的组合（与或非等），形成我们需要的逻辑。</p>
+<p>这就是门电路。一方面，我们可以通过继电器或者中继，进行长距离的信号传输。另一方面，我们也可以通过设置不同的线路和开关状态，实现更多不同的信号表示和处理方式，这些线路的连接方式其实就是我们在数字电路中所说的门电路。</p>
+<p>而这些门电路，也是我们创建 CPU 和内存的基本逻辑单元。我们的各种对于计算机二进制的“0”和“1”的操作，其实就是来自于门电路，叫作组合逻辑电路。</p>
+<p>在计算机里，即通过千万的晶体管组合，从而去指挥计算机干什么。</p>
+</br>
+
+<p>以上</p>
+</br>
+
+</br>
+
+<p><strong>声明 ：本站主要是用来整理不懂的知识，大部分内容我都没有完全掌握，请谨慎参考。</strong><br><strong>版权 ：可以转载，但请在文章显著位置注明出处 ！ <a href="https://mjd507.github.io/">https://mjd507.github.io</a></strong></p>
+<p><strong>补充 ：为方便面试或者跳槽的小伙伴，我创建了一个公众号「 Daily Problem 」 ，每天推送一道算法题，可以扫以下二维码关注。</strong></p>
+<p><img src="https://user-images.githubusercontent.com/8939151/111026177-fb505600-8423-11eb-89e5-687b94b156a0.png"></p>
+</div><div class="tags"></div><div class="post-nav"><a class="pre" href="/2020/10/26/Computer-Organization-6/">计算机组成原理 - 浮点数和定点数</a><a class="next" href="/2020/10/18/Computer-Organization-4/">计算机组成原理 - 程序的链接，装载和执行</a></div><div id="container"></div><link rel="stylesheet" type="text/css" href="//unpkg.com/gitalk/dist/gitalk.css?v=0.0.0"><script type="text/javascript" src="//cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.js?v=0.0.0"></script><script type="text/javascript" src="//unpkg.com/gitalk/dist/gitalk.min.js?v=0.0.0"></script><script>var gitalk = new Gitalk({
+  clientID: 'fa8d49cc90698365347d',
+  clientSecret: 'ad101f458b7f3950fccc09b931977c106cd2c467',
+  repo: 'mjd507.github.io',
+  owner: 'mjd507',
+  admin: ['mjd507'],
+  id: md5(location.pathname),
+  distractionFreeMode: false
+})
+gitalk.render('container')
+</script></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Back-End/">Back-End</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Big-Front-End/">Big-Front-End</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Data-Structure-Algorithm/">Data Structure & Algorithm</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java-Android/">Java & Android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Network/">Network</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Operation-System/">Operation System</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Story/">Story</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="http://johnnyshieh.me/" title="JohnnyShieh" target="_blank">JohnnyShieh</a><ul></ul><a href="https://daimajia.com/" title="代码家" target="_blank">代码家</a><ul></ul><a href="https://imququ.com/" title="Jerry Qu" target="_blank">Jerry Qu</a><ul></ul><a href="https://sivers.org/" title="Derek Sivers" target="_blank">Derek Sivers</a><ul></ul><a href="https://www.alispit.tel/#/" title="alispittel" target="_blank">alispittel</a><ul></ul><a href="http://www.hugogu.cn/" title="Hugo Gu" target="_blank">Hugo Gu</a><ul></ul><a href="https://weekly.75team.com/" title="奇舞周刊" target="_blank">奇舞周刊</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2021 <a href="/." rel="nofollow">mjd507.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox/dist/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox/dist/jquery.fancybox.min.css"><script type="text/javascript" src="/js/copycode.js" successtext="复制成功!"></script><link rel="stylesheet" type="text/css" href="/css/copycode.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script></div></body></html>

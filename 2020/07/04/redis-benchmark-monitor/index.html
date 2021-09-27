@@ -1,0 +1,67 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>redis 基准测试和监控 | mjd507</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="/css/dark.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/normalize.css/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/purecss/build/pure-min.min.css"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/purecss/build/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = 'https://hm.baidu.com/hm.js?' + '1c847d4fb515d19b6108f15a5387f1d6';
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+  })();
+</script><script type="text/javascript" src="//cdn.jsdelivr.net/npm/clipboard/dist/clipboard.min.js"></script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/codeseven/toastr/build/toastr.min.js"></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/codeseven/toastr/build/toastr.min.css"><meta name="generator" content="Hexo 5.4.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">redis 基准测试和监控</h1><a id="logo" href="/.">mjd507</a><p class="description">Stop stopping</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">redis 基准测试和监控</h1><div class="post-meta">2020-07-04<span> | </span><span class="category"><a href="/categories/Back-End/">Back-End</a></span></div><div class="clear"><div class="toc-article" id="toc"><div class="toc-title">文章目录</div><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E5%87%86%E6%B5%8B%E8%AF%95"><span class="toc-number">1.</span> <span class="toc-text">基准测试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%91%E6%8E%A7"><span class="toc-number">2.</span> <span class="toc-text">监控</span></a></li></ol></div></div><div class="post-content"><p>记录一下 redis 基准测试和监控搭建过程。</p>
+<span id="more"></span>
+
+<h2 id="基准测试"><a href="#基准测试" class="headerlink" title="基准测试"></a>基准测试</h2><p>redis 提供了基准测试工具 redis-benchmark。</p>
+<p><strong>测试机器配置：Mac OS 4c16g 256G</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">// 默认模拟 10w 次请求，50个client并发，数据大小 3b. keep-alive 1 </span><br><span class="line">~ redis-benchmark</span><br><span class="line">​</span><br><span class="line">// Quiet. Just show query/sec values</span><br><span class="line">~ redis-benchmark -q </span><br><span class="line">PING_INLINE: 80971.66 requests per second</span><br><span class="line">PING_BULK: 85106.38 requests per second</span><br><span class="line">SET: 93196.65 requests per second</span><br><span class="line">GET: 99403.58 requests per second</span><br><span class="line">INCR: 101729.40 requests per second</span><br><span class="line">LPUSH: 95693.78 requests per second</span><br><span class="line">RPUSH: 81234.77 requests per second</span><br><span class="line">LPOP: 87108.02 requests per second</span><br><span class="line">RPOP: 84033.61 requests per second</span><br><span class="line">SADD: 84889.65 requests per second</span><br><span class="line">HSET: 81300.81 requests per second</span><br><span class="line">SPOP: 84104.29 requests per second</span><br><span class="line">LPUSH (needed to benchmark LRANGE): 81037.28 requests per second</span><br><span class="line">LRANGE_100 (first 100 elements): 21920.21 requests per second</span><br><span class="line">LRANGE_300 (first 300 elements): 9130.75 requests per second</span><br><span class="line">LRANGE_500 (first 450 elements): 5879.93 requests per second</span><br><span class="line">LRANGE_600 (first 600 elements): 4888.30 requests per second</span><br><span class="line">MSET (10 keys): 64683.05 requests per second</span><br></pre></td></tr></table></figure>
+
+<h2 id="监控"><a href="#监控" class="headerlink" title="监控"></a>监控</h2><p><strong>使用 redis-exporter 上报 prometheus，接入 grafana 显示。</strong></p>
+<ol>
+<li>下载 redis-exporter ，本地 build 并且启动。</li>
+</ol>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/oliver006/redis_exporter.git</span><br><span class="line">​</span><br><span class="line">cd redis_exporter</span><br><span class="line">​</span><br><span class="line">go build .</span><br><span class="line">​</span><br><span class="line">./redis_exporter --version</span><br><span class="line">​</span><br><span class="line">// 启动后，浏览器访问 http://localhost:9121/metrics ，有数据表示启动成功</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>安装 prometheus</li>
+</ol>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">// 下载地址: https://prometheus.io/docs/prometheus/latest/installation/</span><br><span class="line">​</span><br><span class="line">// 解压后，cd prometheus-2.19.2.darwin-amd64, 配置 prometheus.yml 文件</span><br><span class="line">// 在 scrape_configs 下，添加 redis-exporter 配置</span><br><span class="line">  - job_name: &#x27;redis_exporter&#x27;</span><br><span class="line">​</span><br><span class="line">    # metrics_path defaults to &#x27;/metrics&#x27;</span><br><span class="line">    # scheme defaults to &#x27;http&#x27;.</span><br><span class="line">​</span><br><span class="line">    static_configs:</span><br><span class="line">    - targets: [&#x27;localhost:9121&#x27;]</span><br><span class="line">​</span><br><span class="line">// 启动 prometheus.</span><br><span class="line">// ./prometheus --config.file=prometheus.yml</span><br><span class="line">// 浏览器访问 http://localhost:9090 有页面表示启动成功</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>安装 grafana</li>
+</ol>
+<pre><code>// 下载地址: https://grafana.com/get
+brew update
+brew install grafana
+​
+// 启动 grafana
+grafana-server --config=/usr/local/etc/grafana/grafana.ini --homepath /usr/local/share/grafana --packaging=brew cfg:default.paths.logs=/usr/local/var/log/grafana cfg:default.paths.data=/usr/local/var/lib/grafana cfg:default.paths.plugins=/usr/local/var/lib/grafana/plugins
+​
+// 浏览器访问 http://localhost:3000 有页面表示启动成功。用户密码都是 admin
+​
+// grafana 页面导入 redis_exporter 仪表盘插件  https://grafana.com/grafana/dashboards/763，
+// 如提示没有 datasource，需要先创建一个 prometheus 类型的 datasource
+​```
+
+&lt;/br&gt;
+
+以上
+
+&lt;/br&gt;
+
+&lt;/br&gt;
+
+**声明 ：本站主要是用来整理不懂的知识，大部分内容我都没有完全掌握，请谨慎参考。**
+**版权 ：可以转载，但请在文章显著位置注明出处 ！ https://mjd507.github.io**
+
+**补充 ：为方便面试或者跳槽的小伙伴，我创建了一个公众号「 Daily Problem 」 ，每天推送一道算法题，可以扫以下二维码关注。**
+
+![](https://user-images.githubusercontent.com/8939151/111026177-fb505600-8423-11eb-89e5-687b94b156a0.png)
+</code></pre>
+</div><div class="tags"></div><div class="post-nav"><a class="pre" href="/2020/10/04/redis-2.2/">redis 2.2 源码阅读</a><a class="next" href="/2019/12/31/My-2019/">我的 2019</a></div><div id="container"></div><link rel="stylesheet" type="text/css" href="//unpkg.com/gitalk/dist/gitalk.css?v=0.0.0"><script type="text/javascript" src="//cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.js?v=0.0.0"></script><script type="text/javascript" src="//unpkg.com/gitalk/dist/gitalk.min.js?v=0.0.0"></script><script>var gitalk = new Gitalk({
+  clientID: 'fa8d49cc90698365347d',
+  clientSecret: 'ad101f458b7f3950fccc09b931977c106cd2c467',
+  repo: 'mjd507.github.io',
+  owner: 'mjd507',
+  admin: ['mjd507'],
+  id: md5(location.pathname),
+  distractionFreeMode: false
+})
+gitalk.render('container')
+</script></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Back-End/">Back-End</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Big-Front-End/">Big-Front-End</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Data-Structure-Algorithm/">Data Structure & Algorithm</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java-Android/">Java & Android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Network/">Network</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Operation-System/">Operation System</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Story/">Story</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="http://johnnyshieh.me/" title="JohnnyShieh" target="_blank">JohnnyShieh</a><ul></ul><a href="https://daimajia.com/" title="代码家" target="_blank">代码家</a><ul></ul><a href="https://imququ.com/" title="Jerry Qu" target="_blank">Jerry Qu</a><ul></ul><a href="https://sivers.org/" title="Derek Sivers" target="_blank">Derek Sivers</a><ul></ul><a href="https://www.alispit.tel/#/" title="alispittel" target="_blank">alispittel</a><ul></ul><a href="http://www.hugogu.cn/" title="Hugo Gu" target="_blank">Hugo Gu</a><ul></ul><a href="https://weekly.75team.com/" title="奇舞周刊" target="_blank">奇舞周刊</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2021 <a href="/." rel="nofollow">mjd507.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox/dist/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox/dist/jquery.fancybox.min.css"><script type="text/javascript" src="/js/copycode.js" successtext="复制成功!"></script><link rel="stylesheet" type="text/css" href="/css/copycode.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script></div></body></html>

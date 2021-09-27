@@ -1,0 +1,108 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>SSH 使用以及与 HTTPS 的对比 | mjd507</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="/css/dark.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/normalize.css/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/purecss/build/pure-min.min.css"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/purecss/build/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = 'https://hm.baidu.com/hm.js?' + '1c847d4fb515d19b6108f15a5387f1d6';
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+  })();
+</script><script type="text/javascript" src="//cdn.jsdelivr.net/npm/clipboard/dist/clipboard.min.js"></script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/codeseven/toastr/build/toastr.min.js"></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/codeseven/toastr/build/toastr.min.css"><meta name="generator" content="Hexo 5.4.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">SSH 使用以及与 HTTPS 的对比</h1><a id="logo" href="/.">mjd507</a><p class="description">Stop stopping</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">SSH 使用以及与 HTTPS 的对比</h1><div class="post-meta">2018-02-09<span> | </span><span class="category"><a href="/categories/Network/">Network</a></span></div><div class="post-content"><p>HTTPS 与 SSH，他们都是网络通信的协议，主要作用都是加密网络通信数据，他们之间的区别广义上讲，差不了多少，以至于有人把他们比作 <a target="_blank" rel="noopener" href="https://security.stackexchange.com/questions/1599/what-is-the-difference-between-ssl-vs-ssh-which-is-more-secure">苹果和桔子</a>的关系，我们日常使用的 GitHub，在 clone 仓库的时候，也提供了 HTTPS 和 SSH 两种方式，都能 clone 下来。</p>
+<p>但 SSH 和 HTTPS 还是不同的，HTTPS 大量用于客户端服务器直接的安全通信，SSH 主要用于两台电脑之间登录、共享数据和协同工作。</p>
+<span id="more"></span>
+
+<table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center">SSL（HTTPS）</th>
+<th align="center">SSH</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">全称</td>
+<td align="center">Secure Socket Layer</td>
+<td align="center">Secure Shell</td>
+</tr>
+<tr>
+<td align="center">端口号</td>
+<td align="center">443</td>
+<td align="center">22</td>
+</tr>
+<tr>
+<td align="center">应用</td>
+<td align="center">客户端服务器之间的加密通信</td>
+<td align="center">两台电脑之间的加密通信</td>
+</tr>
+<tr>
+<td align="center">授权</td>
+<td align="center">公钥和私钥</td>
+<td align="center">1. 公钥和私钥 \n  2.用户名和密码</td>
+</tr>
+</tbody></table>
+<p>之前已经整理过 HTTPS 相关的知识，这里主要记录一下 SSH 相关知识。</p>
+<h2 id="1-SSH-口令登录"><a href="#1-SSH-口令登录" class="headerlink" title="1. SSH 口令登录"></a>1. SSH 口令登录</h2><p>现在我在阿里云购买了一台云服务器，其 ip 地址为 120.27.210.94，我在自己电脑上，用 SSH 登录远程主机。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ ssh root@120.27.210.94</span><br><span class="line">The authenticity of host &#x27;120.27.210.94 (120.27.210.94)&#x27; can&#x27;t be established.</span><br><span class="line">ECDSA key fingerprint is SHA256:+FvnAMcSHUPuWvciMpQhvlZaITKUg9gJa/nqAyg7G/s.</span><br><span class="line">Are you sure you want to continue connecting (yes/no)?</span><br></pre></td></tr></table></figure>
+
+<p>ssh 默认的端口号为 22，如果远程主机 ssh 端口号不是 22，比如是 27037，那么就这样指定 <code>ssh -p 27037 root@120.27.210.94</code></p>
+<p>由于是第一次登录，为了防止中间人攻击，远程主机显示了自己的公钥指纹，确认没问题后，输入确认建立连接。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Are you sure you want to continue connecting (yes/no)? yes</span><br><span class="line">Warning: Permanently added &#x27;120.27.210.94&#x27; (ECDSA) to the list of known hosts.</span><br><span class="line">root@120.27.210.94&#x27;s password:</span><br><span class="line">...</span><br><span class="line">Welcome to Alibaba Cloud Elastic Compute Service !</span><br></pre></td></tr></table></figure>
+
+<p>当远程主机的公钥被接受以后，它就会被保存在文件$HOME/.ssh/known_hosts之中。下次再连接这台主机，系统就会认出它的公钥已经保存在本地了，从而跳过警告部分，直接提示输入密码。</p>
+<h2 id="2-SSH-公钥登录"><a href="#2-SSH-公钥登录" class="headerlink" title="2. SSH 公钥登录"></a>2. SSH 公钥登录</h2><p>每次都输入密码，很麻烦，SSH 也提供了公钥登录，原理就是，本地主机生成一个公钥和私钥，并将公钥在远程主机上存储一份。登录的时候，远程主机会向本地主机发送一个随机字符串，本地主机用生成的私钥加密后，发送给远程主机。远程主机采用公钥进行解密，如果匹配，则登录成功，不需要输入密码。</p>
+<h3 id="2-1-原理图"><a href="#2-1-原理图" class="headerlink" title="2.1 原理图"></a>2.1 原理图</h3><p><img src="https://user-images.githubusercontent.com/8939151/111024408-9ee83900-8419-11eb-86a3-36cde5a1358e.png" alt="图片来自(https://www.git-tower.com/learn/git/ebook/cn/command-line/advanced-topics/ssh-public-keys)"></p>
+<h3 id="2-2-本地生成公钥私钥"><a href="#2-2-本地生成公钥私钥" class="headerlink" title="2.2 本地生成公钥私钥"></a>2.2 本地生成公钥私钥</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ ssh-keygen</span><br><span class="line">Generating public/private rsa key pair.</span><br><span class="line">Enter file in which to save the key (/Users/mjd/.ssh/id_rsa):</span><br><span class="line">Enter passphrase (empty for no passphrase):</span><br><span class="line">Enter same passphrase again:</span><br><span class="line">Your identification has been saved in /Users/mjd/.ssh/id_rsa.</span><br><span class="line">Your public key has been saved in /Users/mjd/.ssh/id_rsa.pub.</span><br><span class="line">The key fingerprint is:</span><br><span class="line">SHA256:eioQgRNeYDEoGXJ6tXY6uonHPUxT8PhE9KjJmC7GAgY mjd@mjddeMacBook-Pro.local</span><br><span class="line">The key&#x27;s randomart image is:</span><br><span class="line">+---[RSA 2048]----+</span><br><span class="line">|=X+....          |</span><br><span class="line">|Xo+....o         |</span><br><span class="line">|Eo..o=o .        |</span><br><span class="line">|...=.=+          |</span><br><span class="line">|..o.*+  S        |</span><br><span class="line">|+...o...         |</span><br><span class="line">|o+o= .. .        |</span><br><span class="line">|oooo=  o         |</span><br><span class="line">|..o  o.          |</span><br><span class="line">+----[SHA256]-----+</span><br></pre></td></tr></table></figure>
+
+<p>现在，两个密钥文件被创建出来了：「id_rsa.pub」(公钥) 和 「id_rsa」(私钥)。如果是 Mac，可以在你 home 目录下的「.ssh」 目录中找到它们（~./ssh/）。</p>
+<h3 id="2-3-将公钥放到远程主机"><a href="#2-3-将公钥放到远程主机" class="headerlink" title="2.3 将公钥放到远程主机"></a>2.3 将公钥放到远程主机</h3><p>现在把生成的公钥「id_rsa.pub」放在远程主机上，使用 ssh-copy-id user@host 命令。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ ssh-copy-id root@120.27.210.94</span><br><span class="line">/usr/bin/ssh-copy-id: INFO: Source of key(s) to be installed: &quot;/Users/mjd/.ssh/id_rsa.pub&quot;</span><br><span class="line">/usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed</span><br><span class="line">/usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys</span><br><span class="line">root@120.27.210.94&#x27;s password:</span><br><span class="line"></span><br><span class="line">Number of key(s) added:        1</span><br><span class="line"></span><br><span class="line">Now try logging into the machine, with:   &quot;ssh &#x27;root@120.27.210.94&#x27;&quot;</span><br><span class="line">and check to make sure that only the key(s) you wanted were added.</span><br></pre></td></tr></table></figure>
+
+<p>PS: 如果远程主机 ssh 端口号不是默认的 22，比如说是 27037，那么就应该这样指定 <code>ssh-copy-id root@120.27.210.94 -p 27037</code></p>
+<p>好了，现在本地公钥就在远程主机上安装完成了，再次登录远程主机，就不要在输入密码了。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ ssh root@120.27.210.94</span><br><span class="line">Last login: Tue Feb 13 15:02:55 2018 from 180.126.250.177</span><br><span class="line"></span><br><span class="line">Welcome to Alibaba Cloud Elastic Compute Service !</span><br><span class="line"></span><br><span class="line">[root@mjd-centos ~]#</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2-4-authorized-keys-文件"><a href="#2-4-authorized-keys-文件" class="headerlink" title="2.4 authorized_keys 文件"></a>2.4 authorized_keys 文件</h3><p>远程主机将本地主机的公钥放在<code>$HOME/.ssh/authorized_keys</code>文件中，用 cat 命令查看下该文件内容。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@mjd-centos ~]# cat ~/.ssh/authorized_keys</span><br><span class="line">ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQD4g5LVz0A3q76pXrqT0CE1XP6rvJtu2aJ9rQDFqTaEXi1hnRWKMATD524AXsv9IZmA2kzWj56WETwwXY73kQt9/OhywKzMlrwTXYNu5x5tpvDImX6A9wGxeROXyHI4iAzkaqiPc8ZqtJDOHTqZRrR2E99r+c72d4GwmZwz9ZENAzYcjrgM/z1M27t24hNlD9fxLFHp6c+SO4Q0nxw0JNETUeaZLzGyxC2nolN7ROzrRrt0j0Qv528uqk2eaSVDjKi/lbwzxM3gzY/yCTQ8HWGlJy2alqw9EcKH9F4HbYyQyrTHd3Bf/g6P+eqPSK9eWTqnjl7UI+yieqbG7E3xKEoB mjd@mjddeMacBook-Pro.local</span><br><span class="line">[root@mjd-centos ~]#</span><br></pre></td></tr></table></figure>
+
+<p>与本地公钥的内容完全一样，所以，另一种安装公钥的方式，就是直接将本地公钥的内容 copy 到 <code>$HOME/.ssh/authorized_keys</code> 这个文件中。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ ssh root@120.27.210.94 &#x27;mkdir -p .ssh &amp;&amp; cat &gt;&gt; .ssh/authorized_keys&#x27; &lt; ~/.ssh/id_rsa.pub</span><br></pre></td></tr></table></figure>
+
+<p>这样，同样下次登录不在需要密码。</p>
+<h2 id="3-Github-的-HTTPS-与-SSH"><a href="#3-Github-的-HTTPS-与-SSH" class="headerlink" title="3. Github 的 HTTPS 与 SSH"></a>3. Github 的 HTTPS 与 SSH</h2><p>Github 提供了 HTTPS 与 SSH 两种通信方式，查看使用的那种通信协议，可以选取一个 Git 仓库，执行 <code>git remote -v</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">➜  mjd507.github.io git:(hexo) ✗ git remote -v</span><br><span class="line">origin	https://github.com/mjd507/mjd507.github.io.git (fetch)</span><br><span class="line">origin	https://github.com/mjd507/mjd507.github.io.git (push)</span><br></pre></td></tr></table></figure>
+
+<p>可以看到我这里都是使用的 HTTPS 协议，使用 HTTPS 的特点就是每次都需要用户名和密码验证才能通信，这里我是配置了用户名和密码，所以每次操作不需要输入，但本质通信还是需要用户名密码验证。如何配置记住用户名和密码，每个操作系统还有点差别，网上资料很多，这里不多说。</p>
+<p>这里我将仓库添加 SSH 协议进行通信。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">➜  mjd507.github.io git:(hexo) ✗ git remote add origin-ssh  git@github.com:mjd507/mjd507.github.io.git</span><br><span class="line">➜  mjd507.github.io git:(hexo) ✗ git remote -v</span><br><span class="line">origin	https://github.com/mjd507/mjd507.github.io.git (fetch)</span><br><span class="line">origin	https://github.com/mjd507/mjd507.github.io.git (push)</span><br><span class="line">origin-ssh	git@github.com:mjd507/mjd507.github.io.git (fetch)</span><br><span class="line">origin-ssh	git@github.com:mjd507/mjd507.github.io.git (push)</span><br></pre></td></tr></table></figure>
+
+<p>现在如果直接 push 会报没有权限，因为 github 上没有我的公钥。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">➜  mjd507.github.io git:(hexo) ✗ git add .</span><br><span class="line">➜  mjd507.github.io git:(hexo) ✗ git commit -m &#x27;添加图片说明&#x27;</span><br><span class="line">....</span><br><span class="line">➜  mjd507.github.io git:(hexo) ✗ git push origin-ssh hexo</span><br><span class="line">git@github.com: Permission denied (publickey).</span><br><span class="line">fatal: Could not read from remote repository.</span><br><span class="line"></span><br><span class="line">Please make sure you have the correct access rights</span><br><span class="line">and the repository exists.</span><br></pre></td></tr></table></figure>
+
+<p>我将刚刚用 <code>ssh-keygen</code> 生成的公钥配置到 Github 上去，此时在提交，就成功了。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">➜  mjd507.github.io git:(hexo) ✗ git push origin-ssh hexo</span><br><span class="line">Counting objects: 10, done.</span><br><span class="line">Delta compression using up to 4 threads.</span><br><span class="line">Compressing objects: 100% (9/9), done.</span><br><span class="line">Writing objects: 100% (10/10), 1.04 KiB | 1.04 MiB/s, done.</span><br><span class="line">Total 10 (delta 6), reused 0 (delta 0)</span><br><span class="line">remote: Resolving deltas: 100% (6/6), completed with 6 local objects.</span><br><span class="line">To github.com:mjd507/mjd507.github.io.git</span><br><span class="line">   25a4d402..75c0bc7f  hexo -&gt; hexo</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="参考阅读"><a href="#参考阅读" class="headerlink" title="参考阅读"></a>参考阅读</h2><p><a target="_blank" rel="noopener" href="https://medium.com/@alxsanborn/https-ssl-and-ssh-a-conceptual-understanding-9-2-16-4e75ce8d574">HTTPS (SSL) and SSH: A Conceptual Understanding</a></p>
+<p>[<a target="_blank" rel="noopener" href="https://security.stackexchange.com/questions/1599/what-is-the-difference-between-ssl-vs-ssh-which-is-more-secure">What is the difference between SSL vs SSH? Which is more secure?</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.git-tower.com/learn/git/ebook/cn/command-line/advanced-topics/ssh-public-keys">使用 SSH 公钥验证</a></p>
+<p><a target="_blank" rel="noopener" href="http://www.ruanyifeng.com/blog/2011/12/ssh_remote_login.html">SSH原理与运用（一）：远程登录</a></br></p>
+<p>以上</p>
+</br>
+
+</br>
+
+<p><strong>声明 ：本站主要是用来整理不懂的知识，大部分内容我都没有完全掌握，请谨慎参考。</strong><br><strong>版权 ：可以转载，但请在文章显著位置注明出处 ！ <a href="https://mjd507.github.io/">https://mjd507.github.io</a></strong></p>
+<p><strong>补充 ：为方便面试或者跳槽的小伙伴，我创建了一个公众号「 Daily Problem 」 ，每天推送一道算法题，可以扫以下二维码关注。</strong></p>
+<p><img src="https://user-images.githubusercontent.com/8939151/111026177-fb505600-8423-11eb-89e5-687b94b156a0.png"></p>
+</div><div class="tags"></div><div class="post-nav"><a class="pre" href="/2018/02/16/HTTP-Cache/">HTTP 缓存</a><a class="next" href="/2018/01/30/HTTP-Security/">HTTPS 安全机制</a></div><div id="container"></div><link rel="stylesheet" type="text/css" href="//unpkg.com/gitalk/dist/gitalk.css?v=0.0.0"><script type="text/javascript" src="//cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.js?v=0.0.0"></script><script type="text/javascript" src="//unpkg.com/gitalk/dist/gitalk.min.js?v=0.0.0"></script><script>var gitalk = new Gitalk({
+  clientID: 'fa8d49cc90698365347d',
+  clientSecret: 'ad101f458b7f3950fccc09b931977c106cd2c467',
+  repo: 'mjd507.github.io',
+  owner: 'mjd507',
+  admin: ['mjd507'],
+  id: md5(location.pathname),
+  distractionFreeMode: false
+})
+gitalk.render('container')
+</script></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Back-End/">Back-End</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Big-Front-End/">Big-Front-End</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Data-Structure-Algorithm/">Data Structure & Algorithm</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java-Android/">Java & Android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Network/">Network</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Operation-System/">Operation System</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Story/">Story</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="http://johnnyshieh.me/" title="JohnnyShieh" target="_blank">JohnnyShieh</a><ul></ul><a href="https://daimajia.com/" title="代码家" target="_blank">代码家</a><ul></ul><a href="https://imququ.com/" title="Jerry Qu" target="_blank">Jerry Qu</a><ul></ul><a href="https://sivers.org/" title="Derek Sivers" target="_blank">Derek Sivers</a><ul></ul><a href="https://www.alispit.tel/#/" title="alispittel" target="_blank">alispittel</a><ul></ul><a href="http://www.hugogu.cn/" title="Hugo Gu" target="_blank">Hugo Gu</a><ul></ul><a href="https://weekly.75team.com/" title="奇舞周刊" target="_blank">奇舞周刊</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2021 <a href="/." rel="nofollow">mjd507.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox/dist/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox/dist/jquery.fancybox.min.css"><script type="text/javascript" src="/js/copycode.js" successtext="复制成功!"></script><link rel="stylesheet" type="text/css" href="/css/copycode.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script></div></body></html>

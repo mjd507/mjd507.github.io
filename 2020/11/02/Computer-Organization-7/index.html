@@ -1,0 +1,55 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>计算机组成原理 - CPU 的指令周期和数据通路建设 | mjd507</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="/css/dark.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/normalize.css/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/purecss/build/pure-min.min.css"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/purecss/build/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = 'https://hm.baidu.com/hm.js?' + '1c847d4fb515d19b6108f15a5387f1d6';
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+  })();
+</script><script type="text/javascript" src="//cdn.jsdelivr.net/npm/clipboard/dist/clipboard.min.js"></script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/codeseven/toastr/build/toastr.min.js"></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/codeseven/toastr/build/toastr.min.css"><meta name="generator" content="Hexo 5.4.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">计算机组成原理 - CPU 的指令周期和数据通路建设</h1><a id="logo" href="/.">mjd507</a><p class="description">Stop stopping</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">计算机组成原理 - CPU 的指令周期和数据通路建设</h1><div class="post-meta">2020-11-02<span> | </span><span class="category"><a href="/categories/Operation-System/">Operation System</a></span></div><div class="clear"><div class="toc-article" id="toc"><div class="toc-title">文章目录</div><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%87%E4%BB%A4%E5%91%A8%E6%9C%9F"><span class="toc-number">1.</span> <span class="toc-text">指令周期</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E9%80%9A%E8%B7%AF"><span class="toc-number">2.</span> <span class="toc-text">数据通路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">3.</span> <span class="toc-text">总结</span></a></li></ol></div></div><div class="post-content"><p>我们知道，在 冯·诺依曼 的提出的计算机模型中，计算机是由五大部分组成：运算器、控制器、存储器、输入设备、输出设备。</p>
+<p>其中，运算器和控制器一般会放在一起，即我们的 CPU （中央处理器），负责指令读取和计算。</p>
+<p>指令一般分为三类，R 型：进行算术操作、逻辑操作；I 型：进行数据传输、条件分支；J 型：地址跳转。</p>
+<p>有了这些基础，那么完整的 CPU 是怎么运转起来的呢。</p>
+<span id="more"></span>
+
+<h2 id="指令周期"><a href="#指令周期" class="headerlink" title="指令周期"></a>指令周期</h2><p>来看下一条指令被执行的过程中，经历了哪些阶段。</p>
+<ol>
+<li><strong>控制器获取指令</strong>。从 PC 寄存器里找指令地址，根据地址再从内存获取具体指令。</li>
+<li><strong>控制器将指令译码</strong>。根据指令，解析成要进行哪些操作（R、I、J类指令操作）。</li>
+<li><strong>运算器将指令执行</strong>。R、I 型一般由 ALU 算术逻辑单元处理，就是运算器处理，简单的跳转指令还是由控制器直接执行。</li>
+<li>循环 1 ~ 3。</li>
+</ol>
+<p><img src="https://static001.geekbang.org/resource/image/18/a7/1840bead02cfbe5d8f70e2f0a7b962a7.jpg" alt="指令周期"></p>
+<p>除了指令周期，CPU 中还有两个常见的周期。</p>
+<p>一是 Machine Cycle，机器周期或者 CPU 周期。一般把从内存里面读取一条指令的最短时间，称为 CPU 周期。</p>
+<p>另一个是 Clock Cycle，也就是时钟周期以及我们机器的主频。一个 CPU 周期，通常会由几个时钟周期累积起来。</p>
+<p>对于一个指令周期来说，我们取出一条指令，然后执行它，至少需要两个 CPU 周期。取出指令至少需要一个 CPU 周期，执行至少也需要一个 CPU 周期，复杂的指令则需要更多的 CPU 周期。</p>
+<p><img src="https://static001.geekbang.org/resource/image/1a/48/1a7d2d6cf7cb78a8f48775268f452e48.jpeg" alt="三个周期的关系"></p>
+<h2 id="数据通路"><a href="#数据通路" class="headerlink" title="数据通路"></a>数据通路</h2><p>我们已经知道 CPU 由运算器，控制器，寄存器，以及总线来将他们串起来。那么在硬件层面，需要哪些电路呢。</p>
+<p>首先就是 ALU 和各种组合逻辑电路，实际就是一个没有状态的，根据输入计算输出结果的第一个电路。</p>
+<p>第二，需要有一个能够进行状态读写的电路元件，也就是我们的寄存器。能够存储一次运算的结果，需要的时候拿出来使用。</p>
+<p>第三，需要由一个“自动”的电路，按照固定的周期，不停地实现 PC 寄存器自增，自动地去执行“Fetch - Decode - Execute“的步骤。</p>
+<p>第四，我们需要有一个“译码”的电路。无论是对于指令进行 decode，还是对于拿到的内存地址去获取对应的数据或者指令，我们都需要通过一个电路找到对应的数据。</p>
+<p>把这四类电路，通过各种方式组合在一起，就能最终组成功能强大的 CPU 了。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本文介绍了 CPU 运转的指令周期和需要的数据通路，以及完成通路功能所需要的四种电路，分别是，ALU 这样的组合逻辑电路、用来存储数据的锁存器和 D 触发器电路、用来实现 PC 寄存器的计数器电路，以及用来解码和寻址的译码器电路。</p>
+<p>虽然 CPU 已经是由几十亿个晶体管组成的及其复杂的电路，但是它仍然是由这样一个个基本功能的电路组成的。只要搞清楚这些电路的运作原理，你自然也就弄明白了 CPU 的工作原理。</p>
+</br>
+
+<p>以上</p>
+</br>
+
+</br>
+
+<p><strong>声明 ：本站主要是用来整理不懂的知识，大部分内容我都没有完全掌握，请谨慎参考。</strong><br><strong>版权 ：可以转载，但请在文章显著位置注明出处 ！ <a href="https://mjd507.github.io/">https://mjd507.github.io</a></strong></p>
+<p><strong>补充 ：为方便面试或者跳槽的小伙伴，我创建了一个公众号「 Daily Problem 」 ，每天推送一道算法题，可以扫以下二维码关注。</strong></p>
+<p><img src="https://user-images.githubusercontent.com/8939151/111026177-fb505600-8423-11eb-89e5-687b94b156a0.png"></p>
+</div><div class="tags"></div><div class="post-nav"><a class="pre" href="/2020/11/22/Computer-Organization-8/">计算机组成原理 - 高速缓存</a><a class="next" href="/2020/10/26/Computer-Organization-6/">计算机组成原理 - 浮点数和定点数</a></div><div id="container"></div><link rel="stylesheet" type="text/css" href="//unpkg.com/gitalk/dist/gitalk.css?v=0.0.0"><script type="text/javascript" src="//cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.js?v=0.0.0"></script><script type="text/javascript" src="//unpkg.com/gitalk/dist/gitalk.min.js?v=0.0.0"></script><script>var gitalk = new Gitalk({
+  clientID: 'fa8d49cc90698365347d',
+  clientSecret: 'ad101f458b7f3950fccc09b931977c106cd2c467',
+  repo: 'mjd507.github.io',
+  owner: 'mjd507',
+  admin: ['mjd507'],
+  id: md5(location.pathname),
+  distractionFreeMode: false
+})
+gitalk.render('container')
+</script></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Back-End/">Back-End</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Big-Front-End/">Big-Front-End</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Data-Structure-Algorithm/">Data Structure & Algorithm</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java-Android/">Java & Android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Network/">Network</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Operation-System/">Operation System</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Story/">Story</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="http://johnnyshieh.me/" title="JohnnyShieh" target="_blank">JohnnyShieh</a><ul></ul><a href="https://daimajia.com/" title="代码家" target="_blank">代码家</a><ul></ul><a href="https://imququ.com/" title="Jerry Qu" target="_blank">Jerry Qu</a><ul></ul><a href="https://sivers.org/" title="Derek Sivers" target="_blank">Derek Sivers</a><ul></ul><a href="https://www.alispit.tel/#/" title="alispittel" target="_blank">alispittel</a><ul></ul><a href="http://www.hugogu.cn/" title="Hugo Gu" target="_blank">Hugo Gu</a><ul></ul><a href="https://weekly.75team.com/" title="奇舞周刊" target="_blank">奇舞周刊</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2021 <a href="/." rel="nofollow">mjd507.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox/dist/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox/dist/jquery.fancybox.min.css"><script type="text/javascript" src="/js/copycode.js" successtext="复制成功!"></script><link rel="stylesheet" type="text/css" href="/css/copycode.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script></div></body></html>

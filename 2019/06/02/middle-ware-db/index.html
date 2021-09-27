@@ -1,0 +1,88 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>数据库中间件基础 | mjd507</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="/css/dark.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/normalize.css/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/purecss/build/pure-min.min.css"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/purecss/build/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = 'https://hm.baidu.com/hm.js?' + '1c847d4fb515d19b6108f15a5387f1d6';
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+  })();
+</script><script type="text/javascript" src="//cdn.jsdelivr.net/npm/clipboard/dist/clipboard.min.js"></script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/codeseven/toastr/build/toastr.min.js"></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/codeseven/toastr/build/toastr.min.css"><meta name="generator" content="Hexo 5.4.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">数据库中间件基础</h1><a id="logo" href="/.">mjd507</a><p class="description">Stop stopping</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">数据库中间件基础</h1><div class="post-meta">2019-06-02<span> | </span><span class="category"><a href="/categories/Back-End/">Back-End</a></span></div><div class="clear"><div class="toc-article" id="toc"><div class="toc-title">文章目录</div><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%BB%E5%86%99%E5%88%86%E7%A6%BB%E7%9A%84%E9%97%AE%E9%A2%98%E5%92%8C%E5%AF%B9%E7%AD%96"><span class="toc-number">1.</span> <span class="toc-text">读写分离的问题和对策</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%95%E6%9C%BA%E5%88%B0%E5%88%86%E5%B8%83%E5%BC%8F%E7%9A%84%E9%97%AE%E9%A2%98%E5%92%8C%E5%AF%B9%E7%AD%96"><span class="toc-number">2.</span> <span class="toc-text">单机到分布式的问题和对策</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%AD%E9%97%B4%E4%BB%B6%E7%9A%84%E8%AE%BE%E8%AE%A1"><span class="toc-number">3.</span> <span class="toc-text">数据库中间件的设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E6%BA%90%E7%9A%84%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%AD%E9%97%B4%E4%BB%B6"><span class="toc-number">4.</span> <span class="toc-text">开源的数据库中间件</span></a></li></ol></div></div><div class="post-content"><p>当单机数据库压力变大，常见的有两种处理方式，一是读写分离，类似于集群，一是分库，分表，即分布式。</p>
+<span id="more"></span>
+
+<h2 id="读写分离的问题和对策"><a href="#读写分离的问题和对策" class="headerlink" title="读写分离的问题和对策"></a>读写分离的问题和对策</h2><ul>
+<li>数据复制问题</li>
+<li>应用对于数据源选择问题</li>
+</ul>
+<p>主从数据同步，必然会在某一刻，数据的不一致，如果业务允许短时间的不一致，那只要保证最终一致即可。当然也可以采取强制读主库的方式。</p>
+<p>对于读写多数据源，有两种形式，一种是通过 proxy 的形式，将 应用层 sql 发送给 proxy 机器，有 proxy 来判断给主库还是从库执行。另一种是在应用内配置两种数据源，根据 sql 的类型（读/写）来调用对应的数据库服务器。</p>
+<h2 id="单机到分布式的问题和对策"><a href="#单机到分布式的问题和对策" class="headerlink" title="单机到分布式的问题和对策"></a>单机到分布式的问题和对策</h2><p>应用服务化后，每个微服务一个对应一个数据库，能很好的减轻数据库的压力，这也是垂直拆分，将较为内聚的业务拆到一个库中。</p>
+<p>垂直拆分的问题：</p>
+<ul>
+<li>单机的 acid 无法保证</li>
+<li>join 操作无法执行</li>
+</ul>
+<p>对于分布式事务，强一致性会极大影响分布式系统的性能，因此提出 cap（一致性，可用性，分区容忍性） 理论，一般牺牲一致性来换取系统的可用性和分区容错性。不过牺牲一致性并不是完全放弃数据一致性，而是牺牲强一致性换取弱一致性，即 base 理论，Basic Available，Soft State，Eventual Consisstency。</p>
+<p>分布式 join 的问题，一是将原有的 sql，分割为两条，在服务之间调用，二是分库建表时，冗余一些必要字段。</p>
+<p>当然，除了垂直方向的分库，还有水平方向的分表，比如订单表，遇到活动，订单数激增，表迅速增大，此时就通过增加一张字段一样的表，来分摊单表的压力。</p>
+<p>水平拆分新增的问题：</p>
+<ul>
+<li>主键问题</li>
+<li>SQL 路由问题</li>
+<li>分页查询问题</li>
+</ul>
+<p>主键问题：有两个要素，唯一性和连续性，这里推荐 Twitter 的 Snowflake 算法，该算法生成的是 64 位唯一 Id（由 41 位的 timestamp+ 10 位自定义的机器码 + 13 位累加计数器组成）</p>
+<p>SQL 路由问题：数据分片的时候按照指定的 key，路由存储到不到的表中。</p>
+<p>分页查询问题：</p>
+<ul>
+<li>不需要排序，可按等步长或等比例从多张表中取数据</li>
+<li>需要排序，每张表都需获取足够查询页数的数据，在应用内合并排序，当页数过大时，负担越重，尽量避免。</li>
+</ul>
+<h2 id="数据库中间件的设计"><a href="#数据库中间件的设计" class="headerlink" title="数据库中间件的设计"></a>数据库中间件的设计</h2><ol>
+<li>SQL 解析</li>
+</ol>
+<ul>
+<li>对官方 SQL 的支持范围</li>
+</ul>
+<ol start="2">
+<li>规则处理</li>
+</ol>
+<ul>
+<li>根据某个字段按照一定规则确定一组库，比如 id % 2 = 0 为 group db 1，id % 2 = 1 为 group db 2.</li>
+</ul>
+<ol start="3">
+<li>SQL 改写</li>
+</ol>
+<ul>
+<li>比如改写表名。水平拆分的表在同一个库中，表名不同，就需要在执行 SQL 时动态更换表名</li>
+</ul>
+<ol start="4">
+<li>数据源选择</li>
+</ol>
+<ul>
+<li>确定一组数据源中的具体的某一个数据源</li>
+</ul>
+<ol start="5">
+<li>SQL 执行</li>
+<li>结果集返回，合并处理</li>
+</ol>
+<h2 id="开源的数据库中间件"><a href="#开源的数据库中间件" class="headerlink" title="开源的数据库中间件"></a>开源的数据库中间件</h2><p><a target="_blank" rel="noopener" href="https://github.com/MyCATApache/Mycat-Server">MyCAT</a><br><a target="_blank" rel="noopener" href="https://github.com/mark-neil-wang/OneProxy">OneProxy</a><br><a target="_blank" rel="noopener" href="https://github.com/Qihoo360/Atlas">Atlas</a></p>
+</br>
+
+<p>以上</p>
+</br>
+
+</br>
+
+<p><strong>声明 ：本站主要是用来整理不懂的知识，大部分内容我都没有完全掌握，请谨慎参考。</strong><br><strong>版权 ：可以转载，但请在文章显著位置注明出处 ！ <a href="https://mjd507.github.io/">https://mjd507.github.io</a></strong></p>
+<p><strong>补充 ：为方便面试或者跳槽的小伙伴，我创建了一个公众号「 Daily Problem 」 ，每天推送一道算法题，可以扫以下二维码关注。</strong></p>
+<p><img src="https://user-images.githubusercontent.com/8939151/111026177-fb505600-8423-11eb-89e5-687b94b156a0.png"></p>
+</div><div class="tags"></div><div class="post-nav"><a class="pre" href="/2019/06/09/middle-ware-msg/">消息中间件基础</a><a class="next" href="/2019/05/25/middle-ware-service/">服务中间件基础</a></div><div id="container"></div><link rel="stylesheet" type="text/css" href="//unpkg.com/gitalk/dist/gitalk.css?v=0.0.0"><script type="text/javascript" src="//cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.js?v=0.0.0"></script><script type="text/javascript" src="//unpkg.com/gitalk/dist/gitalk.min.js?v=0.0.0"></script><script>var gitalk = new Gitalk({
+  clientID: 'fa8d49cc90698365347d',
+  clientSecret: 'ad101f458b7f3950fccc09b931977c106cd2c467',
+  repo: 'mjd507.github.io',
+  owner: 'mjd507',
+  admin: ['mjd507'],
+  id: md5(location.pathname),
+  distractionFreeMode: false
+})
+gitalk.render('container')
+</script></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Back-End/">Back-End</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Big-Front-End/">Big-Front-End</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Data-Structure-Algorithm/">Data Structure & Algorithm</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java-Android/">Java & Android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Network/">Network</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Operation-System/">Operation System</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Story/">Story</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="http://johnnyshieh.me/" title="JohnnyShieh" target="_blank">JohnnyShieh</a><ul></ul><a href="https://daimajia.com/" title="代码家" target="_blank">代码家</a><ul></ul><a href="https://imququ.com/" title="Jerry Qu" target="_blank">Jerry Qu</a><ul></ul><a href="https://sivers.org/" title="Derek Sivers" target="_blank">Derek Sivers</a><ul></ul><a href="https://www.alispit.tel/#/" title="alispittel" target="_blank">alispittel</a><ul></ul><a href="http://www.hugogu.cn/" title="Hugo Gu" target="_blank">Hugo Gu</a><ul></ul><a href="https://weekly.75team.com/" title="奇舞周刊" target="_blank">奇舞周刊</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2021 <a href="/." rel="nofollow">mjd507.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox/dist/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox/dist/jquery.fancybox.min.css"><script type="text/javascript" src="/js/copycode.js" successtext="复制成功!"></script><link rel="stylesheet" type="text/css" href="/css/copycode.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script></div></body></html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>设计一个在 AWS 上管理千万级别的用户系统 | mjd507</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="/css/dark.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/normalize.css/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/purecss/build/pure-min.min.css"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/purecss/build/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = 'https://hm.baidu.com/hm.js?' + '1c847d4fb515d19b6108f15a5387f1d6';
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+  })();
+</script><script type="text/javascript" src="//cdn.jsdelivr.net/npm/clipboard/dist/clipboard.min.js"></script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/codeseven/toastr/build/toastr.min.js"></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/codeseven/toastr/build/toastr.min.css"><meta name="generator" content="Hexo 5.4.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">设计一个在 AWS 上管理千万级别的用户系统</h1><a id="logo" href="/.">mjd507</a><p class="description">Stop stopping</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">设计一个在 AWS 上管理千万级别的用户系统</h1><div class="post-meta">2019-12-29<span> | </span><span class="category"><a href="/categories/Back-End/">Back-End</a></span></div><div class="clear"><div class="toc-article" id="toc"><div class="toc-title">文章目录</div><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E6%A6%82%E8%BF%B0%E7%94%A8%E4%BE%8B%E5%92%8C%E7%BA%A6%E6%9D%9F%EF%BC%8C%E8%AE%A1%E7%AE%97"><span class="toc-number">1.</span> <span class="toc-text">1. 概述用例和约束，计算</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E6%8A%BD%E8%B1%A1%E8%AE%BE%E8%AE%A1"><span class="toc-number">2.</span> <span class="toc-text">2. 抽象设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E6%A0%B8%E5%BF%83%E7%BB%84%E4%BB%B6%E8%AE%BE%E8%AE%A1"><span class="toc-number">3.</span> <span class="toc-text">3. 核心组件设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E6%89%A9%E5%B1%95%E6%9C%8D%E5%8A%A1%E8%AE%BE%E8%AE%A1"><span class="toc-number">4.</span> <span class="toc-text">4. 扩展服务设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E8%BF%9B%E4%B8%80%E6%AD%A5%E8%AE%A8%E8%AE%BA"><span class="toc-number">5.</span> <span class="toc-text">5. 进一步讨论</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E5%85%B6%E4%BB%96"><span class="toc-number">6.</span> <span class="toc-text">6. 其他</span></a></li></ol></div></div><div class="post-content"><p>设计一个在 AWS 上管理千万级别的用户系统</p>
+<span id="more"></span>
+
+<h2 id="1-概述用例和约束，计算"><a href="#1-概述用例和约束，计算" class="headerlink" title="1. 概述用例和约束，计算"></a>1. 概述用例和约束，计算</h2><p>假设这题有以下用例：</p>
+<ul>
+<li><p>用户发出读取或写入请求</p>
+<ul>
+<li>服务进行处理，存储用户数据，然后返回结果</li>
+</ul>
+</li>
+<li><p>服务需要从负载少量用户发展到千万用户</p>
+<ul>
+<li>思考处理大量用户和请求时，架构设计和一般的扩展模式</li>
+</ul>
+</li>
+<li><p>服务高可用</p>
+</li>
+</ul>
+<p>状态假设：</p>
+<ul>
+<li><p>用户流量分布不均匀</p>
+</li>
+<li><p>需要关系型数据</p>
+</li>
+<li><p>从1个用户扩展到1千万用户</p>
+<ul>
+<li><p>每月 10 亿次写请求</p>
+</li>
+<li><p>每月 1000 亿次读请求</p>
+</li>
+<li><p>读写比例 100 : 1</p>
+</li>
+<li><p>每次写请求存储 1kb 内容</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>计算：</p>
+<ul>
+<li><p>每月 1T 内容存储：每次写 1kb * 10亿次写 = 1T，3 年就是 36 T</p>
+</li>
+<li><p>平均每秒 400 次写请求</p>
+</li>
+<li><p>平均每秒 40000 次读请求</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1G ≈ 1000M ≈ 1000000K(100万k) ≈ 1000000000b(10亿byte)</span><br><span class="line"></span><br><span class="line">1T ≈ 10亿kb</span><br><span class="line"></span><br><span class="line">30 天 = 24 * 30 h = 24 * 30 * 3600 s ≈ 250万 s</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-抽象设计"><a href="#2-抽象设计" class="headerlink" title="2. 抽象设计"></a>2. 抽象设计</h2><p><img src="https://camo.githubusercontent.com/19e81d65d7ced13c58952f72fe1002e0f8c5798c/687474703a2f2f692e696d6775722e636f6d2f42384c444b44372e706e67" alt="各个组件"></p>
+<h2 id="3-核心组件设计"><a href="#3-核心组件设计" class="headerlink" title="3. 核心组件设计"></a>3. 核心组件设计</h2><p>对于 1 - 2 个用户，只需要简单得设计即可：</p>
+<ul>
+<li><p>一台 Web Server </p>
+</li>
+<li><p>必要时垂直扩容</p>
+</li>
+<li><p>监控以确定瓶颈</p>
+</li>
+</ul>
+<p>在单个机器里，部署服务，部署 MySQL 数据库存放用户数据。</p>
+<p>当性能不足时 (cpu, memory等) ，垂直扩容，换更好的机器。</p>
+<p>将服务器分配一个公共静态 IP。</p>
+<p>添加 DNS 域名服务，指向服务器的 IP。</p>
+<p>安全方面，服务器仅打开必要的端口，比如 http 请求的 80 端口，https 请求的 443 端口，以及 ssh 白名单用户的 22 端口。</p>
+<h2 id="4-扩展服务设计"><a href="#4-扩展服务设计" class="headerlink" title="4. 扩展服务设计"></a>4. 扩展服务设计</h2><p><strong>User+</strong></p>
+<p><img src="https://camo.githubusercontent.com/91df3093298a51bf3b70a2e24622f37d5ee19d0f/687474703a2f2f692e696d6775722e636f6d2f7272666a4d58422e706e67"></p>
+<p>用户增多，单机的负载增加。用户静态资源占用过多磁盘，MySQL 也占用越来越多的<strong>内存</strong>和<strong>CPU</strong>资源。</p>
+<p>因为垂直扩展已到极限，换再好的硬件机器也无法对 MySQL 数据库和 Web 服务器进行独立扩展。</p>
+<p>目标与对策：</p>
+<ul>
+<li><p>减轻单机负载，并允许独立扩容。</p>
+<ul>
+<li><p>考虑 <strong>S3 对象存储</strong>，单独保存 JS, CSS, Html, Images, Videos 等静态资源</p>
+</li>
+<li><p>将 <strong>Mysql 单独部署</strong>，使用 RDS 服务来管理 Mysql 实例</p>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<p><strong>User++</strong></p>
+<p><img src="https://camo.githubusercontent.com/0a8044552aafe305f21804e136aa3d69e08e958a/687474703a2f2f692e696d6775722e636f6d2f72616f4654584d2e706e67"></p>
+<p>用户再次增多，高峰时段的单个Web服务器瓶颈，导致响应缓慢，在某些情况下还会导致停机。希望朝着更高的可用性和更低的延时性发展。</p>
+<p>目标与对策：</p>
+<ul>
+<li><p>使用水平扩容应对不断增加的负载，解决单点故障</p>
+<ul>
+<li><p>添加 Load Balancer 负载均衡器，例如亚马逊的 ELB 或 HAProxy</p>
+</li>
+<li><p>Web Server 多服务多地域部署</p>
+</li>
+<li><p>Mysql 采用多实例部署，主从模式。</p>
+</li>
+</ul>
+</li>
+<li><p>将 Web Server 与 Application Server 分开</p>
+<ul>
+<li><p>两层分别配置</p>
+</li>
+<li><p>Web Server 可以作为一个反向代理</p>
+</li>
+<li><p>比如可以增加 Application Server 专门负责读请求，其他的负责写请求</p>
+</li>
+</ul>
+</li>
+<li><p>将静态（和一些动态）内容移动到 CDN 上，减少加载和延时</p>
+</li>
+</ul>
+<hr>
+<p><strong>User+++</strong></p>
+<p><img src="https://camo.githubusercontent.com/45ccce17b66f6089bc014a2c9ed538753df69ed9/687474703a2f2f692e696d6775722e636f6d2f4f5a43784a72302e706e67"></p>
+<p>用户仍在增多，而且的读取量很大（读写比例100：1），我们的数据库性能不佳。需要提高读请求的性能。</p>
+<p>目标与对策：</p>
+<ul>
+<li><p>减少负载和延迟</p>
+<ul>
+<li><p>将热门数据缓存到 Elasticache 之内的内存中 (首先可尝试先开始 MySQL 缓存，观察是否足以缓解瓶颈)，session 数据的缓存</p>
+</li>
+<li><p>Web Server 设成无状态，允许自动缩放。</p>
+</li>
+<li><p>从内存顺序读取 1MB大约需要 250 微秒，而从 SSD 读取则需要 4 倍，而从磁盘读取则需要 80 倍的时间</p>
+</li>
+</ul>
+</li>
+<li><p>添加 MySQL 读库，减少写主库上的负载</p>
+</li>
+<li><p>添加更多Web服务器和应用服务器以提高响应速度</p>
+</li>
+</ul>
+<hr>
+<p><strong>User++++</strong></p>
+<p><img src="https://camo.githubusercontent.com/2b12de3a8a5c67a6bccadee0061bdb3d2c02c9d0/687474703a2f2f692e696d6775722e636f6d2f3358386e6d644c2e706e67"></p>
+<p>用户在一天的某段时间比如工作时间会达到峰值，而其他时间流量会大幅下降，希望尽可能多的 DevOps 自动化以实现自动缩放和常规操作。</p>
+<p>目标与对策:</p>
+<ul>
+<li><p>根据流量自动扩展机器</p>
+<ul>
+<li><p>跟上流量高峰</p>
+</li>
+<li><p>通过关闭未使用的实例来降低成本</p>
+</li>
+</ul>
+</li>
+<li><p>自动化DevOps</p>
+</li>
+<li><p>继续监控指标以解决瓶颈</p>
+<ul>
+<li><p>主机级别-查看单个EC2实例</p>
+</li>
+<li><p>聚合级别-查看负载均衡器统计信息</p>
+</li>
+<li><p>日志分析-CloudWatch，CloudTrail，Loggly，Splunk，Sumo</p>
+</li>
+<li><p>外部站点性能-Pingdom或New Relic</p>
+</li>
+<li><p>错误报告-sentry </p>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<p><strong>User+++++</strong></p>
+<p><img src="https://camo.githubusercontent.com/e45e39c36eebcc4c66e1aecd4e4145112d8e88e3/687474703a2f2f692e696d6775722e636f6d2f6a6a3341354e382e706e67"></p>
+<p>用户进一步增长，持续监测并做一些优化</p>
+<ul>
+<li><p>如果 MySQL 数据库开始变得太大，考虑仅在数据库中存储有限时间段的数据，其余存储在 Redshift 等数据仓库中</p>
+</li>
+<li><p>每秒平均 40000 个读取请求，通过扩展内存缓存来解决热门数据的读取流量，这对于分布不均的流量和流量峰值也很有用</p>
+</li>
+<li><p>每秒 400 次平均写入，对于单个主从模式写请求而言，可能很难，需要其他扩展技术，比如queue</p>
+</li>
+<li><p>为了进一步解决高读写请求，我们还应该考虑将适当的数据移动到 NoSQL 数据库（例如 DynamoDB）</p>
+</li>
+</ul>
+<h2 id="5-进一步讨论"><a href="#5-进一步讨论" class="headerlink" title="5. 进一步讨论"></a>5. 进一步讨论</h2><p>取决于问题领域和剩余时间。</p>
+<p>SQL扩展模式 (读写分离，分库分表，分片，sql 调优)</p>
+<p>NoSql (kv 存储，document 存储，宽表存储，图形数据库)</p>
+<p>缓存 (client，cdn，web server，database)</p>
+<p>消息队列，微服务，服务发现</p>
+<p>其他方面的权衡取舍</p>
+<h2 id="6-其他"><a href="#6-其他" class="headerlink" title="6. 其他"></a>6. 其他</h2><p>持续对系统进行基准测试和监控，发现瓶颈，并解决它，服务扩展时一个持续的过程。</p>
+<p>以上。</p>
+</br>
+
+<p>以上</p>
+</br>
+
+</br>
+
+<p><strong>声明 ：本站主要是用来整理不懂的知识，大部分内容我都没有完全掌握，请谨慎参考。</strong><br><strong>版权 ：可以转载，但请在文章显著位置注明出处 ！ <a href="https://mjd507.github.io/">https://mjd507.github.io</a></strong></p>
+<p><strong>补充 ：为方便面试或者跳槽的小伙伴，我创建了一个公众号「 Daily Problem 」 ，每天推送一道算法题，可以扫以下二维码关注。</strong></p>
+<p><img src="https://user-images.githubusercontent.com/8939151/111026177-fb505600-8423-11eb-89e5-687b94b156a0.png"></p>
+</div><div class="tags"></div><div class="post-nav"><a class="pre" href="/2019/12/31/My-2019/">我的 2019</a><a class="next" href="/2019/12/21/system-design-2/">设计一个 kv 缓存系统</a></div><div id="container"></div><link rel="stylesheet" type="text/css" href="//unpkg.com/gitalk/dist/gitalk.css?v=0.0.0"><script type="text/javascript" src="//cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.js?v=0.0.0"></script><script type="text/javascript" src="//unpkg.com/gitalk/dist/gitalk.min.js?v=0.0.0"></script><script>var gitalk = new Gitalk({
+  clientID: 'fa8d49cc90698365347d',
+  clientSecret: 'ad101f458b7f3950fccc09b931977c106cd2c467',
+  repo: 'mjd507.github.io',
+  owner: 'mjd507',
+  admin: ['mjd507'],
+  id: md5(location.pathname),
+  distractionFreeMode: false
+})
+gitalk.render('container')
+</script></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Back-End/">Back-End</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Big-Front-End/">Big-Front-End</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Data-Structure-Algorithm/">Data Structure & Algorithm</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java-Android/">Java & Android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Network/">Network</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Operation-System/">Operation System</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Story/">Story</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="http://johnnyshieh.me/" title="JohnnyShieh" target="_blank">JohnnyShieh</a><ul></ul><a href="https://daimajia.com/" title="代码家" target="_blank">代码家</a><ul></ul><a href="https://imququ.com/" title="Jerry Qu" target="_blank">Jerry Qu</a><ul></ul><a href="https://sivers.org/" title="Derek Sivers" target="_blank">Derek Sivers</a><ul></ul><a href="https://www.alispit.tel/#/" title="alispittel" target="_blank">alispittel</a><ul></ul><a href="http://www.hugogu.cn/" title="Hugo Gu" target="_blank">Hugo Gu</a><ul></ul><a href="https://weekly.75team.com/" title="奇舞周刊" target="_blank">奇舞周刊</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2021 <a href="/." rel="nofollow">mjd507.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox/dist/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox/dist/jquery.fancybox.min.css"><script type="text/javascript" src="/js/copycode.js" successtext="复制成功!"></script><link rel="stylesheet" type="text/css" href="/css/copycode.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script></div></body></html>

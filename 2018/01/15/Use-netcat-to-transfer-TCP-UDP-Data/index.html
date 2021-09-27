@@ -1,0 +1,110 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>使用 netcat 读写 TCP UDP 数据包 | mjd507</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="/css/dark.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/normalize.css/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/purecss/build/pure-min.min.css"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/purecss/build/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = 'https://hm.baidu.com/hm.js?' + '1c847d4fb515d19b6108f15a5387f1d6';
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+  })();
+</script><script type="text/javascript" src="//cdn.jsdelivr.net/npm/clipboard/dist/clipboard.min.js"></script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/codeseven/toastr/build/toastr.min.js"></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/codeseven/toastr/build/toastr.min.css"><meta name="generator" content="Hexo 5.4.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">使用 netcat 读写 TCP UDP 数据包</h1><a id="logo" href="/.">mjd507</a><p class="description">Stop stopping</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">使用 netcat 读写 TCP UDP 数据包</h1><div class="post-meta">2018-01-15<span> | </span><span class="category"><a href="/categories/Network/">Network</a></span></div><div class="clear"><div class="toc-article" id="toc"><div class="toc-title">文章目录</div><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF-%E6%9C%8D%E5%8A%A1%E7%AB%AF%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.</span> <span class="toc-text">客户端&#x2F;服务端模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E4%BC%A0%E8%BE%93"><span class="toc-number">2.</span> <span class="toc-text">数据传输</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8E%E6%9C%8D%E5%8A%A1%E7%AB%AF%E4%BA%A4%E4%BA%92"><span class="toc-number">3.</span> <span class="toc-text">与服务端交互</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AB%AF%E5%8F%A3%E6%89%AB%E6%8F%8F"><span class="toc-number">4.</span> <span class="toc-text">端口扫描</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E4%BB%A3%E7%90%86"><span class="toc-number">5.</span> <span class="toc-text">使用代理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%89%E9%A1%B9%E8%AF%B4%E6%98%8E"><span class="toc-number">6.</span> <span class="toc-text">选项说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-number">7.</span> <span class="toc-text">参考资料</span></a></li></ol></div></div><div class="post-content"><p>netcat，简写为 nc，是 unix 系统下一个强大的命令行网络通信工具，用于在两台主机之间建立 TCP 或者 UDP 连接，并提供丰富的命令进行数据通信。nc 在网络参考模型属于应用层。使用 nc 可以做很多事情：建立连接，发送数据包，监听端口，扫描端口，处理 ip4 和 ip6，和 telnet 不同，nc 会区分错误输出和标准输出，telnet 则都是标准输出。</p>
+<span id="more"></span>
+
+<p>Mac 系统自带了 netcat 工具，使用 「man nc」命令，可以查看 netcat 的使用帮助。</p>
+<h2 id="客户端-服务端模型"><a href="#客户端-服务端模型" class="headerlink" title="客户端/服务端模型"></a>客户端/服务端模型</h2><p>使用 nc 可以非常简单的构建一个基本的客户端/服务端模型。</p>
+<p>首先在一个终端窗口，开启一个本地端口的监听。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nc -l 1234</span><br></pre></td></tr></table></figure>
+
+<p>现在 nc 就在监听 1234 端口，等待一个连接。再另开一个控制台（或另一台主机），使用 nc 连接该主机和端口。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nc 127.0.0.1 1234</span><br></pre></td></tr></table></figure>
+
+<p>这样，连接就已经建立起来了，默认是 TCP 连接，现在在任意一个控制台输入内容，另一个控制台都会收到，此时，nc 已不关心谁是客户端，谁是服务端了。</p>
+<p><img src="https://user-images.githubusercontent.com/8939151/111024794-94c73a00-841b-11eb-9ff0-8f69adce6ce9.png" alt="nc cs 模型"></p>
+<h2 id="数据传输"><a href="#数据传输" class="headerlink" title="数据传输"></a>数据传输</h2><p>上面的例子，再扩展一下，就可以构建一个数据传输模型。</p>
+<p>nc 在开启了端口监听后，将收到的内容输出到指定文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nc -l 1234 &gt; out.txt</span><br></pre></td></tr></table></figure>
+
+<p>在第二个机器(或控制台)上，连接该主机和端口，并向该主机传输文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nc 127.0.0.1 1234 &lt; in.txt</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://user-images.githubusercontent.com/8939151/111024806-a0b2fc00-841b-11eb-9dc1-09dd866626b3.png" alt="nc 数据传输"></p>
+<h2 id="与服务端交互"><a href="#与服务端交互" class="headerlink" title="与服务端交互"></a>与服务端交互</h2><p>与 <a target="_blank" rel="noopener" href="http://www.baidu.com/">www.baidu.com</a> 的 80 端口建立一个 TCP 连接</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nc www.baidu.com 80</span><br></pre></td></tr></table></figure>
+
+<p>此时，仅仅是建立了一个 TCP 连接，本地的端口号是随机的。</p>
+<p>也可以指定端口，使用 「nc -p 1234 <a target="_blank" rel="noopener" href="http://www.baidu.com/">www.baidu.com</a> 80 」，即采用本地 1234 端口与百度 80 端口建立连接。</p>
+<p>还可以设定连接时间，「nc -w 5 <a target="_blank" rel="noopener" href="http://www.baidu.com/">www.baidu.com</a> 80」，即连接 5s 后自动断开。</p>
+<p>此外，「-v」选项可以让 nc 输出详细的日志；「-u」可以建立一个 UDP 连接。</p>
+<p>现在使用 HTTP 协议，模拟浏览器访问百度。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo -n &quot;GET / HTTP/1.0\r\n\r\n&quot; | nc -p 1234 www.baidu.com 80</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://user-images.githubusercontent.com/8939151/111024833-b7f1e980-841b-11eb-97c8-cb350c13fa7a.png" alt="访问百度"></p>
+<p>上面用法也可以这样写:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nc -p 1234 www.baidu.com 80</span><br><span class="line">GET / HTTP/1.0</span><br><span class="line">(回车)</span><br><span class="line">(回车)</span><br></pre></td></tr></table></figure>
+
+<p>注意空格和回车。</p>
+<h2 id="端口扫描"><a href="#端口扫描" class="headerlink" title="端口扫描"></a>端口扫描</h2><p>端口扫描经常被系统管理员和黑客用来发现在一些机器上开放的端口，帮助他们识别系统中的漏洞。</p>
+<p>检查本机 8088 - 8090 端口是否开启</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nc 127.0.0.1 -z 8088-8090</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://user-images.githubusercontent.com/8939151/111024846-c93af600-841b-11eb-9e67-b009da510060.png"></p>
+<p><img src="https://user-images.githubusercontent.com/8939151/111024855-d2c45e00-841b-11eb-81fb-b39b6f2f4312.png"></p>
+<p>可以看到，只有 8090 端口是开启的。</p>
+<h2 id="使用代理"><a href="#使用代理" class="headerlink" title="使用代理"></a>使用代理</h2><p>有些网络不能直接访问, 只能通过代理服务才能访问</p>
+<p>通过代理连接 <code>host.example.com</code> 的 42 端口，下面是一些例子，未实际验证。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 使用 HTTP 代理 http://10.2.3.4:8080 与 host.example.com 的 42 端口连接</span><br><span class="line">$ nc -x10.2.3.4:8080 -Xconnect host.example.com 42</span><br><span class="line"></span><br><span class="line"># 使用 socks4 代理 socks4://10.2.3.4:8080 连接 host.example.com 的 42 端口</span><br><span class="line">$ nc -x10.2.3.4:8080 -X4 host.example.com 42</span><br><span class="line"></span><br><span class="line"># 使用 socks5 代理 socks5://10.2.3.4:8080 连接 host.example.com 的 42 端口</span><br><span class="line">$ nc -x10.2.3.4:8080 -X5 host.example.com 42</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="选项说明"><a href="#选项说明" class="headerlink" title="选项说明"></a>选项说明</h2><ul>
+<li><p>-v : 打印详细的输出</p>
+</li>
+<li><p>-l : 指定 nc 监听的端口号</p>
+</li>
+<li><p>-4 : 强制 nc 使用 IPV4 地址</p>
+</li>
+<li><p>-6 : 强制 nc 使用 IPV6 地址</p>
+</li>
+<li><p>-n : 不走 DNS 服务器</p>
+</li>
+<li><p>-p : 指定源端口</p>
+</li>
+<li><p>-s : 指定源 ip</p>
+</li>
+<li><p>-w : 指定闲置连接关闭的时间</p>
+</li>
+<li><p>-x : 指定代理地址[:port]</p>
+</li>
+<li><p>-X : 指定代理的版本</p>
+<blockquote>
+<p>‘4’  (SOCKS v.4)</p>
+<p>‘5’  (SOCKS v.5)</p>
+<p>‘connect’  (HTTPS proxy)</p>
+</blockquote>
+</li>
+<li><p>-z : 指定 nc 扫描的端口范围</p>
+</li>
+<li><p>-u : 使用 UDP 代替默认的 TCP</p>
+</li>
+<li><p>…</p>
+</li>
+</ul>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Netcat">Netcat - wikipedia</a></p>
+<p><a target="_blank" rel="noopener" href="http://www.ifmicro.com/%E8%AE%B0%E5%BD%95/2017/12/12/netcat-usage/">使用 nc 读写 TCP/UDP 连接</a></br></p>
+<p>以上</p>
+</br>
+
+</br>
+
+<p><strong>声明 ：本站主要是用来整理不懂的知识，大部分内容我都没有完全掌握，请谨慎参考。</strong><br><strong>版权 ：可以转载，但请在文章显著位置注明出处 ！ <a href="https://mjd507.github.io/">https://mjd507.github.io</a></strong></p>
+<p><strong>补充 ：为方便面试或者跳槽的小伙伴，我创建了一个公众号「 Daily Problem 」 ，每天推送一道算法题，可以扫以下二维码关注。</strong></p>
+<p><img src="https://user-images.githubusercontent.com/8939151/111026177-fb505600-8423-11eb-89e5-687b94b156a0.png"></p>
+</div><div class="tags"></div><div class="post-nav"><a class="pre" href="/2018/01/20/HTTP-Versions/">HTTP 协议各版本特性</a><a class="next" href="/2018/01/07/Internet-Protocol-Suite/">TCP/IP 协议入门</a></div><div id="container"></div><link rel="stylesheet" type="text/css" href="//unpkg.com/gitalk/dist/gitalk.css?v=0.0.0"><script type="text/javascript" src="//cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.js?v=0.0.0"></script><script type="text/javascript" src="//unpkg.com/gitalk/dist/gitalk.min.js?v=0.0.0"></script><script>var gitalk = new Gitalk({
+  clientID: 'fa8d49cc90698365347d',
+  clientSecret: 'ad101f458b7f3950fccc09b931977c106cd2c467',
+  repo: 'mjd507.github.io',
+  owner: 'mjd507',
+  admin: ['mjd507'],
+  id: md5(location.pathname),
+  distractionFreeMode: false
+})
+gitalk.render('container')
+</script></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Back-End/">Back-End</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Big-Front-End/">Big-Front-End</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Data-Structure-Algorithm/">Data Structure & Algorithm</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java-Android/">Java & Android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Network/">Network</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Operation-System/">Operation System</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Story/">Story</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="http://johnnyshieh.me/" title="JohnnyShieh" target="_blank">JohnnyShieh</a><ul></ul><a href="https://daimajia.com/" title="代码家" target="_blank">代码家</a><ul></ul><a href="https://imququ.com/" title="Jerry Qu" target="_blank">Jerry Qu</a><ul></ul><a href="https://sivers.org/" title="Derek Sivers" target="_blank">Derek Sivers</a><ul></ul><a href="https://www.alispit.tel/#/" title="alispittel" target="_blank">alispittel</a><ul></ul><a href="http://www.hugogu.cn/" title="Hugo Gu" target="_blank">Hugo Gu</a><ul></ul><a href="https://weekly.75team.com/" title="奇舞周刊" target="_blank">奇舞周刊</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2021 <a href="/." rel="nofollow">mjd507.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox/dist/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox/dist/jquery.fancybox.min.css"><script type="text/javascript" src="/js/copycode.js" successtext="复制成功!"></script><link rel="stylesheet" type="text/css" href="/css/copycode.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script></div></body></html>

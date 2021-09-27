@@ -1,0 +1,85 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>计算机组成原理 - DMA | mjd507</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="/css/dark.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/normalize.css/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/purecss/build/pure-min.min.css"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/purecss/build/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = 'https://hm.baidu.com/hm.js?' + '1c847d4fb515d19b6108f15a5387f1d6';
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+  })();
+</script><script type="text/javascript" src="//cdn.jsdelivr.net/npm/clipboard/dist/clipboard.min.js"></script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/codeseven/toastr/build/toastr.min.js"></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/codeseven/toastr/build/toastr.min.css"><meta name="generator" content="Hexo 5.4.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">计算机组成原理 - DMA</h1><a id="logo" href="/.">mjd507</a><p class="description">Stop stopping</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">计算机组成原理 - DMA</h1><div class="post-meta">2020-12-16<span> | </span><span class="category"><a href="/categories/Operation-System/">Operation System</a></span></div><div class="post-content"><p>我们对于 I/O 设备的大量操作，多数类似文件复制，把硬盘数据拷贝到内存，再把内存数据传输到I/O设备。这种情况，如果所有数据都要经过 CPU，实在有点太浪费时间了，因为 CPU 速度很快，大部分都在傻等硬盘读写。</p>
+<p>因此，计算机工程师们，发明了 DMA 技术，即<strong>直接内存访问（Direct Memory Access）技术</strong>，来减少 CPU 的等待。 </p>
+<span id="more"></span>
+
+<h2 id="DMAC-协处理器"><a href="#DMAC-协处理器" class="headerlink" title="DMAC 协处理器"></a>DMAC 协处理器</h2><p>DMA 技术就是在主板上放一块独立的芯片，当进行内存和 I/O 设备的数据传输时，不再通过 CPU 来控制传输，而直接通过 DMA 控制器(DMAC),  这块芯片，就可以称之为协处理器。</p>
+<p>DMAC 最大的作用在于，当要传输的数据特别大，速度特别快，或传输的数据特别小，速度特别慢的时候。</p>
+<p>比如，我们用千兆网卡或者硬盘传输大量数据的时候，如果都用 CPU，那可定忙不过来。而当我们数据传输很慢，DMAC 就可以等数据到齐了，再发送信号，给到 CPU 处理。</p>
+<p>再说说为什么 DMAC 是一块「协处理器芯片」呢？</p>
+<p>因为 DMAC 实在协助 CPU ，完成对应数据的传输工作，写死 DMAC 控制数据传输的过程中，我们还是需要 CPU 的。</p>
+<p>此外，DMAC 是一个特殊的 I/O 设备，一般连接到总线上的设备，有两种类型，一种是主设备，一种是从设备。只有主设备可以主动发起数据传输，从设备只能接受数据传输。从设备一般通过发送控制信号告诉 CPU ，让 CPU 主动去读或写。</p>
+<p>而 DMAC 既是主设备，又是从设备。对于 CPU 来说，它是从设备，对于硬盘来说，它是主设备。</p>
+<p>来看看使用 DMAC 进行数据传输的具体过程。</p>
+<ol>
+<li>CPU 向 DMAC 设备发起请求。其实就是在 DMAC 里修改配置寄存器。</li>
+<li>CPU 修改 DMAC 的配置时候，会告诉 DMAC 几个信息<ul>
+<li>源地址的初始值，以及传输的时候地址增减方式。</li>
+<li>目标地址初始值，以及传输的时候地址增减方式。</li>
+<li>要传输的数据长度。</li>
+</ul>
+</li>
+<li>设置完这些信息，DMAC 就好变成一个空闲的状态。</li>
+<li>如果我们要从硬盘往内存加载数据，硬盘就会像 DMAC 发起一个数据传输请求。这个请求不通过总线，而是一个额外的连线。</li>
+<li>然后我们的 DMAC 需要在通过一个额外的连线响应这个申请。</li>
+<li>于是，DMAC这个芯片，就向硬盘的接口发起要总线读的传输请求。数据就从硬盘里面，读到了DMAC的控制器里面。</li>
+<li>然后，DMAC再向我们的内存发起总线写的数据传输请求，把数据写入到内存里面。</li>
+<li>DMAC会反复进行上面第6、7步的操作，直到DMAC的寄存器里面设置的数据长度传输完成。</li>
+<li>数据传输完成之后，DMAC重新回到第3步的空闲状态。</li>
+</ol>
+<p>所以整个数据传输过程，我们不是通过 CPU 来搬运数据，而是有DMAC 来搬运。但是 CPU 在这个过程也是必不可少的。因为传输什么数据，从哪传到哪，还是由 CPU 设置。这也是为什么，DMAC 被称为协处理器。</p>
+<h2 id="kafka-与-DMA"><a href="#kafka-与-DMA" class="headerlink" title="kafka 与 DMA"></a>kafka 与 DMA</h2><p>kafka 是一个用来处理实时数据的管道，常用来做消息队列，或者收集和落地海量的日志。作为实时数据和日志的管道，瓶颈自然在 I/O 层面。</p>
+<p>有两种常见的情况，一是从网络中接收上游的数据，落地到本地磁盘上；二是从本地磁盘读取出来，通过网络发送出去。</p>
+<p>先来看有一种情况，从磁盘读数据发送到网络上去。如果我们自己写程序，最直观的就是用一个文件读操作，从磁盘把数据读到内存里来，然后再用一个 socket，把数据发送到网络上去。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">File.read(fileDesc, buf, len);</span><br><span class="line">Socket.send(socket, buf, len);</span><br></pre></td></tr></table></figure>
+
+<p>这个过程，一共发生了四次数据传输，两次是 DMA 传输，另外两次，是 CPU 控制的传输，来看下这个过程。</p>
+<ol>
+<li>从硬盘读到操作系统内核的缓冲区里，通过 DMA 搬运</li>
+<li>从内核缓冲区复制到应用内存里，通过 CPU 搬运</li>
+<li>从应用内存里，再写到操作系统的 Socket 缓冲区里，通过 CPU 搬运</li>
+<li>从 Socket 缓冲区写到网卡的缓冲区里，通过 DMA 搬运</li>
+</ol>
+<p>我们只是搬运一份数据，却经过了四次操作。而且 2、3 两步相当于绕了一圈，特没效率。</p>
+<p>对于 kafka 这种专注搬运数据的事儿，就需要尽可能少的搬运。kafka 将数据搬运从 4 次减少为 2 次，并且只有 DMA 来进行数据搬运，不需要 CPU。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">public long transferFrom(FileChannel fileChannel, long position, long count) throws IOException &#123;</span><br><span class="line">    return fileChannel.transferTo(position, count, socketChannel);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>kafka 通过调用 Java 的 NIO 库，具体是 FileChannel 里的 transferTo 方法，数据没有读到中间的应用内存里，而是直接通过 channel,写到对应的网络设备里。并且对于 Socket 操作，也不是写到 Socket Buffer 里，而是直接通过描述符写到网卡的缓冲区里面。</p>
+<p>第一次，是通过DMA，从硬盘直接读到操作系统内核的读缓冲区里面。第二次，则是根据Socket的描述符信息，直接从读缓冲区里面，写入到网卡的缓冲区里面。</p>
+<p>这个方法，没有在内存层面去复制数据，因此也称为<strong>零拷贝（Zero-Copy）</strong></p>
+<p>在使用了这样的零拷贝的方法之后呢，我们传输同样数据的时间，可以缩减为原来的1/3，相当于提升了3倍的吞吐率。</p>
+<p> 3 &gt; /proc/sys/vm/drop_caches</p>
+<ol start="3">
+<li><p>第一次读取文件的耗时如下</p>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sh-4.4# time cat /home/dd.out &amp;&gt; /dev/null</span><br><span class="line"></span><br><span class="line">real	0m1.774s</span><br><span class="line">user	0m0.020s</span><br><span class="line">sys	0m0.970s</span><br></pre></td></tr></table></figure></li>
+<li><p>再次读取文件的耗时如下</p>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sh-4.4# time cat /home/dd.out &amp;&gt; /dev/null</span><br><span class="line"></span><br><span class="line">real	0m0.212s</span><br><span class="line">user	0m0.020s</span><br><span class="line">sys	0m0.180s</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>可以看到，第二次读取文件的耗时远小于第一次的耗时，这是因为第一次是从磁盘来读取的内容，磁盘I/O是比较耗时的，而第二次读取的时候由于文件内容已经在第一次读取时被读到内存了，所以是直接从内存读取的数据，内存相比磁盘速度是快很多的。这就是Page Cache存在的意义：减少I/O，提升应用的I/O速度。</p>
+</br>
+
+<p>以上</p>
+</br>
+
+</br>
+
+<p><strong>声明 ：本站主要是用来整理不懂的知识，大部分内容我都没有完全掌握，请谨慎参考。</strong><br><strong>版权 ：可以转载，但请在文章显著位置注明出处 ！ <a href="https://mjd507.github.io/">https://mjd507.github.io</a></strong></p>
+<p><strong>补充 ：为方便面试或者跳槽的小伙伴，我创建了一个公众号「 Daily Problem 」 ，每天推送一道算法题，可以扫以下二维码关注。</strong></p>
+<p><img src="https://user-images.githubusercontent.com/8939151/111026177-fb505600-8423-11eb-89e5-687b94b156a0.png"></p>
+</div><div class="tags"></div><div class="post-nav"><a class="pre" href="/2020/12/28/Linux-Kernel-1/">Linux 内核技术 - Page Cache 观测</a><a class="next" href="/2020/12/06/Computer-Organization-10/">计算机组成原理 - 理解 IO_WAIT</a></div><div id="container"></div><link rel="stylesheet" type="text/css" href="//unpkg.com/gitalk/dist/gitalk.css?v=0.0.0"><script type="text/javascript" src="//cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.js?v=0.0.0"></script><script type="text/javascript" src="//unpkg.com/gitalk/dist/gitalk.min.js?v=0.0.0"></script><script>var gitalk = new Gitalk({
+  clientID: 'fa8d49cc90698365347d',
+  clientSecret: 'ad101f458b7f3950fccc09b931977c106cd2c467',
+  repo: 'mjd507.github.io',
+  owner: 'mjd507',
+  admin: ['mjd507'],
+  id: md5(location.pathname),
+  distractionFreeMode: false
+})
+gitalk.render('container')
+</script></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Back-End/">Back-End</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Big-Front-End/">Big-Front-End</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Data-Structure-Algorithm/">Data Structure & Algorithm</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java-Android/">Java & Android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Network/">Network</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Operation-System/">Operation System</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Story/">Story</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="http://johnnyshieh.me/" title="JohnnyShieh" target="_blank">JohnnyShieh</a><ul></ul><a href="https://daimajia.com/" title="代码家" target="_blank">代码家</a><ul></ul><a href="https://imququ.com/" title="Jerry Qu" target="_blank">Jerry Qu</a><ul></ul><a href="https://sivers.org/" title="Derek Sivers" target="_blank">Derek Sivers</a><ul></ul><a href="https://www.alispit.tel/#/" title="alispittel" target="_blank">alispittel</a><ul></ul><a href="http://www.hugogu.cn/" title="Hugo Gu" target="_blank">Hugo Gu</a><ul></ul><a href="https://weekly.75team.com/" title="奇舞周刊" target="_blank">奇舞周刊</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2021 <a href="/." rel="nofollow">mjd507.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox/dist/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox/dist/jquery.fancybox.min.css"><script type="text/javascript" src="/js/copycode.js" successtext="复制成功!"></script><link rel="stylesheet" type="text/css" href="/css/copycode.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script></div></body></html>

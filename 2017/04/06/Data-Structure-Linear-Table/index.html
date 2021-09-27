@@ -1,0 +1,49 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>线性表 | mjd507</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="/css/dark.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/normalize.css/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/purecss/build/pure-min.min.css"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/purecss/build/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = 'https://hm.baidu.com/hm.js?' + '1c847d4fb515d19b6108f15a5387f1d6';
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+  })();
+</script><script type="text/javascript" src="//cdn.jsdelivr.net/npm/clipboard/dist/clipboard.min.js"></script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/codeseven/toastr/build/toastr.min.js"></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/codeseven/toastr/build/toastr.min.css"><meta name="generator" content="Hexo 5.4.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">线性表</h1><a id="logo" href="/.">mjd507</a><p class="description">Stop stopping</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">线性表</h1><div class="post-meta">2017-04-06<span> | </span><span class="category"><a href="/categories/Data-Structure-Algorithm/">Data Structure &amp; Algorithm</a></span></div><div class="clear"><div class="toc-article" id="toc"><div class="toc-title">文章目录</div><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A1%BA%E5%BA%8F%E5%AD%98%E5%82%A8"><span class="toc-number">1.</span> <span class="toc-text">顺序存储</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%93%BE%E5%BC%8F%E5%AD%98%E5%82%A8"><span class="toc-number">2.</span> <span class="toc-text">链式存储</span></a></li></ol></div></div><div class="post-content"><p>最近听了这么一段话，说武侠小说里少林寺的和尚们，在入寺时，并不会被授予易筋经、降龙十八掌等武功秘籍，而是给一个菜园，挑水，植菜，养猪，为什么呢？武功有招式和心法之分，招式建立与心法之上，内功深厚，招式才游刃有余。如今的 Android，iOS，Web 开发，说白了就是招式，招式可以千变外化，如果一味的追求招式，忽视内功的话，结果就像天龙八部里的鸠摩智，技术领略的内功修炼，数据结构和算法是很重要的一部分，所以我打算写几篇博客理一下数据结构。</p>
+<span id="more"></span>
+
+<p>先来看一张图，了解下线性表的概念</p>
+<p><img src="https://user-images.githubusercontent.com/8939151/111024037-72cbb880-8417-11eb-992d-1ac9db42a90c.png"><br>a1 是 a2 的前驱，a(i+1) 是 a(i) 的后继，a1 没有前驱，a(n) 没有后继；<br>n 为线性表的长度，若 n = 0，线性表为空表。</p>
+<p>线性表有两种存储方式：顺序存储 和 链式存储</p>
+<h2 id="顺序存储"><a href="#顺序存储" class="headerlink" title="顺序存储"></a>顺序存储</h2><p>顺序存储本质上是一组<strong>地址连续</strong>的存储单元，使用数组实现，数组的大小需指定或者动态分配。</p>
+<p><img src="https://user-images.githubusercontent.com/8939151/111024048-82e39800-8417-11eb-84b9-d97d86a52089.png" alt="顺序表"></p>
+<p>顺序存储需要预分配一定的空间，后期空间不够可动态添加；</p>
+<p>优点：查找快，O(1)的时间复杂度</p>
+<p>缺点：插入删除慢，需要移动大量元素（想象食堂排队），O(n)的时间复杂度</p>
+<h2 id="链式存储"><a href="#链式存储" class="headerlink" title="链式存储"></a>链式存储</h2><p>线性表的链式存储有三种：单链表、循环链表、双向循环链表。</p>
+<p>链式存储的特点就是可以用<strong>任意的存储单元</strong>来存储线性表的数据元素，即存储单元可以连续，可以不连续。</p>
+<p><img src="https://user-images.githubusercontent.com/8939151/111024054-90991d80-8417-11eb-9a9d-6abbc432e749.png" alt="单链表"></p>
+<p>将单链表中的终端结点的指针端由空指针改为向头结点，使得整个单链表形成一个环，这种头尾相连的单链表称为单循环链表，简称循环链表。</p>
+<p><img src="https://user-images.githubusercontent.com/8939151/111024063-9db60c80-8417-11eb-82b2-82f9c72337fa.png" alt="循环链表"></p>
+<p>在单循环链表的基础上，为每一个元素添加一个指向其前驱结点的指针域，就形成了一个双向循环链表。</p>
+<p><img src="https://user-images.githubusercontent.com/8939151/111024069-ac042880-8417-11eb-8858-3a43c544dd87.png" alt="双向循环链表"></p>
+<p>链式存储不需要分配空间，存储元素个数也不限制；</p>
+<p>链表的优点：插入和删除效率高，O(1)的时间复杂度</p>
+<p>缺点：查找效率低，O(n)的时间复杂度</p>
+</br>
+
+<p>以上</p>
+</br>
+
+</br>
+
+<p><strong>声明 ：本站主要是用来整理不懂的知识，大部分内容我都没有完全掌握，请谨慎参考。</strong><br><strong>版权 ：可以转载，但请在文章显著位置注明出处 ！ <a href="https://mjd507.github.io/">https://mjd507.github.io</a></strong></p>
+<p><strong>补充 ：为方便面试或者跳槽的小伙伴，我创建了一个公众号「 Daily Problem 」 ，每天推送一道算法题，可以扫以下二维码关注。</strong></p>
+<p><img src="https://user-images.githubusercontent.com/8939151/111026177-fb505600-8423-11eb-89e5-687b94b156a0.png"></p>
+</div><div class="tags"></div><div class="post-nav"><a class="pre" href="/2017/04/09/Data-Structure-ArrayList-SourceCode/">ArrayList 源码分析</a><a class="next" href="/2017/04/02/Algorithm-Selection-Sort/">经典排序算法之五 选择排序</a></div><div id="container"></div><link rel="stylesheet" type="text/css" href="//unpkg.com/gitalk/dist/gitalk.css?v=0.0.0"><script type="text/javascript" src="//cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.js?v=0.0.0"></script><script type="text/javascript" src="//unpkg.com/gitalk/dist/gitalk.min.js?v=0.0.0"></script><script>var gitalk = new Gitalk({
+  clientID: 'fa8d49cc90698365347d',
+  clientSecret: 'ad101f458b7f3950fccc09b931977c106cd2c467',
+  repo: 'mjd507.github.io',
+  owner: 'mjd507',
+  admin: ['mjd507'],
+  id: md5(location.pathname),
+  distractionFreeMode: false
+})
+gitalk.render('container')
+</script></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Back-End/">Back-End</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Big-Front-End/">Big-Front-End</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Data-Structure-Algorithm/">Data Structure & Algorithm</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java-Android/">Java & Android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Network/">Network</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Operation-System/">Operation System</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Story/">Story</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="http://johnnyshieh.me/" title="JohnnyShieh" target="_blank">JohnnyShieh</a><ul></ul><a href="https://daimajia.com/" title="代码家" target="_blank">代码家</a><ul></ul><a href="https://imququ.com/" title="Jerry Qu" target="_blank">Jerry Qu</a><ul></ul><a href="https://sivers.org/" title="Derek Sivers" target="_blank">Derek Sivers</a><ul></ul><a href="https://www.alispit.tel/#/" title="alispittel" target="_blank">alispittel</a><ul></ul><a href="http://www.hugogu.cn/" title="Hugo Gu" target="_blank">Hugo Gu</a><ul></ul><a href="https://weekly.75team.com/" title="奇舞周刊" target="_blank">奇舞周刊</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2021 <a href="/." rel="nofollow">mjd507.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox/dist/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox/dist/jquery.fancybox.min.css"><script type="text/javascript" src="/js/copycode.js" successtext="复制成功!"></script><link rel="stylesheet" type="text/css" href="/css/copycode.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script></div></body></html>

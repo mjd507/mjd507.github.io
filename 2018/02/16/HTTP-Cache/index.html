@@ -1,0 +1,51 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>HTTP 缓存 | mjd507</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="/css/dark.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/normalize.css/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/purecss/build/pure-min.min.css"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/purecss/build/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = 'https://hm.baidu.com/hm.js?' + '1c847d4fb515d19b6108f15a5387f1d6';
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+  })();
+</script><script type="text/javascript" src="//cdn.jsdelivr.net/npm/clipboard/dist/clipboard.min.js"></script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/codeseven/toastr/build/toastr.min.js"></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/codeseven/toastr/build/toastr.min.css"><meta name="generator" content="Hexo 5.4.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">HTTP 缓存</h1><a id="logo" href="/.">mjd507</a><p class="description">Stop stopping</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">HTTP 缓存</h1><div class="post-meta">2018-02-16<span> | </span><span class="category"><a href="/categories/Network/">Network</a></span></div><div class="clear"><div class="toc-article" id="toc"><div class="toc-title">文章目录</div><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Response-Cache-Headers"><span class="toc-number">1.</span> <span class="toc-text">Response Cache Headers</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Request-Cache-Headers"><span class="toc-number">2.</span> <span class="toc-text">Request Cache Headers</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%A4%E6%AC%A1%E8%AE%BF%E9%97%AE%E5%AF%B9%E6%AF%94"><span class="toc-number">3.</span> <span class="toc-text">两次访问对比</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E9%98%85%E8%AF%BB"><span class="toc-number">4.</span> <span class="toc-text">相关阅读</span></a></li></ol></div></div><div class="post-content"><p>一次网络通信，也许会有多个缓存，从数据库缓存，服务器缓存，代理服务器缓存，中间服务器缓存，到本地浏览器缓存等，一路缓存下来，不仅减轻服务端的压力，本地用户体验也流畅了。</p>
+<p>HTTP 的缓存是在请求/响应头里控制的，不同版本的 HTTP 协议，缓存配置字段也有些区别。</p>
+<span id="more"></span>
+
+<h2 id="Response-Cache-Headers"><a href="#Response-Cache-Headers" class="headerlink" title="Response Cache Headers"></a>Response Cache Headers</h2><p><strong>1. Cache-Control</strong> 服务端要求客户端控制缓存的指令。值有<code>public</code>,<code>private</code> <code> max-age=&lt;seconds&gt;</code>, <code>no-cache</code>, <code>no-store</code>。</p>
+<p><strong>2. Last-Modified</strong> 标记资源在服务端最后被修改的时间，格式类似这样<code>Sat, 10 Feb 2018 07:54:47 GMT</code>，客户端下次请求该资源时，将该时间作为<code>If-Modified-Since</code>的参数值，放在请求头部，发送服务器判断。</p>
+<p><strong>3. Etag (Entity Tag)</strong> 标记资源在服务端的 hash 值，客服的下次请求该资源时，将该 hash 值作为<code>If-None-Match</code>的参数值，放在请求头部，发送服务器判断。</p>
+<p><strong>4. Vary</strong> 用于列出一个响应字段列表，告诉服务器遇到同一个 URL 对应着不同版本文档的情况时，如何缓存和筛选合适的版本。如果服务端同时使用请求头中<code>User-Agent</code>和<code>Cookie</code>这两个字段来生成内容，那么响应中的<code>Vary</code>字段看上去应该是这样<code>Vary: User-Agent, Cookie</code>。</p>
+<blockquote>
+<p>Cache-Control 和 Etag 都是 HTTP 1.1 中使用的，1.0 中采用 Expire 字段来传递资源过期时间。Etag 主要解决 Last-Modified 不够完善的问题：</p>
+<ul>
+<li>一些文件更改的仅仅是修改时间，内容没有变，这个时候并不希望客户端认为这个文件被修改了，而重新请求</li>
+<li>某些服务器不能精确得到文件的最后修改时间</li>
+</ul>
+</blockquote>
+<h2 id="Request-Cache-Headers"><a href="#Request-Cache-Headers" class="headerlink" title="Request Cache Headers"></a>Request Cache Headers</h2><p><strong>1. Cache-Control</strong> 客户端告诉服务端当前使用的缓存策略。值有 <code>max-age=&lt;seconds&gt;</code>, <code>no-cache</code>, <code>no-store</code>。</p>
+<p><strong>2. If-Modified-Since</strong> 标记资源上次修改时间，格式类似这样<code>Sat, 10 Feb 2018 07:54:47 GMT</code>，放在请求头部，发送服务器判断。</p>
+<p><strong>3. If-None-Match</strong> 标记上次请求资源的 hash 值，放在请求头部，发送服务器判断。</p>
+<h2 id="两次访问对比"><a href="#两次访问对比" class="headerlink" title="两次访问对比"></a>两次访问对比</h2><p>第一次访问，没有缓存信息，直接从服务器取，返回 200，并设置了缓存。</p>
+<p><img src="https://user-images.githubusercontent.com/8939151/111023472-3480ca00-8414-11eb-878c-4b1dfc984ae4.png"></p>
+<p>第二次访问，服务器判断资源还没过期，使用缓存内容，返回 304。</p>
+<p><img src="https://user-images.githubusercontent.com/8939151/111023482-3f3b5f00-8414-11eb-9a9b-133bf6e8ce33.png"></p>
+<h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://medium.com/@udnisap/how-not-to-use-http-cache-part-1-3888b09bd3b2">How (not) to use HTTP Cache Part 1</a></p>
+<p><a target="_blank" rel="noopener" href="https://medium.com/@udnisap/how-not-to-use-http-cache-part-2-a394efb89c4b">How (not) to use HTTP Cache Part 2</a></p>
+<p><a target="_blank" rel="noopener" href="https://imququ.com/post/vary-header-in-http.html">HTTP 协议中 Vary 的一些研究</a></br></p>
+<p>以上</p>
+</br>
+
+</br>
+
+<p><strong>声明 ：本站主要是用来整理不懂的知识，大部分内容我都没有完全掌握，请谨慎参考。</strong><br><strong>版权 ：可以转载，但请在文章显著位置注明出处 ！ <a href="https://mjd507.github.io/">https://mjd507.github.io</a></strong></p>
+<p><strong>补充 ：为方便面试或者跳槽的小伙伴，我创建了一个公众号「 Daily Problem 」 ，每天推送一道算法题，可以扫以下二维码关注。</strong></p>
+<p><img src="https://user-images.githubusercontent.com/8939151/111026177-fb505600-8423-11eb-89e5-687b94b156a0.png"></p>
+</div><div class="tags"></div><div class="post-nav"><a class="pre" href="/2018/02/27/Java-Buffer-IO/">IO 流的一些优化</a><a class="next" href="/2018/02/09/HTTPS-vs-SSH/">SSH 使用以及与 HTTPS 的对比</a></div><div id="container"></div><link rel="stylesheet" type="text/css" href="//unpkg.com/gitalk/dist/gitalk.css?v=0.0.0"><script type="text/javascript" src="//cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.js?v=0.0.0"></script><script type="text/javascript" src="//unpkg.com/gitalk/dist/gitalk.min.js?v=0.0.0"></script><script>var gitalk = new Gitalk({
+  clientID: 'fa8d49cc90698365347d',
+  clientSecret: 'ad101f458b7f3950fccc09b931977c106cd2c467',
+  repo: 'mjd507.github.io',
+  owner: 'mjd507',
+  admin: ['mjd507'],
+  id: md5(location.pathname),
+  distractionFreeMode: false
+})
+gitalk.render('container')
+</script></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Back-End/">Back-End</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Big-Front-End/">Big-Front-End</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Data-Structure-Algorithm/">Data Structure & Algorithm</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java-Android/">Java & Android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Network/">Network</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Operation-System/">Operation System</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Story/">Story</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="http://johnnyshieh.me/" title="JohnnyShieh" target="_blank">JohnnyShieh</a><ul></ul><a href="https://daimajia.com/" title="代码家" target="_blank">代码家</a><ul></ul><a href="https://imququ.com/" title="Jerry Qu" target="_blank">Jerry Qu</a><ul></ul><a href="https://sivers.org/" title="Derek Sivers" target="_blank">Derek Sivers</a><ul></ul><a href="https://www.alispit.tel/#/" title="alispittel" target="_blank">alispittel</a><ul></ul><a href="http://www.hugogu.cn/" title="Hugo Gu" target="_blank">Hugo Gu</a><ul></ul><a href="https://weekly.75team.com/" title="奇舞周刊" target="_blank">奇舞周刊</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2021 <a href="/." rel="nofollow">mjd507.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox/dist/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox/dist/jquery.fancybox.min.css"><script type="text/javascript" src="/js/copycode.js" successtext="复制成功!"></script><link rel="stylesheet" type="text/css" href="/css/copycode.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script></div></body></html>

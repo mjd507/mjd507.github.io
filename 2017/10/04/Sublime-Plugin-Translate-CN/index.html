@@ -1,0 +1,44 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>一款提高开发效率的插件 | mjd507</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="/css/dark.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/normalize.css/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/purecss/build/pure-min.min.css"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/purecss/build/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = 'https://hm.baidu.com/hm.js?' + '1c847d4fb515d19b6108f15a5387f1d6';
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+  })();
+</script><script type="text/javascript" src="//cdn.jsdelivr.net/npm/clipboard/dist/clipboard.min.js"></script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/codeseven/toastr/build/toastr.min.js"></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/codeseven/toastr/build/toastr.min.css"><meta name="generator" content="Hexo 5.4.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">一款提高开发效率的插件</h1><a id="logo" href="/.">mjd507</a><p class="description">Stop stopping</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">一款提高开发效率的插件</h1><div class="post-meta">2017-10-04<span> | </span><span class="category"><a href="/categories/Big-Front-End/">Big-Front-End</a></span></div><div class="post-content"><p>Sublime 是个非常好用的编辑器，而且，我是 Sublime 的忠实用户，不仅因为它本身的轻量，还有它对各种编程语言的支持，以及丰富的插件库资源。这几天对它上瘾了，有时用来写写 Java ，有时写写 js，有时写写 Python，卧槽，这编辑器强大得深不可测。</p>
+<span id="more"></span>
+
+<p>在读一些源代码的过程中，相信大家都会遇到这样一个问题：这个单词什么意思啊？每当这时，就会打开浏览器，搜索翻译词典，输入要翻译的词，然后在回到编辑器的代码中。出于对 Sublime 的热爱，这次国庆花了一天时间写了一个翻译插件，从此你阅读代码的是下面这个样子了。</p>
+<p><img src="https://user-images.githubusercontent.com/8939151/111024385-7fe9a700-8419-11eb-890b-b17406f3c00b.png" alt="翻译源码"></p>
+<p>在需要翻译的单词上，按下 <code>alt + t</code> 就会显示翻译结果了，瞬间省了不少时间。</p>
+<p>下面这个功能就更能提高效率了，在写代码过程中，我们经常在起名称上花费不少时间，像变量名，方法名，类名…… 每当这时，如果不知道对应的英文，还是得打开浏览器，搜索翻译词典，输入要翻译的词，然后在回到编辑器写上名称，确实繁琐，而现在，你需要按下 <code>alt + i</code> 即可打开 sublime 的输入面板，在这里输入要翻译的单词，按下回车，就好出现翻译的文本了。</p>
+<p><img src="https://user-images.githubusercontent.com/8939151/111024325-2c775900-8419-11eb-9510-dc75de063937.png" alt="输入要翻译的单词"></p>
+<p>按下回车，即可翻译输入的单词，中英文翻译可自动识别哦。</p>
+<p><img src="https://user-images.githubusercontent.com/8939151/111024376-6f393100-8419-11eb-81f8-0fbca3f8bb88.png" alt="翻译结果"></p>
+<p>对于这个功能，个人认为非常方便，所以也提交到 Sublime 的 <a target="_blank" rel="noopener" href="https://github.com/wbond/package_control_channel">package_control_channel</a> 中去了，现在已通过了测试，预计过几天大家就能在安装面板搜索到了，如果插件提供的快捷键与你之前的插件有冲突，也可以采用右击菜单的方式，使用该翻译的功能。</p>
+<p>插件的仓库地址：<a target="_blank" rel="noopener" href="https://github.com/mjd507/Sublime-Translate">Translate-CN</a>，使用 <a target="_blank" rel="noopener" href="http://ai.youdao.com/docs/doc-trans-api.s#p02">有道智云</a> 提供的翻译 api 实现。</p>
+<p><strong>Tips:</strong> </p>
+<ul>
+<li>有道智云的翻译服务是收费服务，具体收费可参加其<a target="_blank" rel="noopener" href="http://ai.youdao.com/docs/doc-trans-price.s#p03">文档</a></li>
+<li>建议自己注册一个账号，获取 appKey 和 secretKey，将代码里的对应的 appKey 和 secretKey 换成自己的。（按一个单词 10 个字符来算，新人可免费翻译近 21 万个单词，一天翻译 100 个，可以免费用近 6 年鸟~）</li>
+<li>更多详情内容可移步以上 Github 仓库地址。</br></li>
+</ul>
+<p>以上</p>
+</br>
+
+</br>
+
+<p><strong>声明 ：本站主要是用来整理不懂的知识，大部分内容我都没有完全掌握，请谨慎参考。</strong><br><strong>版权 ：可以转载，但请在文章显著位置注明出处 ！ <a href="https://mjd507.github.io/">https://mjd507.github.io</a></strong></p>
+<p><strong>补充 ：为方便面试或者跳槽的小伙伴，我创建了一个公众号「 Daily Problem 」 ，每天推送一道算法题，可以扫以下二维码关注。</strong></p>
+<p><img src="https://user-images.githubusercontent.com/8939151/111026177-fb505600-8423-11eb-89e5-687b94b156a0.png"></p>
+</div><div class="tags"></div><div class="post-nav"><a class="pre" href="/2017/10/07/Slides-With-Markdown/">制作 PPT 和流程图的超酷姿势</a><a class="next" href="/2017/09/10/Web-ImageHelper/">关于前端图片处理的一些分享</a></div><div id="container"></div><link rel="stylesheet" type="text/css" href="//unpkg.com/gitalk/dist/gitalk.css?v=0.0.0"><script type="text/javascript" src="//cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.js?v=0.0.0"></script><script type="text/javascript" src="//unpkg.com/gitalk/dist/gitalk.min.js?v=0.0.0"></script><script>var gitalk = new Gitalk({
+  clientID: 'fa8d49cc90698365347d',
+  clientSecret: 'ad101f458b7f3950fccc09b931977c106cd2c467',
+  repo: 'mjd507.github.io',
+  owner: 'mjd507',
+  admin: ['mjd507'],
+  id: md5(location.pathname),
+  distractionFreeMode: false
+})
+gitalk.render('container')
+</script></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Back-End/">Back-End</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Big-Front-End/">Big-Front-End</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Data-Structure-Algorithm/">Data Structure & Algorithm</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java-Android/">Java & Android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Network/">Network</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Operation-System/">Operation System</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Story/">Story</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="http://johnnyshieh.me/" title="JohnnyShieh" target="_blank">JohnnyShieh</a><ul></ul><a href="https://daimajia.com/" title="代码家" target="_blank">代码家</a><ul></ul><a href="https://imququ.com/" title="Jerry Qu" target="_blank">Jerry Qu</a><ul></ul><a href="https://sivers.org/" title="Derek Sivers" target="_blank">Derek Sivers</a><ul></ul><a href="https://www.alispit.tel/#/" title="alispittel" target="_blank">alispittel</a><ul></ul><a href="http://www.hugogu.cn/" title="Hugo Gu" target="_blank">Hugo Gu</a><ul></ul><a href="https://weekly.75team.com/" title="奇舞周刊" target="_blank">奇舞周刊</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2021 <a href="/." rel="nofollow">mjd507.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox/dist/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox/dist/jquery.fancybox.min.css"><script type="text/javascript" src="/js/copycode.js" successtext="复制成功!"></script><link rel="stylesheet" type="text/css" href="/css/copycode.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script></div></body></html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>HTTP 授权认证 | mjd507</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="/css/dark.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/normalize.css/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/purecss/build/pure-min.min.css"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/purecss/build/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = 'https://hm.baidu.com/hm.js?' + '1c847d4fb515d19b6108f15a5387f1d6';
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+  })();
+</script><script type="text/javascript" src="//cdn.jsdelivr.net/npm/clipboard/dist/clipboard.min.js"></script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/codeseven/toastr/build/toastr.min.js"></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/codeseven/toastr/build/toastr.min.css"><meta name="generator" content="Hexo 5.4.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">HTTP 授权认证</h1><a id="logo" href="/.">mjd507</a><p class="description">Stop stopping</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">HTTP 授权认证</h1><div class="post-meta">2018-01-25<span> | </span><span class="category"><a href="/categories/Network/">Network</a></span></div><div class="post-content"><p>Web 上对于一些私人数据，获取时需要进行用户认证，即要用户名和密码，才能访问资源。浏览器上可以通过 Cookie 来进行认证，移动客户端没有 Cookie，可以使用 HTTP 原生提供的一些认证机制。</p>
+<p>这里介绍两种最常见的 HTTP 认证形式，基本认证（basic authentication）和摘要认证（digest authentication）。</p>
+<span id="more"></span>
+
+<h2 id="1-认证协议与首部"><a href="#1-认证协议与首部" class="headerlink" title="1. 认证协议与首部"></a>1. 认证协议与首部</h2><p>HTTP 通过一组可定制的控制首部，为不同的认证协议提供了一个可扩展框架。</p>
+<table>
+<thead>
+<tr>
+<th align="center">步骤</th>
+<th align="center">首部</th>
+<th align="center">描述</th>
+<th align="center">方法/状态</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">请求</td>
+<td align="center"></td>
+<td align="center">第一条请求没有认证信息</td>
+<td align="center">GET</td>
+</tr>
+<tr>
+<td align="center">质询</td>
+<td align="center">WWW-Authenticate</td>
+<td align="center">服务器需要用户提供认证</td>
+<td align="center">401 Unauthorized</td>
+</tr>
+<tr>
+<td align="center">授权</td>
+<td align="center">Authorization</td>
+<td align="center">客户端发出带认证的请求</td>
+<td align="center">GET</td>
+</tr>
+<tr>
+<td align="center">成功</td>
+<td align="center">Authentication-Info</td>
+<td align="center">如果认证成功，则请求成功</td>
+<td align="center">200 OK</td>
+</tr>
+</tbody></table>
+<p>服务器质询时，会告诉客户端应该如何认证，质询信息就在返回的 WWW-Authenticate 首部字段中，里面包含了一个 realm 指令，告诉客户端是在应该在哪个域下进行认证。很多公司都会有不同的安全域，普通员工一个域，财务部一个域，那么如果财务访问资源，如果未认证，就应该提示客户端用财务部账号授权认证。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.0 401 Unauthorized</span><br><span class="line">WWW-Authenticate: Basic realm=&quot;Corporate Financials&quot;</span><br></pre></td></tr></table></figure>
+
+<p>对一些高级认证算法来说，认证成功后，可能还会返回一些额外的与授权回话相关的信息，这些信息会放在 Authentication-Info 字段中。</p>
+<h2 id="2-基本认证"><a href="#2-基本认证" class="headerlink" title="2. 基本认证"></a>2. 基本认证</h2><p>基本认证是最流行的 HTTP 认证协议，最初是在 HTTP/1.0 规范中提出的。</p>
+<h3 id="2-1-Base64-编码"><a href="#2-1-Base64-编码" class="headerlink" title="2.1 Base64 编码"></a>2.1 Base64 编码</h3><p>基本认证是将用户名和密码以冒号分隔，用 Base64 编码将其打包一起。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String encodeAuth = Base64.encode(username:password)</span><br></pre></td></tr></table></figure>
+
+<p>将编码后的信息作为认证信息，发给服务端。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Authorization: Basic encodeAuth</span><br></pre></td></tr></table></figure>
+
+<p>服务器在对认证信息进行 Base64 解码，获取出用户名密码来验证。</p>
+<h3 id="2-2-代理认证"><a href="#2-2-代理认证" class="headerlink" title="2.2 代理认证"></a>2.2 代理认证</h3><p>代理服务器也可以实现认证功能。步骤与 Web 服务器身份验证的步骤相同。但首部和状态码都有所不同。</p>
+<table>
+<thead>
+<tr>
+<th align="center">Web 服务器</th>
+<th align="center">代理服务器</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Unauthorized status code: 401</td>
+<td align="center">Unauthorized status code: 407</td>
+</tr>
+<tr>
+<td align="center">WWW-Authenticate</td>
+<td align="center">Proxy-Authenticate</td>
+</tr>
+<tr>
+<td align="center">Authorization</td>
+<td align="center">Proxy-Authorization</td>
+</tr>
+<tr>
+<td align="center">Authentication-Info</td>
+<td align="center">Proxy-Authentication-Info</td>
+</tr>
+</tbody></table>
+<p>通过代理服务器提供对某组织内部资源的统一访问控制是一种很便捷的方式。</p>
+<h3 id="2-3-缺陷"><a href="#2-3-缺陷" class="headerlink" title="2.3 缺陷"></a>2.3 缺陷</h3><p>基本认证简单方便，但并不安全。</p>
+<ul>
+<li>Base64 编码隐可以很容易被解码，实际上，用户名密码就是以「明文」的形式传输的，安全隐患很大。</li>
+<li>重放攻击。第三方用户获取到用户名和密码后，可以一次一次地重放给原始服务器，以获得对服务器的访问权。</li>
+<li>没有针对代理的防护措施，代理没有修改认证首部，但可能修改了报文的其余部分，这样就严重地改变了事务的本质。</li>
+<li>……</li>
+</ul>
+<p>为了避免以上缺陷，可以使用更安全的认证协议，比如摘要认证。</p>
+<h2 id="3-摘要认证"><a href="#3-摘要认证" class="headerlink" title="3. 摘要认证"></a>3. 摘要认证</h2><p>摘要认证并不是最安全的协议，至今也还没有被广泛应用，但摘要认证比它要取代的基本认证强大很多。</p>
+<ul>
+<li>永远不会以明文的方式发送密码</li>
+<li>可以防止恶意用户捕获并重放认证的握手过程</li>
+<li>可以有选择的防止对报文内容的修改</li>
+<li>防范其它几种常见的攻击方式</li>
+</ul>
+<p>摘要认证不能满足安全 HTTP 事务的很多需求。对这些需求来说，使用 TLS (Transport Layer Security) 和HTTPS (Secure HTTP) 协议更为合适一些。</p>
+<h3 id="3-1-工作原理"><a href="#3-1-工作原理" class="headerlink" title="3.1 工作原理"></a>3.1 工作原理</h3><p>摘要认证不发送密码，而是发送一个「指纹」或密码的「摘要」，这个「摘要」是不可逆的。服务端根据用户信息可以计算得出一个「摘要」来，与客户端发送过来的「摘要」比对，如果匹配则认证通过。</p>
+<p>常见的摘要函数 MD5，即将任意长度的字节序列转换为一个 128 位的摘要。这 128 位的摘要通常会被写成 32 个十六进制的字符，每个字符表示 4 位。</p>
+<h3 id="3-2-用随机数避免重放攻击"><a href="#3-2-用随机数避免重放攻击" class="headerlink" title="3.2 用随机数避免重放攻击"></a>3.2 用随机数避免重放攻击</h3><p>仅仅使用摘要，恶意用户仍然可以捕获并重发请求，这和密码就一样了。为了防止此类重放攻击的发生，服务器可以在 <code>WWW-Authenticate</code> 字段中向客户端发送一个随机数（nonce）的特殊令牌，客户端在计算摘要之前，要先将这个令牌附加到密码上去。</p>
+<p>而且这个随机数会经常发生变化（可能每次认证都变化），这样每次的认证「摘要」都不一样，从而防止重放攻击的发生</p>
+<h3 id="3-3-握手机制"><a href="#3-3-握手机制" class="headerlink" title="3.3 握手机制"></a>3.3 握手机制</h3><p>摘要认证，在返回头部添加了一个新的可选首部 <code>Authentication-Info</code>,可以存放客户端下一次请求的随机数。</p>
+<p>摘要认证整体的流程：</p>
+<ol>
+<li>客户端请求，未带授权信息</li>
+<li>服务器将发出质询，并在 <code>WWW-Authenticate</code> 首部发送一个随机数和服务端支持的摘要算法列表</li>
+<li>客户端选择一个算法，计算出密码的摘要。并将摘要放在 <code>Authorization</code> 首部字段中，和数据一起发回服务器。如果客户端要对服务器进行认证，可以发送一个客户端随机数。</li>
+<li>服务器接收到摘要、选中的算法以及数据后，计算出一个的摘要，然后将本地计算的摘要与传送过来的摘要进行比较，验证是否匹配。</li>
+<li>匹配后，如果有客户端的随机数对服务器进行质询，服务端就会创建客户端摘要，并且可以预先将下一个随机数计算出来，提前将其传递给客户端，这样下一次客户端就可以预先发送正确的摘要了。</li>
+</ol>
+<h3 id="3-4-缺陷"><a href="#3-4-缺陷" class="headerlink" title="3.4 缺陷"></a>3.4 缺陷</h3><ul>
+<li> 服务端预先生成随机数，虽然可以减少请求，加快处理速度，但是却破坏了 HTTP 的管道化机制，因为在发布下一条请求之前，一定要收到下一个随机值才行。这样会造成很大的性能损失。</li>
+<li>如果不采用每次请求都用随机数，而是在有限的次数内重用随机数。比如，允许将某个随机数重用 5 次，或者重用 10 秒，仍然有一定的重放攻击隐患。</li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="">HTTP 权威指南</a></br></li>
+</ul>
+<p>以上</p>
+</br>
+
+</br>
+
+<p><strong>声明 ：本站主要是用来整理不懂的知识，大部分内容我都没有完全掌握，请谨慎参考。</strong><br><strong>版权 ：可以转载，但请在文章显著位置注明出处 ！ <a href="https://mjd507.github.io/">https://mjd507.github.io</a></strong></p>
+<p><strong>补充 ：为方便面试或者跳槽的小伙伴，我创建了一个公众号「 Daily Problem 」 ，每天推送一道算法题，可以扫以下二维码关注。</strong></p>
+<p><img src="https://user-images.githubusercontent.com/8939151/111026177-fb505600-8423-11eb-89e5-687b94b156a0.png"></p>
+</div><div class="tags"></div><div class="post-nav"><a class="pre" href="/2018/01/30/HTTP-Security/">HTTPS 安全机制</a><a class="next" href="/2018/01/20/HTTP-Versions/">HTTP 协议各版本特性</a></div><div id="container"></div><link rel="stylesheet" type="text/css" href="//unpkg.com/gitalk/dist/gitalk.css?v=0.0.0"><script type="text/javascript" src="//cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.js?v=0.0.0"></script><script type="text/javascript" src="//unpkg.com/gitalk/dist/gitalk.min.js?v=0.0.0"></script><script>var gitalk = new Gitalk({
+  clientID: 'fa8d49cc90698365347d',
+  clientSecret: 'ad101f458b7f3950fccc09b931977c106cd2c467',
+  repo: 'mjd507.github.io',
+  owner: 'mjd507',
+  admin: ['mjd507'],
+  id: md5(location.pathname),
+  distractionFreeMode: false
+})
+gitalk.render('container')
+</script></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Back-End/">Back-End</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Big-Front-End/">Big-Front-End</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Data-Structure-Algorithm/">Data Structure & Algorithm</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java-Android/">Java & Android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Network/">Network</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Operation-System/">Operation System</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Story/">Story</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="http://johnnyshieh.me/" title="JohnnyShieh" target="_blank">JohnnyShieh</a><ul></ul><a href="https://daimajia.com/" title="代码家" target="_blank">代码家</a><ul></ul><a href="https://imququ.com/" title="Jerry Qu" target="_blank">Jerry Qu</a><ul></ul><a href="https://sivers.org/" title="Derek Sivers" target="_blank">Derek Sivers</a><ul></ul><a href="https://www.alispit.tel/#/" title="alispittel" target="_blank">alispittel</a><ul></ul><a href="http://www.hugogu.cn/" title="Hugo Gu" target="_blank">Hugo Gu</a><ul></ul><a href="https://weekly.75team.com/" title="奇舞周刊" target="_blank">奇舞周刊</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2021 <a href="/." rel="nofollow">mjd507.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox/dist/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox/dist/jquery.fancybox.min.css"><script type="text/javascript" src="/js/copycode.js" successtext="复制成功!"></script><link rel="stylesheet" type="text/css" href="/css/copycode.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script></div></body></html>

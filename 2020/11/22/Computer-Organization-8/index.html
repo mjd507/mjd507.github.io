@@ -1,0 +1,81 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>计算机组成原理 - 高速缓存 | mjd507</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="/css/dark.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/normalize.css/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/purecss/build/pure-min.min.css"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/purecss/build/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = 'https://hm.baidu.com/hm.js?' + '1c847d4fb515d19b6108f15a5387f1d6';
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+  })();
+</script><script type="text/javascript" src="//cdn.jsdelivr.net/npm/clipboard/dist/clipboard.min.js"></script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/codeseven/toastr/build/toastr.min.js"></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/codeseven/toastr/build/toastr.min.css"><meta name="generator" content="Hexo 5.4.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">计算机组成原理 - 高速缓存</h1><a id="logo" href="/.">mjd507</a><p class="description">Stop stopping</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">计算机组成原理 - 高速缓存</h1><div class="post-meta">2020-11-22<span> | </span><span class="category"><a href="/categories/Operation-System/">Operation System</a></span></div><div class="clear"><div class="toc-article" id="toc"><div class="toc-title">文章目录</div><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Cpu-Cache-%E8%AF%BB%E5%8F%96%E6%95%B0%E6%8D%AE"><span class="toc-number">1.</span> <span class="toc-text">Cpu Cache 读取数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Cpu-Cache-%E5%86%99%E5%85%A5%E6%95%B0%E6%8D%AE"><span class="toc-number">2.</span> <span class="toc-text">Cpu Cache 写入数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E6%A0%B8-CPU-Cache-%E7%BC%93%E5%AD%98%E4%B8%80%E8%87%B4%E6%80%A7"><span class="toc-number">3.</span> <span class="toc-text">多核 CPU Cache 缓存一致性</span></a></li></ol></div></div><div class="post-content"><p>来看 3 行代码，比较一下两个循环运行所花的时间。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span>[] arr = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">64</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line"></span><br><span class="line"><span class="comment">// 循环1</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; arr.length; i++) arr[i] *= <span class="number">3</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 循环2</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; arr.length; i += <span class="number">16</span>) arr[i] *= <span class="number">3</span></span><br></pre></td></tr></table></figure>
+
+<p>按道理来说，循环1 花费的时间应该是循环2 的 16 倍左右。但实际上，循环1 在我的电脑上运行需要 50 毫秒，循环2 只需要 46 毫秒。相差在 15% 之内，1 倍都没有。</p>
+<p>这就是 CPU Cache （高速缓存）带来的效果。</p>
+<p>程序执行时，CPU 将对应的数据从内存中读取出来，加载到 CPU Cache 里。这里注意，CPU 是一小块一小块来读取数据的，而不是按照单个数组元素来读取数据的。</p>
+<p>这一小块一小块的数据，在 CPU Cache 里面，我们把它叫作 Cache Line（缓存块）。</p>
+<p>日常用的 Intel 服务器或者 PC 中，Cache Line 的大小通常是 64 字节。</p>
+<p>上面的循环2 里面，每隔 16 个整型数计算一次，16 个整型数正好是 64 个字节。所以，循环1 和循环2，都需要把同样数量的 Cache Line 数据从内存中读取到 CPU Cache 中，导致两个程序花费的时间就差别不大了。</p>
+<span id="more"></span>
+
+<p>CPU Cache 一般有三层，L1/L2 单核私有，L3 多核共享缓存(这里的 L1-L3 指特定的由 SRAM 组成的物理芯片，不是概念上的缓存)。有了 CPU Cache，内存中的指令、数据，会被加载到 L1-L3 Cache 中，95% 的情况下，CPU 都只需要访问 L1-L3 Cache，而无需访问内存。</p>
+<h2 id="Cpu-Cache-读取数据"><a href="#Cpu-Cache-读取数据" class="headerlink" title="Cpu Cache 读取数据"></a>Cpu Cache 读取数据</h2><p>现代 CPU 进行数据读取的时候，无论数据是否已经存储在 Cache 中，CPU 始终会首先访问 Cache。只有当 CPU 在 Cache 中找不到数据的时候，才会去访问内存，并将读取到的数据写入 Cache 之中。</p>
+<p>那么，Cache 如何根据内存地址定位到数据呢？</p>
+<ol>
+<li>根据内存地址的低位，计算在 Cache 中的索引；</li>
+<li>判断有效位，确认 Cache 中的数据是有效的；</li>
+<li>对比内存地址的高位，和 Cache 中的组标记，确认 Cache 中的数据就是我们要访问的内存数据，从 Cache Line 中读取到对应的数据块（Data Block）；</li>
+<li>根据内存地址的Offset位，从Data Block中，读取希望读取到的字</li>
+</ol>
+<p>如果在2、3这两个步骤中，CPU 发现，Cache 中的数据并不是要访问的内存地址的数据，那 CPU 就会访问内存，并把对应的 Block Data 更新到 Cache Line 中，同时更新对应的有效位和组标记的数据。</p>
+<p><img src="https://static001.geekbang.org/resource/image/13/d4/1313fe1e4eb3b5c949284c8b215af8d4.png" alt="内存地址到 Cache Line 的关系"></p>
+<p>总结一下，一个内存的访问地址，最终包括高位代表的组标记、低位代表的索引，以及在对应的Data Block中定位对应字的位置偏移量。</p>
+<h2 id="Cpu-Cache-写入数据"><a href="#Cpu-Cache-写入数据" class="headerlink" title="Cpu Cache 写入数据"></a>Cpu Cache 写入数据</h2><p>当 Cpu 要写入数据时，到底是写 Cache 还是写主存呢，如何保证一致性呢？</p>
+<p>这里介绍两种写入策略。</p>
+<p><strong>1. 写直达（Write-Through）</strong></p>
+<p>写入前，我们会先去判断数据是否已经在 Cache 里面了。如果数据已经在 Cache 里面了，我们先把数据写入更新到 Cache 里面，再写入到主内存里面；如果数据不在 Cache 里，我们就只更新主内存。</p>
+<p>这个策略很直观，但是问题也很明显，那就是这个策略很慢。无论数据是不是在 Cache 里面，我们都需要把数据写到主内存里面。这个方式就有点儿像 Java 里 volatile 关键字，始终都要把数据同步到主内存里面。</p>
+<p><img src="https://static001.geekbang.org/resource/image/8b/d3/8b9ad674953bf36680e815247de235d3.jpeg"></p>
+<p><strong>2. 写回（Write-Back）</strong></p>
+<p>如果要写入的数据，就在 CPU Cache 里面，那么就只更新 CPU Cache 里面的数据。同时标记 CPU Cache 里的这个 Block 是脏（Dirty）的。就是这个时候，CPU Cache 里的这个 Block 的数据，和主内存是不一致的。</p>
+<p>如果要写入的数据所对应的 Cache Block 里，放的是别的内存地址的数据，那么就要看一看，Cache Block 里的数据有没有被标记成脏的。如果是脏的，要先把这个 Cache Block 里面的数据，写入到主内存里面。然后，再把当前要写入的数据，写入到 Cache 里，同时把 Cache Block 标记成脏的。如果 Block 里面的数据没有被标记成脏的，那么我们直接把数据写入到 Cache 里面，然后再把 Cache Block 标记成脏的就好了。</p>
+<p><img src="https://static001.geekbang.org/resource/image/67/0d/67053624d6aa2a5c27c295e1fda4890d.jpeg"></p>
+<p>然而，无论是写回还是写直达，都没有解决多线程，或者是多个 CPU 核的缓存一致性的问题。</p>
+<p>这也就是我们在写入修改缓存后，需要解决的第二个问题。</p>
+<p>要解决这个问题，我们需要引入一个新的方法，叫作 MESI 协议。这是一个维护缓存一致性协议。这个协议不仅可以用在 CPU Cache 之间，也可以广泛用于各种需要使用缓存，同时缓存之间需要同步的场景下。</p>
+<h2 id="多核-CPU-Cache-缓存一致性"><a href="#多核-CPU-Cache-缓存一致性" class="headerlink" title="多核 CPU Cache 缓存一致性"></a>多核 CPU Cache 缓存一致性</h2><p>因为多核 CPU Cache 在 L3 缓存是共享的，所以一致性问题，只会出现在 L1/L2 级这种单核私有缓存的场景中。</p>
+<p>我们需要有一种机制，来同步两个不同核心里面的缓存数据。这样的机制需要满足两点：</p>
+<p>第一点叫写传播（Write Propagation）。写传播是说，在一个CPU核心里，我们的Cache数据更新，必须能够传播到其他的对应节点的Cache Line里。</p>
+<p>第二点叫事务的串行化（Transaction Serialization），事务串行化是说，我们在一个CPU核心里面的读取和写入，在其他的节点看起来，顺序是一样的。</p>
+<p>CPU Cache 里做到事务串行化，需要做到两点，第一点是一个 CPU 核心对于数据的操作，需要同步通信给到其他 CPU 核心。第二点是，如果两个 CPU 核心里有同一个数据的 Cache，那么对于这个 Cache 数据的更新，需要有一个“锁”的概念。只有拿到了对应 Cache Block 的“锁”之后，才能进行对应的数据更新。接下来，我们就看看实现了这两个机制的 MESI 协议。</p>
+<p>MESI 协议，是一种叫作写失效（Write Invalidate）的协议。在写失效协议里，只有一个 CPU 核心负责写入数据，其他的核心，只是同步读取到这个写入。在这个 CPU 核心写入 Cache 之后，它会去广播一个“失效”请求告诉所有其他的 CPU 核心。其他的 CPU 核心，只是去判断自己是否也有一个“失效”版本的 Cache Block，然后把这个也标记成失效的就好了。</p>
+<p><img src="https://static001.geekbang.org/resource/image/4e/59/4ed6d05049cbbc8603346f617206cd59.jpeg"></p>
+<p>MESI协议的由来呢，来自于我们对 Cache Line 的四个不同的标记，分别是：</p>
+<p>M：代表已修改（Modified）<br>E：代表独占（Exclusive）<br>S：代表共享（Shared）<br>I：代表已失效（Invalidated）</p>
+<p>我们先来看看“已修改”和“已失效”，这两个状态比较容易理解。所谓的“已修改”，就是我们上一讲所说的“脏”的 Cache Block。Cache Block 里面的内容我们已经更新过了，但是还没有写回到主内存里面。而所谓的“已失效“，自然是这个 Cache Block 里面的数据已经失效了，我们不可以相信这个 Cache Block 里面的数据。</p>
+<p>然后，我们再来看“独占”和“共享”这两个状态。这就是 MESI 协议的精华所在了。无论是独占状态还是共享状态，缓存里面的数据都是“干净”的。这个“干净”，自然对应的是前面所说的“脏”的，也就是说，这个时候，Cache Block 里面的数据和主内存里面的数据是一致的。</p>
+<p>那么“独占”和“共享”这两个状态的差别在哪里呢？这个差别就在于，在独占状态下，对应的 Cache Line 只加载到了当前 CPU 核所拥有的 Cache 里。其他的 CPU 核，并没有加载对应的数据到自己的 Cache 里。这个时候，如果要向独占的 Cache Block 写入数据，我们可以自由地写入数据，而不需要告知其他 CPU 核。 </p>
+<p>在独占状态下的数据，如果收到了一个来自于总线的读取对应缓存的请求，它就会变成共享状态。这个共享状态是因为，这个时候，另外一个 CPU 核心，也把对应的 Cache Block，从内存里面加载到了自己的 Cache 里来。</p>
+<p>而在共享状态下，因为同样的数据在多个 CPU 核心的 Cache 里都有。所以，当我们想要更新 Cache 里面的数据的时候，不能直接修改，而是要先向所有的其他 CPU 核心广播一个请求，要求先把其他 CPU 核心里面的 Cache，都变成无效的状态，然后再更新当前 Cache 里面的数据。这个广播操作，一般叫作 RFO（Request For Ownership），也就是获取当前对应 Cache Block 数据的所有权。</p>
+<p>有没有觉得这个操作有点儿像我们在多线程里面用到的读写锁。在共享状态下，大家都可以并行去读对应的数据。但是如果要写，我们就需要通过一个锁，获取当前写入位置的所有权。</p>
+<p>整个 MESI 的状态，可以用一个有限状态机来表示它的状态流转。需要注意的是，对于不同状态触发的事件操作，可能来自于当前 CPU 核心，也可能来自总线里其他 CPU 核心广播出来的信号。我把对应的状态机流转图放在了下面，你可以对照着 Wikipedia 里面 MESI 的内容，仔细研读一下。</p>
+<p><img src="https://static001.geekbang.org/resource/image/fa/d1/fa98835c78c879ab69fd1f29193e54d1.jpeg"></p>
+</br>
+
+<p>以上</p>
+</br>
+
+</br>
+
+<p><strong>声明 ：本站主要是用来整理不懂的知识，大部分内容我都没有完全掌握，请谨慎参考。</strong><br><strong>版权 ：可以转载，但请在文章显著位置注明出处 ！ <a href="https://mjd507.github.io/">https://mjd507.github.io</a></strong></p>
+<p><strong>补充 ：为方便面试或者跳槽的小伙伴，我创建了一个公众号「 Daily Problem 」 ，每天推送一道算法题，可以扫以下二维码关注。</strong></p>
+<p><img src="https://user-images.githubusercontent.com/8939151/111026177-fb505600-8423-11eb-89e5-687b94b156a0.png"></p>
+</div><div class="tags"></div><div class="post-nav"><a class="pre" href="/2020/11/29/Computer-Organization-9/">计算机组成原理 - 理解内存</a><a class="next" href="/2020/11/02/Computer-Organization-7/">计算机组成原理 - CPU 的指令周期和数据通路建设</a></div><div id="container"></div><link rel="stylesheet" type="text/css" href="//unpkg.com/gitalk/dist/gitalk.css?v=0.0.0"><script type="text/javascript" src="//cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.js?v=0.0.0"></script><script type="text/javascript" src="//unpkg.com/gitalk/dist/gitalk.min.js?v=0.0.0"></script><script>var gitalk = new Gitalk({
+  clientID: 'fa8d49cc90698365347d',
+  clientSecret: 'ad101f458b7f3950fccc09b931977c106cd2c467',
+  repo: 'mjd507.github.io',
+  owner: 'mjd507',
+  admin: ['mjd507'],
+  id: md5(location.pathname),
+  distractionFreeMode: false
+})
+gitalk.render('container')
+</script></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Back-End/">Back-End</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Big-Front-End/">Big-Front-End</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Data-Structure-Algorithm/">Data Structure & Algorithm</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java-Android/">Java & Android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Network/">Network</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Operation-System/">Operation System</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Story/">Story</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="http://johnnyshieh.me/" title="JohnnyShieh" target="_blank">JohnnyShieh</a><ul></ul><a href="https://daimajia.com/" title="代码家" target="_blank">代码家</a><ul></ul><a href="https://imququ.com/" title="Jerry Qu" target="_blank">Jerry Qu</a><ul></ul><a href="https://sivers.org/" title="Derek Sivers" target="_blank">Derek Sivers</a><ul></ul><a href="https://www.alispit.tel/#/" title="alispittel" target="_blank">alispittel</a><ul></ul><a href="http://www.hugogu.cn/" title="Hugo Gu" target="_blank">Hugo Gu</a><ul></ul><a href="https://weekly.75team.com/" title="奇舞周刊" target="_blank">奇舞周刊</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2021 <a href="/." rel="nofollow">mjd507.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox/dist/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox/dist/jquery.fancybox.min.css"><script type="text/javascript" src="/js/copycode.js" successtext="复制成功!"></script><link rel="stylesheet" type="text/css" href="/css/copycode.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script></div></body></html>
