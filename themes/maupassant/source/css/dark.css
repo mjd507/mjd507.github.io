@@ -3,12 +3,12 @@
     * 颜色预设
     */
          :root {
-            --main-background-color: #363B40;
-            --block-background-color: #363B40;
-            --line-background-color: rgba(255, 255, 255, 0.6);
+            --main-background-color: rgba(18, 18, 18, 1);
+            --block-background-color: rgba(32, 32, 32, 1);
+            --line-background-color: rgba(44, 44, 44, 1);
             --high-text-color: rgba(255, 255, 255, 0.87);
             --modium-text-color: rgba(255, 255, 255, 0.60);
-            --disabled-text-color: rgba(255, 255, 255, 0.6);
+            --disabled-text-color: rgba(255, 255, 255, 0.38);
         }
         /*
     * 背景

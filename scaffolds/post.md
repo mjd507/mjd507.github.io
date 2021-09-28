@@ -6,7 +6,7 @@ toc: true
 tags:
 comments: true
 copyright: true
-visible: true
+hidden: false
 ---
 
 

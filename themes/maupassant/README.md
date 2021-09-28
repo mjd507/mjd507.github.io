@@ -26,19 +26,25 @@ Then change your `theme` setting in `_config.yml` to `maupassant`.
 Default config:
 
 ```YAML
-disqus: ## Your disqus_shortname, e.g. username
+disqus:
+  enable: false ## If you want to use Disqus comment system, please set the value to true.
+  shortname: ## Your disqus_shortname, e.g. username
+  api: ## You can visit Disqus comments in China mainland without barriers using Disqus API, e.g. https://disqus.skk.moe/disqus/
+  apikey: ## Your API key obtained in Disqus API Application, e.g. yk00ZB1fjYGRkrCrDDRYDUjpp26GJWJiJRZQZ5SY0r3th5FMW6pnSzQMnWH7ua7r
+  admin: ## Username of your Disqus moderator, e.g. username
+  admin_label: ## The text of Disqus moderator badge, e.g. Mod
 uyan: ## Your uyan_id. e.g. 1234567
 livere: ## Your livere data-uid, e.g. MTAyMC8zMDAxOC78NTgz
 changyan: ## Your changyan appid, e.g. cyrALsXc8
 changyan_conf: ## Your changyan conf, e.g. prod_d8a508c2825ab57eeb43e7c69bba0e8b
-gitalk:
+gitalk: ## See: https://github.com/gitalk/gitalk
   enable: false ## If you want to use Gitment comment system please set the value to true.
   owner: ## Your GitHub ID, e.g. username
   repo: ## The repository to store your comments, make sure you're the repo's owner, e.g. gitalk.github.io
   client_id: ## GitHub client ID, e.g. 75752dafe7907a897619
   client_secret: ## GitHub client secret, e.g. ec2fb9054972c891289640354993b662f4cccc50
   admin: ## Github repo owner and collaborators, only these guys can initialize github issues.
-valine: ## https://valine.js.org
+valine: ## See: https://valine.js.org
   enable: false ## If you want to use Valine comment system, please set the value to true.
   appid: ## Your LeanCloud application App ID, e.g. pRBBL2JR4N7kLEGojrF0MsSs-gzGzoHsz
   appkey: ## Your LeanCloud application App Key, e.g. tjczHpDfhjYDSYddzymYK1JJ
@@ -48,6 +54,29 @@ valine: ## https://valine.js.org
   avatar: "mm" ## Gravatar type, see https://github.com/xCss/Valine/wiki/avatar-setting-for-valine
   pageSize: 10 ## Number of comments per page.
   guest_info: nick,mail,link ## Attributes of reviewers.
+minivaline: ## See: https://github.com/MiniValine/MiniValine
+  enable: false ## If you want to use MiniValine comment system, please set the value to true.
+  appId: ## Your LeanCloud application App ID, e.g. pRBBL2JR4N7kLEGojrF0MsSs-gzGzoHsz
+  appKey: ## Your LeanCloud application App Key, e.g. tjczHpDfhjYDSYddzymYK1JJ
+  placeholder: Write a Comment ## Comment box placeholder.
+  adminEmailMd5: ## The MD5 of Admin Email to show Admin Flag.
+  math: true ## Support MathJax.
+  md: true ## Support Markdown.
+  # MiniValine's display language depends on user's browser or system environment
+  # If you want everyone visiting your site to see a uniform language, you can set a force language value
+  # Available values: en  | zh-CN | (and many more)
+  # More i18n info: https://github.com/MiniValine/minivaline-i18n
+  lang:
+utterances: ## See: https://utteranc.es
+  enable: false ## If you want to use Utterances comment system, please set the value to true.
+  repo: ## The repository utterances will connect to, e.g. tufu9441/comments
+  identifier: title ## The mapping between blog posts and GitHub issues.
+  theme: github-light ## Choose an Utterances theme which matches your blog.
+twikoo: ## See: https://twikoo.js.org
+  enable: false ## If you want to use twikoo comment system, please set the value to true.
+  envId: ## Tencent CloudBase envId
+  region: ## Tencent CloudBase region, e.g. ap-shanghai
+  path: ## Article path, e.g. window.location.pathname
 
 google_search: true ## Use Google search, true/false.
 baidu_search: false ## Use Baidu search, true/false.
@@ -82,10 +111,12 @@ post_copyright:
   copyright_text: ## Your copyright text, e.g. The author owns the copyright, please indicate the source reproduced.
 love: false ## If you want the peach heart to appear when you click anywhere, set the value to true.
 plantuml: ## Using PlantUML to generate UML diagram, must install hexo-filter-plantuml (https://github.com/miao1007/hexo-filter-plantuml).
-    render: "PlantUMLServer" ##  Local or PlantUMLServer.
-    outputFormat: "svg" ## common options: svg/png
+  render: "PlantUMLServer" ##  Local or PlantUMLServer.
+  outputFormat: "svg" ## common options: svg/png
 copycode: true ## If you want to enable one-click copy of the code blocks, set the value to true.
 dark: false ## If you want to use the dark mode theme, set the value to true. Note: This feature is not complete, please open an issue if you have any problem.
+totop: true ## If you want to use the rocketship button to return to the top, set the value to true.
+external_css: false ## If you want to load an external CSS file, set the value to true and create a file named "external.css" in the source/css folder.
 
 menu:
   - page: home
@@ -132,14 +163,17 @@ js: js
 css: css
 
 # Theme version
-version: 0.0.0
+version: 1.0.0
 ```
-- disqus - [Disqus](https://disqus.com) shortname
+- disqus - [Disqus](https://disqus.com) comment system, integrated with [DisqusJS](https://github.com/SukkaW/DisqusJS) API.
 - uyan - [Uyan](http://www.uyan.cc) id
 - livere - [LiveRe](https://livere.com) data-uid
 - changyan - [Changyan](http://changyan.kuaizhan.com) appid
 - gitalk - [Gitalk](https://github.com/gitalk/gitalk) comment system
 - valine - [Valine](https://valine.js.org) comment system
+- minivaline - [MiniValine](https://github.com/MiniValine/MiniValine) comment system
+- utterances - [Utterances](https://utteranc.es) comment system
+- twikoo - [Twikoo](https://twikoo.js.org) comment system
 - google_search - Default search engine
 - baidu_search - Search engine for users in China
 - swiftype - [Swiftype Search](https://swiftype.com) key
@@ -153,13 +187,15 @@ version: 0.0.0
 - busuanzi - Enable [Busuanzi](http://busuanzi.ibruce.info) page views
 - wordcount - Enable [hexo-wordcount](https://github.com/willin/hexo-wordcount) of each post
 - widgets_on_small_screens - Show the widgets at the bottom of small screens
-- [canvas_nest](https://github.com/hustcc/canvas-nest.js) - Enable dynamic background
+- canvas_nest - Enable [canvas-nest.js](https://github.com/hustcc/canvas-nest.js/blob/master/README-zh.md) dynamic background
 - donate - Enable donate button after each post
 - post_copyright - Enable copyright info after each post
 - love - Enable peach heart when clicking anywhere
 - plantuml - Enable PlantUML to generate UML diagram
 - copycode - Enable one-click copy of code blocks
 - dark - Enable the dark mode of the theme
+- totop - Enable the rocketship to-top button
+- external_css - Enable loading an external CSS file
 - menu - Customize your menu of pages here, just follow the format of existied items. Don't forget to create corresponding folders inlcuding `index.md` in `source` folder to ensure the pages will correctly display. [FontAwesome](http://fontawesome.io) icon fonts have been integrated, and you can choose other icons which you like [here](http://fontawesome.io/icons/) and use them according to the instruction.
 - widgets - Choose and arrange the widgets in sidebar here.
 - links - Edit your blogroll here.

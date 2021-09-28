@@ -3,7 +3,7 @@ title: 毕业季
 toc: true
 tags: 
 comments: true
-visible: false
+hidden: true
 date: 2016-06-25 15:17:03
 categories: 其他
 ---

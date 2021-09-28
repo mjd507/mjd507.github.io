@@ -1,4 +1,10 @@
-disqus: ## Your disqus_shortname, e.g. username
+disqus:
+  enable: false ## If you want to use Disqus comment system, please set the value to true.
+  shortname: ## Your disqus_shortname, e.g. username
+  api: ## You can visit Disqus comments in China mainland without barriers using Disqus API, e.g. https://disqus.skk.moe/disqus/
+  apikey: ## Your API key obtained in Disqus API Application, e.g. yk00ZB1fjYGRkrCrDDRYDUjpp26GJWJiJRZQZ5SY0r3th5FMW6pnSzQMnWH7ua7r
+  admin: ## Username of your Disqus moderator, e.g. username
+  admin_label: ## The text of Disqus moderator badge, e.g. Mod
 uyan: ## Your uyan_id. e.g. 1234567
 livere: ## Your livere data-uid, e.g. MTAyMC8zMDAxOC78NTgz
 changyan: ## Your changyan appid, e.g. cyrALsXc8
@@ -20,21 +26,30 @@ valine: ## https://valine.js.org
   avatar: "mm" ## Gravatar type, see https://github.com/xCss/Valine/wiki/avatar-setting-for-valine
   pageSize: 10 ## Number of comments per page.
   guest_info: nick,mail,link ## Attributes of reviewers.
-# MiniValine
-# See: https://github.com/MiniValine/MiniValine
-minivaline:
-  enable: false
-  appId:  # Your leancloud application appid
-  appKey:  # Your leancloud application appkey
-  placeholder: Write a Comment # Comment box placeholder
-  adminEmailMd5: # The MD5 of Admin Email to show Admin Flag.
-  math: true # Support MathJax.
-  md: true # Support Markdown.
+minivaline: ## See: https://github.com/MiniValine/MiniValine
+  enable: false ## If you want to use MiniValine comment system, please set the value to true.
+  appId: ## Your LeanCloud application App ID, e.g. pRBBL2JR4N7kLEGojrF0MsSs-gzGzoHsz
+  appKey: ## Your LeanCloud application App Key, e.g. tjczHpDfhjYDSYddzymYK1JJ
+  placeholder: Write a Comment ## Comment box placeholder.
+  adminEmailMd5: ## The MD5 of Admin Email to show Admin Flag.
+  math: true ## Support MathJax.
+  md: true ## Support Markdown.
   # MiniValine's display language depends on user's browser or system environment
   # If you want everyone visiting your site to see a uniform language, you can set a force language value
   # Available values: en  | zh-CN | (and many more)
   # More i18n info: https://github.com/MiniValine/minivaline-i18n
   lang:
+utterances: ## See: https://utteranc.es
+  enable: false ## If you want to use Utterances comment system, please set the value to true.
+  repo: ## The repository utterances will connect to, e.g. tufu9441/comments
+  identifier: title ## The mapping between blog posts and GitHub issues.
+  theme: github-light ## Choose an Utterances theme which matches your blog.
+twikoo: ## See: https://twikoo.js.org
+  enable: false ## If you want to use twikoo comment system, please set the value to true.
+  envId: ## Tencent CloudBase envId
+  region: ## Tencent CloudBase region, e.g. ap-shanghai
+  path: ## Article path, e.g. window.location.pathname
+
 
 google_search: true ## Use Google search, true/false.
 baidu_search: false ## Use Baidu search, true/false.
@@ -64,15 +79,17 @@ donate:
   btc_key: ## Bitcoin key, e.g. 1KuK5eK2BLsqpsFVXXSBG5wbSAwZVadt6L
   paypal_url: ## Paypal URL, e.g. https://www.paypal.me/tufu9441
 post_copyright:
-  enable: false ## If you want to display the copyright info after each post, please set the value to true and fill the following items on your need.
-  author: ## Your author name, e.g. tufu9441
-  copyright_text: ## Your copyright text, e.g. The author owns the copyright, please indicate the source reproduced.
+  enable: true ## If you want to display the copyright info after each post, please set the value to true and fill the following items on your need.
+  author: mjd507 ## Your author name, e.g. tufu9441
+  copyright_text: 本站主要是用来整理不懂的知识，大部分内容我都没有完全掌握，请谨慎参考。 ## Your copyright text, e.g. The author owns the copyright, please indicate the source reproduced.
 love: false ## If you want the love to appear when you click anywhere, set the value to true.
 plantuml: ## Using PlantUML to generate UML diagram, must install hexo-filter-plantuml (https://github.com/miao1007/hexo-filter-plantuml).
     render: "PlantUMLServer" ## Local or PlantUMLServer.
     outputFormat: "svg" ## Common options: svg/png
 copycode: true ## If you want to enable one-click copy of the code blocks, set the value to true.
 dark: true ## If you want to use the dark mode theme, set the value to true. Note: This feature is not complete, please open an issue if you have any problem.
+totop: true ## If you want to use the rocketship button to return to the top, set the value to true.
+external_css: false ## If you want to load an external CSS file, set the value to true and create a file named "external.css" in the source/css folder.
 
 menu:
   - page: home
@@ -133,4 +150,4 @@ js: js
 css: css
 
 # Theme version
-version: 0.0.0
+version: 1.0.0
