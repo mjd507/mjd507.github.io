@@ -1,9 +1,10 @@
 ---
 title: 工作与认知
-categories: 其他
+categories: Other
 toc: true
 comments: true
 copyright: true
+hidden: true
 date: 2017-11-18 13:40:01
 tags:
 ---

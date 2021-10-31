@@ -1,6 +1,6 @@
 ---
 title: 毕业一年，真实的生活状态
-categories: 其他
+categories: Other
 toc: false
 comments: true
 copyright: true

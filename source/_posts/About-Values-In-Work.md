@@ -1,6 +1,6 @@
 ---
 title: 关于职业中的价值观
-categories: 其他
+categories: Other
 toc: true
 comments: true
 copyright: false

@@ -5,7 +5,7 @@ tags:
 comments: true
 hidden: true
 date: 2016-06-25 15:17:03
-categories: 其他
+categories: Other
 ---
 
 昨天，学校院长给我们一一拔穗，合影，随后参加了毕业典礼，下午领取了毕业证书和学士学位证书，晚上寝室六人一起聚餐，作为最后的告别。

@@ -1,9 +1,10 @@
 ---
 title: 制作 PPT 和流程图的超酷姿势
-categories: 其他
+categories: Other
 toc: true
 comments: true
 copyright: true
+hidden: true
 date: 2017-10-07 12:38:29
 tags:
 ---

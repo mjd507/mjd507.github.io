@@ -1,8 +1,9 @@
 ---
 title: Mac OS 上的一些疑问的解决方法
-categories: 其他
+categories: Other
 toc: true
 comments: true
+hidden: true
 date: 2016-12-01 18:42:16
 tags:
 ---
