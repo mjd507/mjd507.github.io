@@ -81,7 +81,7 @@ donate:
 post_copyright:
   enable: true ## If you want to display the copyright info after each post, please set the value to true and fill the following items on your need.
   author: mjd507 ## Your author name, e.g. tufu9441
-  copyright_text: 本站主要是用来整理不懂的知识，大部分内容我都没有完全掌握，请谨慎参考。 ## Your copyright text, e.g. The author owns the copyright, please indicate the source reproduced.
+  copyright_text: This station is mainly used to sort out incomprehensible knowledge. I have not fully mastered most of the content. Please refer carefully. ## Your copyright text, e.g. The author owns the copyright, please indicate the source reproduced.
 love: false ## If you want the love to appear when you click anywhere, set the value to true.
 plantuml: ## Using PlantUML to generate UML diagram, must install hexo-filter-plantuml (https://github.com/miao1007/hexo-filter-plantuml).
     render: "PlantUMLServer" ## Local or PlantUMLServer.
@@ -120,20 +120,14 @@ widgets: ## Six widgets in sidebar provided: search, category, tag, recent_posts
   - links
 
 links:
- - title: JohnnyShieh
-   url: http://johnnyshieh.me/
- - title: 代码家
-   url: https://daimajia.com/
  - title: Jerry Qu
    url: https://imququ.com/
+ - title: 代码家
+   url: https://daimajia.com/
  - title: Derek Sivers
    url: https://sivers.org/
- - title: alispittel
-   url: https://www.alispit.tel/#/
  - title: Hugo Gu
    url: http://www.hugogu.cn/
- - title: 奇舞周刊
-   url: https://weekly.75team.com/
 
 timeline:
   - num: 1
