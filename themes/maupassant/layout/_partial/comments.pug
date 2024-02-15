@@ -1,24 +1,24 @@
 if theme.disqus.enable == true
-  link(rel='stylesheet', type='text/css', href='https://cdn.jsdelivr.net/gh/sukkaw/disqusjs/dist/disqusjs.css?v=' + theme.version)
-  script(type='text/javascript' src='https://cdn.jsdelivr.net/gh/sukkaw/disqusjs/dist/disqus.js?v=' + theme.version)
-  script(type='text/javascript' id='disqus-count-script').
-      $(function() {
-           var xhr = new XMLHttpRequest();
-           xhr.open('GET', '//disqus.com/next/config.json', true);
-           xhr.timeout = 2500;
-           xhr.onreadystatechange = function () {
-             if (xhr.readyState === 4 && xhr.status === 200) {
-               $('.post-meta .post-comments-count').show();
-               var s = document.createElement('script');
-               s.id = 'dsq-count-scr';
-               s.src = 'https://#{theme.disqus.shortname}.disqus.com/count.js';
-               s.async = true;
-               (document.head || document.body).appendChild(s);
-             }
-           };
-           xhr.ontimeout = function () { xhr.abort(); };
-           xhr.send(null);
-         });
+  link(rel='stylesheet', type='text/css', href='https://unpkg.com/disqusjs@1.3/dist/disqusjs.css')
+  script(type='text/javascript', src='https://unpkg.com/disqusjs@1.3/dist/disqus.js')
+  script(type='text/javascript', id='disqus-count-script').
+    $(function() {
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', '//disqus.com/next/config.json', true);
+      xhr.timeout = 2500;
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          $('.post-meta .post-comments-count').show();
+          var s = document.createElement('script');
+          s.id = 'dsq-count-scr';
+          s.src = 'https://#{theme.disqus.shortname}.disqus.com/count.js';
+          s.async = true;
+          (document.head || document.body).appendChild(s);
+        }
+      };
+      xhr.ontimeout = function () { xhr.abort(); };
+      xhr.send(null);
+    });
   #disqus_thread.comments
     script(type='text/javascript').
       // Load comments with DisqusJS
@@ -68,30 +68,30 @@ if theme.disqus.enable == true
 
 if theme.uyan
   #uyan_frame
-  script(type='text/javascript' src='//v2.uyan.cc/code/uyan.js?uid=' + theme.uyan)
+  script(type='text/javascript', src='//v2.uyan.cc/code/uyan.js?uid=' + theme.uyan)
 
 if theme.changyan
-  div#SOHUCS(sid=page.date.valueOf())
+  #SOHUCS(sid=page.date.valueOf())
   script.
     (function(){var appid='#{theme.changyan}';var conf='#{theme.changyan_conf}';var width=window.innerWidth||document.documentElement.clientWidth;if(width<960){window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id='+appid+'&conf='+conf+'"><\/script>')}else{var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})})}})()
 
 if theme.livere
-  div(id='lv-container' data-id='city' data-uid=theme.livere)
+  #lv-container(data-id='city', data-uid=theme.livere)
     script.
       (function(d, s) {
-         var j, e = d.getElementsByTagName(s)[0];
-         if (typeof LivereTower === 'function') { return; }
-         j = d.createElement(s);
-         j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
-         j.async = true;
-         e.parentNode.insertBefore(j, e);
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
       })(document, 'script');
 
 if theme.gitalk.enable == true
   #container
-  link(rel='stylesheet', type='text/css', href='//unpkg.com/gitalk/dist/gitalk.css?v=' + theme.version)
-  script(type='text/javascript' src='//cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.js?v=' + theme.version)
-  script(type='text/javascript' src='//unpkg.com/gitalk/dist/gitalk.min.js?v=' + theme.version)
+  link(rel='stylesheet', type='text/css', href='//unpkg.com/gitalk/dist/gitalk.css')
+  script(type='text/javascript', src='//cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.js')
+  script(type='text/javascript', src='//unpkg.com/gitalk/dist/gitalk.min.js')
   script.
     var gitalk = new Gitalk({
       clientID: '#{theme.gitalk.client_id}',
@@ -105,7 +105,7 @@ if theme.gitalk.enable == true
     gitalk.render('container')
 
 if theme.valine.enable == true
-  #vcomment
+  #vcomment.nofancybox
   script(src='//cdn1.lncld.net/static/js/3.0.4/av-min.js')
   script(src='//unpkg.com/valine@latest/dist/Valine.min.js')
   script.
@@ -122,6 +122,7 @@ if theme.valine.enable == true
       verify:verify,
       appId:'#{theme.valine.appid}',
       appKey:'#{theme.valine.appkey}',
+      serverURLs:'#{theme.valine.serverURLs}',
       placeholder:'#{theme.valine.placeholder}',
       avatar:'#{theme.valine.avatar}',
       guest_info:guest_info,
@@ -129,7 +130,7 @@ if theme.valine.enable == true
     })
 
 if theme.minivaline.enable == true
-  #minivaline-container
+  #minivaline-container.nofancybox
   script(src='https://unpkg.com/minivaline/dist/MiniValine.min.js')
   script.
     new MiniValine({
@@ -143,12 +144,30 @@ if theme.minivaline.enable == true
       md: #{theme.minivaline.md}
     })
 
+if theme.waline.enable == true
+  #waline.nofancybox
+  script(src='//unpkg.com/@waline/client@v2/dist/waline.js')
+  link(rel='stylesheet', type='text/css', href='//unpkg.com/@waline/client@v2/dist/waline.css')
+  script.
+    let metaInfo = ['nick', 'mail', 'link']
+    let requiredMeta = '#{theme.waline.requiredMeta}'.split(',').filter(item => {
+      return metaInfo.indexOf(item) > -1
+    })
+    Waline.init({
+      el: '#waline',
+      comment: true,
+      serverURL: '#{theme.waline.serverURL}',
+      pageSize: '#{theme.waline.pageSize}',
+      wordLimit: '#{theme.waline.wordLimit}',
+      requiredMeta,
+    })
+
 if theme.utterances.enable == true
-  script(src='https://utteranc.es/client.js', repo=theme.utterances.repo, issue-term=theme.utterances.identifier, theme=theme.utterances.theme, crossorigin='anonymous', async)  
+  script(src='https://utteranc.es/client.js', repo=theme.utterances.repo, issue-term=theme.utterances.identifier, theme=theme.utterances.theme, crossorigin='anonymous', async)
 
 if theme.twikoo.enable == true
   #tcomment
-  script(src='https://cdn.jsdelivr.net/npm/twikoo/dist/twikoo.all.min.js')
+  script(src='https://unpkg.com/twikoo@1.5.7/dist/twikoo.all.min.js')
   script.
     twikoo.init({
       envId: '#{theme.twikoo.envId}',
