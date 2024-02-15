@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /**
  *
  * @package Maupassant
@@ -106,7 +107,8 @@ div {
   padding-bottom: 20px;
   word-wrap: break-word; }
   #sidebar .widget {
-    margin-bottom: 30px; }
+    margin-bottom: 30px;
+    /* tiered display categories */ }
     #sidebar .widget .widget-title {
       color: #6E7173;
       line-height: 2.7;
@@ -134,6 +136,8 @@ div {
       #sidebar .widget ul li {
         margin: 5px 0;
         line-height: 1.5; }
+        #sidebar .widget ul li .wl-emoji {
+          width: 16px; }
     #sidebar .widget .category-list-count {
       padding-left: 5px;
       color: #6E7173; }
@@ -141,6 +145,15 @@ div {
       content: "("; }
     #sidebar .widget .category-list-count::after {
       content: ")"; }
+    #sidebar .widget .category-list-child li {
+      margin-left: 0.6em !important;
+      padding-left: 1em;
+      position: relative; }
+    #sidebar .widget .category-list-child li::before {
+      content: "-";
+      position: absolute;
+      top: 0;
+      left: 0; }
     #sidebar .widget .search-form {
       position: relative;
       overflow: hidden; }
@@ -158,6 +171,17 @@ div {
         -webkit-box-shadow: none;
         -moz-box-shadow: none;
         box-shadow: none; }
+    #sidebar .widget .author-info {
+      text-align: center; }
+      #sidebar .widget .author-info a.info-avatar img {
+        border-radius: 50%;
+        padding: 4px;
+        width: 96px;
+        height: 96px;
+        background-color: transparent;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); }
+      #sidebar .widget .author-info a.info-icon {
+        font-size: 25px; }
 
 /* title for search result or tagged posts*/
 .label-title {
@@ -175,6 +199,18 @@ div {
     font: bold 25px/1.1 "ff-tisa-web-pro", Cambria, "Times New Roman", Georgia, Times, sans-serif; }
     .post .post-title a {
       color: #555; }
+    .post .post-title .top-post {
+      font-weight: 400;
+      height: 32px;
+      padding: 0 6px;
+      margin-right: 5px;
+      line-height: 32px;
+      font-size: 16px;
+      white-space: nowrap;
+      vertical-align: 2px;
+      color: #fff;
+      background-image: -webkit-linear-gradient(0deg, #3742fa 0, #a86af9 100%);
+      border-radius: 2px 6px; }
   .post .post-meta {
     padding: 0;
     margin: 15px 0 0;
@@ -228,7 +264,7 @@ div {
     padding-top: 15px;
     text-align: justify;
     text-justify: distribute;
-    word-break: normal; }
+    word-break: break-word; }
     .post .post-content h2 {
       margin: 1.4em 0 1.1em;
       border-bottom: 1px solid #eee;
@@ -509,6 +545,7 @@ pre {
 
 #process .timeline-centered {
   position: relative;
+  min-height: 14px;
   margin-bottom: 30px; }
 
 #process .timeline-centered::before,
@@ -683,9 +720,9 @@ pre {
   display: block;
   width: 4px;
   background: #eee;
-  top: -3%;
+  top: -18px;
   right: -30px;
-  bottom: -3%; }
+  bottom: -8px; }
 
 #process .present,
 #process .born {
@@ -715,21 +752,21 @@ pre {
 
 #process .present {
   position: absolute;
-  top: -3%;
+  top: -18px;
   right: 0;
   margin-top: -20px;
   line-height: 100%; }
 
 #process .born {
   position: absolute;
-  bottom: -3%;
+  bottom: -8px;
   right: 0;
   margin-bottom: -20px;
   line-height: 100%; }
 
 #process .dot_tp {
   position: absolute;
-  top: -3%;
+  top: -18px;
   right: -35px;
   background-color: transparent;
   height: 15px;
@@ -742,7 +779,7 @@ pre {
 
 #process .dot_bt {
   position: absolute;
-  bottom: -3%;
+  bottom: -8px;
   right: -35px;
   background-color: transparent;
   height: 15px;
@@ -1521,3 +1558,212 @@ em.search-keyword {
   color: #fff;
   background-color: #999999;
   text-shadow: 0; }
+
+/* Footer Badge*/
+.github-badge {
+  display: inline-block;
+  border-radius: 4px;
+  text-shadow: none;
+  font-size: 12px;
+  color: #fff;
+  line-height: 1.25;
+  background-color: #ABBAC3;
+  margin-bottom: 5px; }
+  .github-badge a {
+    color: #fff; }
+  .github-badge img {
+    /*height: "calc(%s * 1.25)" % $fontsize-footnote*/
+    height: 1.25em;
+    vertical-align: top; }
+  .github-badge .badge-subject {
+    display: inline-block;
+    background-color: #555;
+    padding: 4px 4px 4px 6px;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px; }
+  .github-badge .badge-value {
+    display: inline-block;
+    padding: 4px 6px 4px 4px;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px; }
+  .github-badge .bg-brightgreen {
+    background-color: #4c1 !important; }
+  .github-badge .bg-green {
+    background-color: #97ca00 !important; }
+  .github-badge .bg-yellowgreen {
+    background-color: #a4a61d !important; }
+  .github-badge .bg-orange {
+    background-color: #FE7D37 !important; }
+  .github-badge .bg-yellow {
+    background-color: #dfb317 !important; }
+  .github-badge .bg-blueviolet {
+    background-color: #8A2BE2 !important; }
+  .github-badge .bg-pink {
+    background-color: #FFC0CB !important; }
+  .github-badge .bg-red {
+    background-color: #e05d44 !important; }
+  .github-badge .bg-blue {
+    background-color: #007EC6 !important; }
+  .github-badge .bg-grey,
+  .github-badge .bg-gray {
+    background-color: #555 !important; }
+  .github-badge .bg-lightgrey,
+  .github-badge .bg-lightgray {
+    background-color: #9f9f9f !important; }
+
+/* Waline CSS*/
+#waline {
+  /* 字体大小 */
+  --waline-font-size: 16px;
+  /* 常规颜色 */
+  --waline-white: #fff;
+  --waline-light-grey: #999;
+  --waline-dark-grey: #666;
+  /* 主题色 */
+  --waline-theme-color: #34495e;
+  --waline-active-color: #bababa;
+  /* 布局颜色 */
+  --waline-text-color: #444;
+  --waline-bgcolor: #fff;
+  --waline-bgcolor-light: #f8f8f8;
+  --waline-bgcolor-hover: #f0f0f0;
+  --waline-border-color: #ddd;
+  --waline-disable-bgcolor: #f8f8f8;
+  --waline-disable-color: #bbb;
+  --waline-code-bgcolor: #282c34;
+  /* 特殊颜色 */
+  --waline-bq-color: #f0f0f0;
+  /* 头像 */
+  --waline-avatar-size: 3.25rem;
+  --waline-mobile-avatar-size: calc(var(--waline-avatar-size) * 9 / 13);
+  /* 徽章 */
+  --waline-badge-color: #34495e;
+  --waline-badge-font-size: 0.775em;
+  /* 信息 */
+  --waline-info-bgcolor: #f8f8f8;
+  --waline-info-color: #999;
+  --waline-info-font-size: 0.625em;
+  /* 渲染选择 */
+  --waline-border: 1px solid var(--waline-border-color);
+  --waline-avatar-radius: 50%;
+  --waline-box-shadow: none; }
+
+/* Darkmode CSS*/
+html[data-dark='true'] {
+  background-color: #121212 !important;
+  filter: invert(100%) hue-rotate(180deg) brightness(105%) contrast(85%);
+  -webkit-filter: invert(100%) hue-rotate(180deg) brightness(105%) contrast(85%); }
+  html[data-dark='true'] img {
+    filter: hue-rotate(180deg) contrast(100%) invert(100%);
+    -webkit-filter: hue-rotate(180deg) contrast(100%) invert(100%); }
+
+.darkmode-toggle {
+  background: #a2a2a2;
+  width: 3rem;
+  height: 3rem;
+  position: fixed;
+  z-index: 999;
+  border-radius: 50%;
+  left: 32px;
+  bottom: 32px;
+  right: unset;
+  cursor: pointer;
+  transition: all 0.5s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center; }
+
+/* Links Layout*/
+.link-items {
+  display: flex;
+  text-align: center;
+  justify-content: left;
+  flex-wrap: wrap;
+  padding: 0px 0.5rem;
+  list-style-type: disc;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  padding-inline-start: 20px; }
+  .link-items .link-item {
+    display: inline-flex;
+    --primary-color: #444; }
+    .link-items .link-item .link-url {
+      display: inline-flex;
+      text-align: center;
+      justify-self: center;
+      line-height: 1.5;
+      width: 15rem;
+      color: var(--primary-color, #000);
+      padding: 0.5rem 1rem;
+      margin: 0.5rem;
+      transition: all 0.2s ease 0s; }
+      .link-items .link-item .link-url .link-left {
+        display: inline-block;
+        line-height: 0; }
+        .link-items .link-item .link-url .link-left .link-avatar {
+          width: 4rem;
+          height: 4rem;
+          border-radius: 50%;
+          transition: all 0.5s ease 0s; }
+      .link-items .link-item .link-url .link-info {
+        padding-left: 0.6rem;
+        display: block; }
+        .link-items .link-item .link-url .link-info .link-blog {
+          font-size: 1.24rem;
+          font-weight: 700;
+          margin: 0.42rem 0px; }
+        .link-items .link-item .link-url .link-info .link-desc {
+          font-size: 0.8rem;
+          font-weight: normal;
+          margin-top: 0.5rem;
+          width: 10.5rem;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          overflow: hidden; }
+
+/* Recent-comments Waline Style*/
+.waline-comment-content {
+  margin: 6px;
+  padding: 6px;
+  border-radius: 6px; }
+  .waline-comment-content p {
+    margin: 0;
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    /*这里设置第几行显示省略号，可以设置第一行或者其他行*/ }
+
+.waline-comment-content-author {
+  text-align: end;
+  margin-bottom: 6px; }
+
+/* article tags  */
+.article-tag-list-item {
+  font-size: 14px;
+  line-height: 24px;
+  display: inline-block;
+  padding: 0 6px;
+  border-radius: 3px;
+  background: #f6f6f6;
+  min-width: 30px;
+  text-align: center;
+  margin: 3px; }
+
+.article-tag-list-item a {
+  text-align: center;
+  color: #555; }
+
+.article-tag-list-item a::before {
+  content: "\f02b";
+  font-family: FontAwesome;
+  margin-right: 4px; }
+
+.article-tag-list-item:hover {
+  color: #555;
+  background: #efefef; }
+
+.article-tag-list {
+  padding-left: 0rem; }
