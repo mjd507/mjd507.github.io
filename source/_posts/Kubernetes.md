@@ -48,7 +48,7 @@ master node: control plane
 - Scheduler = Ensures pods placement
 - etcd = kubernetes backing store (etcd holds the current status of any K8s component)
 
-worker nodes: which your applications are running
+worker nodes: where your applications are running
 
 
 ## Main Components
@@ -96,7 +96,7 @@ Production Cluster Setup
 
 Setup k8s cluster locally (docker or other VM is required)
 - using minikube : Master and Worker processes run on One machine.
-- `brew install minikube`  [minikube installation](https://minikube.sigs.k8s.io/docs/start/)
+- For MacOS: `brew install minikube`  [minikube installation](https://minikube.sigs.k8s.io/docs/start/)
 - `minikube start --driver docker`
 - `minikube status`
 - `kubectl get node`
