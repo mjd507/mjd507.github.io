@@ -108,7 +108,7 @@ deploy a mongo instance and a web app into our local k8s cluster.
 
 both mongo and webapp are official images which can be searched from docker hub. 
 
-project link: https://github.com/mjd507/k8s-demo
+demo code link: https://github.com/mjd507/k8s-demo
 
 Mongo-ConfigMap.yaml: store mongo url
 
