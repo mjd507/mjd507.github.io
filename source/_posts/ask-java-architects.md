@@ -1,5 +1,5 @@
 ---
-title: Ask Java Architects - Open Questions (1)
+title: Ask Java Architects - Open Questions
 categories: Back-End
 toc: false
 comments: true
@@ -11,10 +11,6 @@ tags:
 
 
 [Ask the Java Architects](https://www.youtube.com/watch?v=SPc9YpLsYo8)
-
-
-Great Questions, Great Answers. 
-
 
 <!--more-->
 
