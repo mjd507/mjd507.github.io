@@ -1,0 +1,95 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>DeepSeek | Jiandong</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=1.0.0"><link rel="stylesheet" type="text/css" href="https://unpkg.com/normalize.css"><link rel="stylesheet" type="text/css" href="https://unpkg.com/purecss/build/pure-min.css"><link rel="stylesheet" type="text/css" href="https://unpkg.com/purecss/build/grids-responsive-min.css"><link rel="stylesheet" href="https://unpkg.com/font-awesome@4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="https://unpkg.com/jquery/dist/jquery.min.js"></script><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><script src="https://www.googletagmanager.com/gtag/js?id=G-566LR096XR" async></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-566LR096XR');
+</script><script type="text/javascript" src="https://unpkg.com/clipboard/dist/clipboard.min.js"></script><script type="text/javascript" src="https://unpkg.com/toastr/build/toastr.min.js"></script><link rel="stylesheet" href="https://unpkg.com/toastr/build/toastr.min.css"><meta name="generator" content="Hexo 5.4.1"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">DeepSeek</h1><a id="logo" href="/.">Jiandong</a><p class="description">Stop stopping</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> Home</i></a><a href="/archives/"><i class="fa fa-archive"> Archive</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">DeepSeek</h1><div class="post-meta">2025-02-04<span> | </span><span class="category"><a href="/categories/Back-End/">Back-End</a></span></div><div class="clear"><div class="toc-article" id="toc"><div class="toc-title">Contents</div><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-Entry-Point-main-Method"><span class="toc-number">1.</span> <span class="toc-text">1. Entry Point: main() Method</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-Initialize-SpringApplication"><span class="toc-number">2.</span> <span class="toc-text">2. Initialize SpringApplication</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-Prepare-the-Environment"><span class="toc-number">3.</span> <span class="toc-text">3. Prepare the Environment</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-Create-ApplicationContext"><span class="toc-number">4.</span> <span class="toc-text">4. Create ApplicationContext</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-Run-ApplicationContext"><span class="toc-number">5.</span> <span class="toc-text">5. Run ApplicationContext</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-Execute-CommandLineRunner-x2F-ApplicationRunner"><span class="toc-number">6.</span> <span class="toc-text">6. Execute CommandLineRunner&#x2F;ApplicationRunner</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-Start-Embedded-Web-Server"><span class="toc-number">7.</span> <span class="toc-text">7. Start Embedded Web Server</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-Application-Ready"><span class="toc-number">8.</span> <span class="toc-text">8. Application Ready</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Key-Annotations"><span class="toc-number">9.</span> <span class="toc-text">Key Annotations</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Flow-Summary"><span class="toc-number">10.</span> <span class="toc-text">Flow Summary</span></a></li></ol></div></div><div class="post-content"><p>use DeepSeek for one week, omg, really powerful for our tech guys.</p>
+<p>Every answer exceeded my expectations and I could easily access and understand details that I didn’t know before or would have taken me a lot of time to know,  now with deep seek, I feel like I have the world at my fingertips.</p>
+<p>List one example I asked to DeepSeek.</p>
+<span id="more"></span>
+
+<p>Q: Spring Boot startup flow</p>
+<p>here are the full output from DeepSeek.</p>
+<blockquote>
+<p>Thought for 26 seconds</p>
+<p>Okay, the user asked about the Spring Boot startup flow. Let me think about how to explain this clearly.</p>
+<p>First, I should start by mentioning that when a Spring Boot app runs, it begins with the main method. The main method uses SpringApplication.run(). That’s the entry point.</p>
+<p>Next, I need to outline the key steps in the startup process. Let me recall the order: loading the application context, running the application runners, and so on.</p>
+<p>Wait, maybe I should break it down step by step. Let’s see. The main method triggers SpringApplication.run(), which initializes the application. Then, Spring Boot starts setting up the environment, like reading properties and profiles.</p>
+<p>After that, it creates the ApplicationContext. The type of context depends on whether it’s a web app or not. For web apps, it’s AnnotationConfigServletWebServerApplicationContext, otherwise AnnotationConfigApplicationContext.</p>
+<p>Then there’s the part about @SpringBootApplication. The @EnableAutoConfiguration triggers auto-configuration, which sets up beans based on dependencies. Component scanning happens here too, looking for @Component, @Service, etc.</p>
+<p>Don’t forget about the application runners, like CommandLineRunner and ApplicationRunner. They execute after the context is loaded but before the app starts accepting requests.</p>
+<p>Oh, and the embedded server setup. Spring Boot automatically starts Tomcat, Jetty, or another server if it’s a web app. The server starts on the specified port, and then the app is ready to handle requests.</p>
+<p>I should also mention events and listeners. Spring Boot publishes events during startup, and developers can hook into these for custom logic.</p>
+<p>Wait, maybe I should structure this as a numbered list for clarity. Let me check the order again: main method, environment setup, context creation, auto-configuration, bean registration, runners, server start.</p>
+<p>Also, the application.yml or application.properties are loaded early on, so properties are available during context setup.</p>
+<p>I should explain each step briefly but clearly. Make sure to highlight the auto-configuration and component scanning parts since they’re key features of Spring Boot.</p>
+<p>Maybe include an example code snippet for the main class. That could help illustrate the starting point.</p>
+<p>Let me also think about any common extensions or hooks, like initializing beans, PostConstruct, or using ApplicationContextInitializer. But maybe keep it simple for now unless the user asks for more details.</p>
+<p>Okay, putting it all together: start with the main method, then the steps in order, explaining each part. Highlight auto-configuration, component scanning, runners, and embedded server. Maybe a flowchart would help, but since it’s text, describe the flow step-by-step.</p>
+</blockquote>
+<p>The Spring Boot application startup flow follows a specific sequence to initialize the application context, load configurations, and start the embedded server. Here’s a step-by-step breakdown:</p>
+<hr>
+<h3 id="1-Entry-Point-main-Method"><a href="#1-Entry-Point-main-Method" class="headerlink" title="1. Entry Point: main() Method"></a><strong>1. Entry Point: <code>main()</code> Method</strong></h3><p>The application starts from the <code>main</code> method, which calls <code>SpringApplication.run()</code>:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyApp</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    SpringApplication.run(MyApp.class, args);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="2-Initialize-SpringApplication"><a href="#2-Initialize-SpringApplication" class="headerlink" title="2. Initialize SpringApplication"></a><strong>2. Initialize <code>SpringApplication</code></strong></h3><ul>
+<li><strong>Loads Defaults</strong>: Configures default settings (e.g., banner, logging).</li>
+<li><strong>Infers Application Type</strong>: Determines if it’s a web application (Servlet, Reactive, or non-web).</li>
+<li><strong>Loads <code>ApplicationContextInitializer</code>s</strong>: Customizes the context before it’s refreshed.</li>
+<li><strong>Loads <code>ApplicationListener</code>s</strong>: Listens to Spring Boot events (e.g., <code>ApplicationStartingEvent</code>).</li>
+</ul>
+<hr>
+<h3 id="3-Prepare-the-Environment"><a href="#3-Prepare-the-Environment" class="headerlink" title="3. Prepare the Environment"></a><strong>3. Prepare the Environment</strong></h3><ul>
+<li><strong>Load Properties</strong>: Reads <code>application.properties</code>, <code>application.yml</code>, and profiles (e.g., <code>@Profile</code>).</li>
+<li><strong>Set Active Profiles</strong>: Configures environments (e.g., <code>dev</code>, <code>prod</code>).</li>
+</ul>
+<hr>
+<h3 id="4-Create-ApplicationContext"><a href="#4-Create-ApplicationContext" class="headerlink" title="4. Create ApplicationContext"></a><strong>4. Create <code>ApplicationContext</code></strong></h3><ul>
+<li><strong>Web Apps</strong>: Uses <code>AnnotationConfigServletWebServerApplicationContext</code>.</li>
+<li><strong>Non-Web Apps</strong>: Uses <code>AnnotationConfigApplicationContext</code>.</li>
+</ul>
+<hr>
+<h3 id="5-Run-ApplicationContext"><a href="#5-Run-ApplicationContext" class="headerlink" title="5. Run ApplicationContext"></a><strong>5. Run <code>ApplicationContext</code></strong></h3><ul>
+<li><strong>Component Scanning</strong>: Scans packages for <code>@Component</code>, <code>@Service</code>, <code>@Repository</code>, etc.</li>
+<li><strong>Process <code>@Configuration</code> Classes</strong>: Loads beans defined in configuration classes.</li>
+<li><strong>Auto-Configuration</strong>: Enabled via <code>@EnableAutoConfiguration</code> (part of <code>@SpringBootApplication</code>):<ul>
+<li>Checks classpath dependencies (e.g., <code>spring-boot-starter-web</code>).</li>
+<li>Configures beans automatically (e.g., <code>DataSource</code>, <code>JdbcTemplate</code>).</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="6-Execute-CommandLineRunner-x2F-ApplicationRunner"><a href="#6-Execute-CommandLineRunner-x2F-ApplicationRunner" class="headerlink" title="6. Execute CommandLineRunner&#x2F;ApplicationRunner"></a><strong>6. Execute <code>CommandLineRunner</code>&#x2F;<code>ApplicationRunner</code></strong></h3><p>Runs custom logic after the context is loaded but before the app fully starts:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> CommandLineRunner <span class="title">demo</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> args -&gt; System.out.println(<span class="string">&quot;App started!&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="7-Start-Embedded-Web-Server"><a href="#7-Start-Embedded-Web-Server" class="headerlink" title="7. Start Embedded Web Server"></a><strong>7. Start Embedded Web Server</strong></h3><ul>
+<li><strong>Tomcat&#x2F;Jetty&#x2F;Undertow</strong>: Starts automatically for web applications.</li>
+<li><strong>Port Configuration</strong>: Listens on the specified port (default: <code>8080</code>).</li>
+</ul>
+<hr>
+<h3 id="8-Application-Ready"><a href="#8-Application-Ready" class="headerlink" title="8. Application Ready"></a><strong>8. Application Ready</strong></h3><ul>
+<li>Publishes <code>ApplicationReadyEvent</code>.</li>
+<li>The app is now ready to handle HTTP requests (if applicable).</li>
+</ul>
+<hr>
+<h3 id="Key-Annotations"><a href="#Key-Annotations" class="headerlink" title="Key Annotations"></a><strong>Key Annotations</strong></h3><ul>
+<li><code>@SpringBootApplication</code>: Combines <code>@Configuration</code>, <code>@ComponentScan</code>, and <code>@EnableAutoConfiguration</code>.</li>
+<li><code>@ConditionalOnClass</code>: Drives auto-configuration based on classpath dependencies.</li>
+</ul>
+<hr>
+<h3 id="Flow-Summary"><a href="#Flow-Summary" class="headerlink" title="Flow Summary"></a><strong>Flow Summary</strong></h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">main() → SpringApplication.run()</span><br><span class="line">  → Environment Setup</span><br><span class="line">  → ApplicationContext Creation</span><br><span class="line">  → Component Scan &amp; Auto-Configuration</span><br><span class="line">  → Run CommandLineRunner/ApplicationRunner</span><br><span class="line">  → Start Embedded Server</span><br><span class="line">  → Application Ready</span><br></pre></td></tr></table></figure>
+
+<p>This streamlined flow allows Spring Boot to “just work” with minimal configuration while providing hooks for customization.</p>
+</div><div class="post-copyright"><script type="text/javascript" src="/js/copyright.js?v=1.0.0" successtext="Copy Successed!"></script><link rel="stylesheet" type="text/css" href="/css/copyright.css?v=1.0.0"><p><span>Title: </span>DeepSeek</p><p><span>Author: </span>mjd507</p><p><span>Date: </span>2025-02-04</p><p><span>Last Update: </span>2025-02-03</p><p><span>Blog Link: </span><a href="/2025/02/04/deep-seek/">https://mjd507.github.io/2025/02/04/deep-seek/</a><span class="copy-path"><i class="fa fa-clipboard" data-clipboard-text="https://mjd507.github.io/2025/02/04/deep-seek/"></i></span></p><p><span>Copyright Declaration: </span>This station is mainly used to sort out incomprehensible knowledge. I have not fully mastered most of the content. Please refer carefully.</p></div><br><div class="tags"></div><div class="post-nav"><a class="next" href="/2024/12/23/jdbc-spec/">JDBC and I</a></div><div id="container"></div><link rel="stylesheet" type="text/css" href="https://unpkg.com/gitalk/dist/gitalk.css"><script type="text/javascript" src="https://unpkg.com/blueimp-md5/js/md5.js"></script><script type="text/javascript" src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script><script>var gitalk = new Gitalk({
+  clientID: 'fa8d49cc90698365347d',
+  clientSecret: 'ad101f458b7f3950fccc09b931977c106cd2c467',
+  repo: 'mjd507.github.io',
+  owner: 'mjd507',
+  admin: ['mjd507'],
+  id: md5(location.pathname),
+  distractionFreeMode: false
+})
+gitalk.render('container')
+</script></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> Categories</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Back-End/">Back-End</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Big-Front-End/">Big-Front-End</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Data-Structure-Algorithm/">Data Structure & Algorithm</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Devops/">Devops</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java-Android/">Java & Android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Network/">Network</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Operation-System/">Operation System</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> Links</i></div><ul></ul><a href="https://dashaun.com/posts/" title="DaShaun Carter" target="_blank">DaShaun Carter</a><ul></ul><a href="https://vladmihalcea.com/blog/" title="Vlad Mihalcea" target="_blank">Vlad Mihalcea</a><ul></ul><a href="https://www.danvega.dev/blog/" title="Dan Vega" target="_blank">Dan Vega</a><ul></ul><a href="https://imququ.com/" title="Jerry Qu" target="_blank">Jerry Qu</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2025 <a href="/." rel="nofollow">Jiandong.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=1.0.0" async></script><script type="text/javascript" src="https://unpkg.com/@fancyapps/fancybox/dist/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=1.0.0" async></script><link rel="stylesheet" type="text/css" href="https://unpkg.com/@fancyapps/fancybox/dist/jquery.fancybox.min.css"><script type="text/javascript" src="/js/copycode.js?v=1.0.0" successtext="Copy Successed!"></script><link rel="stylesheet" type="text/css" href="/css/copycode.css?v=1.0.0"><script type="text/javascript" src="/js/codeblock-resizer.js?v=1.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=1.0.0"></script></div></body></html>
