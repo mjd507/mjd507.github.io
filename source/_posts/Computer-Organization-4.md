@@ -1,6 +1,6 @@
 ---
 title: 计算机组成原理 - 程序的链接，装载和执行
-categories: Operation System
+categories: Big-Back-End
 toc: true
 comments: true
 copyright: true

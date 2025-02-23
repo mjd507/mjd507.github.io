@@ -1,6 +1,6 @@
 ---
 title: 计算机组成原理 - 性能和功耗
-categories: Operation System
+categories: Big-Back-End
 toc: true
 comments: true
 copyright: true

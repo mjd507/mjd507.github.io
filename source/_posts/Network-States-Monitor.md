@@ -1,6 +1,6 @@
 ---
 title: 关于应用中网络状态变化的一点思考
-categories: Java & Android
+categories: Big-Back-End
 toc: true
 comments: true
 date: 2017-01-19 13:54:49

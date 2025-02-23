@@ -1,6 +1,6 @@
 ---
 title: redis 基准测试和监控
-categories: Back-End
+categories: Big-Back-End
 toc: true
 comments: true
 copyright: true

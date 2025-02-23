@@ -1,6 +1,6 @@
 ---
 title: HTTP 授权认证
-categories: Network
+categories: Big-Back-End
 toc: false
 comments: true
 copyright: true

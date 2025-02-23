@@ -1,6 +1,6 @@
 ---
 title: 二叉查找树节添加删除节点的细节
-categories: Data Structure & Algorithm
+categories: Big-Back-End
 toc: true
 comments: true
 copyright: true

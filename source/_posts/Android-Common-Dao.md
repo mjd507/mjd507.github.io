@@ -1,6 +1,6 @@
 ---
 title: 个人精炼的 Android 数据库框架
-categories: Java & Android
+categories: Big-Back-End
 toc: true
 comments: true
 date: 2017-01-15 11:57:24

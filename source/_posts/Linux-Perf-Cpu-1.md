@@ -1,6 +1,6 @@
 ---
 title: Linux 性能优化 - CPU 篇
-categories: Operation System
+categories: Big-Back-End
 toc: true
 comments: true
 copyright: true

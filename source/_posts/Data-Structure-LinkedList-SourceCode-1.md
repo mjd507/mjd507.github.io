@@ -1,6 +1,6 @@
 ---
 title: LinkedList 链表的源码分析
-categories: Data Structure & Algorithm
+categories: Big-Back-End
 toc: true
 comments: true
 copyright: true

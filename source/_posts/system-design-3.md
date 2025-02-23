@@ -1,6 +1,6 @@
 ---
 title: 设计一个在 AWS 上管理千万级别的用户系统
-categories: Back-End
+categories: Big-Back-End
 toc: true
 comments: true
 copyright: true

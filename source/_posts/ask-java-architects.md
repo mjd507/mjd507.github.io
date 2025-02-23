@@ -1,6 +1,6 @@
 ---
 title: Ask Java Architects - Open Questions
-categories: Back-End
+categories: Big-Back-End
 toc: false
 comments: true
 copyright: true

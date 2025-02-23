@@ -1,6 +1,6 @@
 ---
 title: 提高 Gradle 速度的方法
-categories: Java & Android
+categories: Big-Back-End
 toc: true
 comments: true
 date: 2017-03-15 15:44:11

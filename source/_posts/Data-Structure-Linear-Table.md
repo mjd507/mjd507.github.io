@@ -1,6 +1,6 @@
 ---
 title: 线性表
-categories: Data Structure & Algorithm
+categories: Big-Back-End
 toc: true
 comments: true
 copyright: true

@@ -1,6 +1,6 @@
 ---
 title: Guava 2 - Primitives, Strings & Cache
-categories: Java & Android
+categories: Big-Back-End
 toc: true
 comments: true
 copyright: true

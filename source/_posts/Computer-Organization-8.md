@@ -1,6 +1,6 @@
 ---
 title: 计算机组成原理 - 高速缓存
-categories: Operation System
+categories: Big-Back-End
 toc: true
 comments: true
 copyright: true

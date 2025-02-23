@@ -1,6 +1,6 @@
 ---
 title: Guava 4 - Collections - 2 & range
-categories: Java & Android
+categories: Big-Back-End
 toc: true
 comments: true
 copyright: true

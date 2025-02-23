@@ -1,6 +1,6 @@
 ---
 title: 数据库中间件基础
-categories: Back-End
+categories: Big-Back-End
 toc: true
 comments: true
 copyright: true

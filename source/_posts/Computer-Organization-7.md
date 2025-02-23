@@ -1,6 +1,6 @@
 ---
 title: 计算机组成原理 - CPU 的指令周期和数据通路建设
-categories: Operation System
+categories: Big-Back-End
 toc: true
 comments: true
 copyright: true

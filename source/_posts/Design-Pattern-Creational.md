@@ -1,6 +1,6 @@
 ---
 title: 设计模式（创建型篇）
-categories: Data Structure & Algorithm
+categories: Big-Back-End
 toc: true
 comments: true
 date: 2017-01-08 11:43:48

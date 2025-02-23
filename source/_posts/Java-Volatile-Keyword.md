@@ -1,6 +1,6 @@
 ---
 title: Java 中的 Volatile 关键字
-categories: Java & Android
+categories: Big-Back-End
 toc: true
 comments: true
 copyright: true

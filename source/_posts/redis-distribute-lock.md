@@ -1,6 +1,6 @@
 ---
 title: redis 分布式锁
-categories: Back-End
+categories: Big-Back-End
 toc: true
 comments: true
 copyright: true

@@ -1,6 +1,6 @@
 ---
 title: 计算机组成原理 - DMA
-categories: Operation System
+categories: Big-Back-End
 toc: false
 comments: true
 copyright: true
