@@ -8,6 +8,7 @@
   "dependencies": {
     "hexo": "^5.4.1",
     "hexo-deployer-git": "^3.0.0",
+    "hexo-filter-plantuml": "^2.1.1",
     "hexo-generator-archive": "^1.0.0",
     "hexo-generator-category": "^1.0.0",
     "hexo-generator-index": "^2.0.0",

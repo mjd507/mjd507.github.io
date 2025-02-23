@@ -11,9 +11,9 @@ $(document).ready(function() {
   });
 });
 $(document).ready(function() {
-  $("a[href$='.jpeg'],a[href$='.jpg'],a[href$='.png'],a[href$='.gif'],a[href$='.webp']").attr('rel', 'gallery').fancybox({
+  $("a[href$='.jpeg' i],a[href$='.jpg' i],a[href$='.png' i],a[href$='.gif' i],a[href$='.webp' i]").attr('data-fancybox', 'gallery').fancybox({
     helpers : {
-    title: { type: 'inside'}
+      title: { type: 'inside'}
     }
   });
 });
