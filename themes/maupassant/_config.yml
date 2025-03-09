@@ -148,12 +148,16 @@ info:
 links:
  - title: DaShaun Carter
    url: https://dashaun.com/posts/
+ - title: develotters
+   url: https://develotters.com/
  - title: Vlad Mihalcea
    url: https://vladmihalcea.com/blog/
  - title: Dan Vega
    url: https://www.danvega.dev/blog/
  - title: Jerry Qu
    url: https://imququ.com/
+ - title: Tech Talks Weekly
+   url: https://www.techtalksweekly.io/
 
 timeline:
   - num: 1
