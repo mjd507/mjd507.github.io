@@ -46,7 +46,7 @@ gtag('config', 'G-566LR096XR');
 <li>for others to implement</li>
 <li>for others only to use</li>
 </ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sealed interface TrafficLight permits RedLight,GreenLight,YellowLight &#123;&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sealed <span class="class"><span class="keyword">interface</span> <span class="title">TrafficLight</span> <span class="title">permits</span> <span class="title">RedLight</span>,<span class="title">GreenLight</span>,<span class="title">YellowLight</span> </span>&#123;&#125;</span><br></pre></td></tr></table></figure>
 
 <h2 id="OOP-vs-Data-Oriented-Programming"><a href="#OOP-vs-Data-Oriented-Programming" class="headerlink" title="OOP vs Data Oriented Programming"></a>OOP vs Data Oriented Programming</h2><p>Paradigms are there to help us and not the other way around.</p>
 <p>OOP is awesome it helps us to develop extensible code.</p>
@@ -60,17 +60,16 @@ gtag('config', 'G-566LR096XR');
 <p>Suppose you are using a third-party library with a hiearchy of classes. You have to implement logic that is different from classes in that hiearchy.</p>
 <p>What is the OOP solution for this?</p>
 <p>Could use visitor pattern.<br>Create a parallel hiearchy of classes.</p>
-<pre><code>    VehicleProcessor             Vehicle
-</code></pre>
-<p>   CarProcessor TruckProcessor      Car   Truck</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">     VehicleProcessor             Vehicle</span><br><span class="line">CarProcessor TruckProcessor      Car   Truck</span><br></pre></td></tr></table></figure>
 <ol>
 <li>a lot of code to write</li>
 <li>boated</li>
 <li>hard to understand where all the logic is being done.</li>
 <li>Little little code spared out in so many places.</li>
 </ol>
-<p>Data Oriented Programming. works really well when dealing with a third-party hiearcy of data.<br>&#x2F;&#x2F; from a third-party lib<br>interface Vehicle {}<br>class Car implement Vehicle {}<br>class Truck implement Vehicle {}</p>
-<p>String process(Vehicle vehicle) {<br>  return switch(vehicle) {<br>    case Car car -&gt; “processing Car… Logic goes here”;<br>    case Truck truck -&gt; “processing Truck… Logic goes here”;<br>  }<br>}</p>
+<p>Data Oriented Programming. works really well when dealing with a third-party hiearcy of data.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// from a third-party lib</span></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Vehicle</span> </span>&#123;&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Car</span> <span class="title">implement</span> <span class="title">Vehicle</span> </span>&#123;&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Truck</span> <span class="title">implement</span> <span class="title">Vehicle</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">String <span class="title">process</span><span class="params">(Vehicle vehicle)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">switch</span>(vehicle) &#123;</span><br><span class="line">    <span class="keyword">case</span> Car car -&gt; <span class="string">&quot;processing Car... Logic goes here&quot;</span>;</span><br><span class="line">    <span class="keyword">case</span> Truck truck -&gt; <span class="string">&quot;processing Truck... Logic goes here&quot;</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 </div><div class="post-copyright"><script type="text/javascript" src="/js/copyright.js?v=1.0.0" successtext="Copy Successed!"></script><link rel="stylesheet" type="text/css" href="/css/copyright.css?v=1.0.0"><p><span>Title: </span>Revisited-Design-Patterns-In-Modern-Java</p><p><span>Author: </span>mjd507</p><p><span>Date: </span>2025-03-12</p><p><span>Last Update: </span>2025-03-12</p><p><span>Blog Link: </span><a href="/2025/03/12/Revisited-Design-Patterns-In-Modern-Java/">https://mjd507.github.io/2025/03/12/Revisited-Design-Patterns-In-Modern-Java/</a><span class="copy-path"><i class="fa fa-clipboard" data-clipboard-text="https://mjd507.github.io/2025/03/12/Revisited-Design-Patterns-In-Modern-Java/"></i></span></p><p><span>Copyright Declaration: </span>This station is mainly used to sort out incomprehensible knowledge. I have not fully mastered most of the content. Please refer carefully.</p></div><br><div class="tags"></div><div class="post-nav"><a class="next" href="/2025/02/24/PropertyDescriptor/">PropertyDescriptor</a></div><div id="container"></div><link rel="stylesheet" type="text/css" href="https://unpkg.com/gitalk/dist/gitalk.css"><script type="text/javascript" src="https://unpkg.com/blueimp-md5/js/md5.js"></script><script type="text/javascript" src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script><script>var gitalk = new Gitalk({
   clientID: 'fa8d49cc90698365347d',
   clientSecret: 'ad101f458b7f3950fccc09b931977c106cd2c467',
