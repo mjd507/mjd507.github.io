@@ -181,7 +181,7 @@ your library has two kinds of interfaces:
 1. for others to implement
 2. for others only to use
 
-```
+```java
 sealed interface TrafficLight permits RedLight,GreenLight,YellowLight {}
 ```
 
@@ -217,9 +217,10 @@ What is the OOP solution for this?
 Could use visitor pattern.
 Create a parallel hiearchy of classes.
 
+```
         VehicleProcessor             Vehicle
    CarProcessor TruckProcessor      Car   Truck
-
+```
 1. a lot of code to write
 2. boated
 3. hard to understand where all the logic is being done.
@@ -227,6 +228,7 @@ Create a parallel hiearchy of classes.
 
 
 Data Oriented Programming. works really well when dealing with a third-party hiearcy of data.
+```java
 // from a third-party lib
 interface Vehicle {}
 class Car implement Vehicle {}
@@ -238,38 +240,5 @@ String process(Vehicle vehicle) {
     case Truck truck -> "processing Truck... Logic goes here";
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+```
 
