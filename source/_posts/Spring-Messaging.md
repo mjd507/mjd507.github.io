@@ -1,5 +1,5 @@
 ---
-title: Learn Spring-Messaging
+title: Spring-Messaging
 categories: Big-Back-End
 toc: true
 comments: true
