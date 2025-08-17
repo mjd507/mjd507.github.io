@@ -1,5 +1,5 @@
 ---
-title: 代理和信托-项目总结
+title: Agency and Trust
 categories: Big-Back-End
 toc: true
 comments: true
@@ -9,13 +9,17 @@ date: 2025-08-07 18:26:39
 tags:
 ---
 
-代理和信托(Agency and Trust)：代理涵盖帮助投资机构/投资者买卖证券，收益归投资者。信托涵盖财富管理，收益归约定的受益人。
+总结一下项目：代理和信托。
+
+代理涵盖帮助投资机构/投资者买卖证券，收益归投资者。
+
+信托涵盖财富管理，收益归约定的受益人。
 
 <!--more-->
 
 ## 背景
 
-代理和信托是一个存在很久（20年+）的项目，客户端是安装在 Windows 上一个应用程序，服务端是 c#，2020 年开始，决定迁移到更现代化的 web 系统来取代 Windows 上的程序，新项目使用微服务架构，技术栈 SpringBoot + Angular + Openshift，共用 Oracle 数据库。所有功能都包含 maker-checker 以及 audit-trail 等审计流程。
+代理和信托是一个存在很久（20年+）的项目，客户端是安装在 Windows 上一个应用程序，服务端是 c#，2020 年开始，决定迁移到更现代化的 web 系统来取代 Windows 上的程序，新项目使用微服务架构，技术栈 SpringBoot + Angular + Jenkins + Openshift，共用 Oracle 数据库。所有功能都包含 maker-checker 以及 audit-trail 等审计流程。
 
 原始功能非常庞大，有一定的业务壁垒，整个迁移周期也是逐渐拉长，目前已经摊开了 40+ 服务模块（前后端各 20+），规划也排到了 2028 年。
 
@@ -40,7 +44,7 @@ create table c_issuer ( -- 发行主体信息表
 ```
 
 ```sql
-create table c_instrument ( -- 债券基本信息表， 1 issuer - 1 instrument
+create table c_instrument ( -- 债券基本信息表
   ID NUMBER AUTO_INCREMENT,
   isin_code VARCHAR(16), -- 债券代码
   isin_name VARCHAR(32),
@@ -272,7 +276,7 @@ note：由于 file-mapper 良好的设计，现在不仅支持债券的自动化
 
 新系统对账户行迁移了两块重要内容。
 
-1. 展示清算通知的记录（receive-queue），即以 MT910 为核心的 record，MT910 是账户行在资金接收环节中，向账户持有人传递到账信息的核心工具，是清算的通知凭证。
+1.展示清算通知的记录（receive-queue），即以 MT910 为核心的 record，MT910 是账户行在资金接收环节中，向账户持有人传递到账信息的核心工具，是清算的通知凭证。
 
 ```sql
 select * from swift_outgoing_message where msg_type = '910';
@@ -281,7 +285,7 @@ select * from swift_outgoing_message where msg_type = '910';
 ```
 
 
-2. 对符合要求的账户，自动进去结算(MT103/MT202)，（工作日 9 - 6 点，每 15 mins）
+2.对符合要求的账户，自动进去结算(MT103/MT202)，（工作日 9 - 6 点，每 15 mins）
 
 ```java
 void autoPaymentRelease() {
@@ -304,24 +308,25 @@ void autoPaymentRelease() {
 
 claim-letter 在 ppa 中的作用是？
 
-```java
-void paymentRelease() {
-  try {
-    releaseFunding();
-  } catch(Exception ex) {
-
-  }
-  validateStatus();
-  checkBalance();
-  updateStatusDenomination();
-  sendSwiftMessage();
-}
-```
 
 
 ### IPA
 
-### 支付流程服务 payment-workflow
+### payment-workflow
+
+```java
+void paymentRelease() {
+  try {
+    releaseFunding();
+    validateStatus();
+    checkBalance();
+    updateStatusDenomination();
+    sendSwiftMessage();
+  } catch(Exception ex) {
+
+  }
+}
+```
 
 ---
 
@@ -329,7 +334,7 @@ void paymentRelease() {
 
 新的服务重新设计了托管账号相关的管理功能，MT537 结算通知相关的功能，以及新开发的托管支付流程。
 
-1. 托管账号管理 (safekeeping account)。
+1.托管账号管理 (safekeeping account)。
 
 方便托管人与搜托人进行沟通，以及交易结算。
 
@@ -363,7 +368,7 @@ create ct_sfkp_acc ( -- 托管账户
 
 ```
 
-2. MT537 (Securities Settlement Transaction Status Advice - 证券结算交易状态通知）。
+2.MT537 (Securities Settlement Transaction Status Advice - 证券结算交易状态通知）。
 
 它主要用于在证券交易的结算环节，向相关参与方（如托管行、经纪商、客户等）通知证券结算交易的处理状态，例如确认交易已完成、提示交易失败及原因，通知部分结算等。
 
@@ -398,28 +403,135 @@ create table ct_sfkp_penalty_report(
 )
 ```
 
-3. 托管支付流程 custody payment instruction
+3.托管支付流程 custody payment instruction
 
-是一个新功能，或者说简化 ops 工作量的功能。
+是一个新功能，为了简化 ops 工作量的功能。 ops 谈的合同大多数基于邮箱邮件，由于邮件繁多，且每一个客户的流程状态无法直观记忆，故开发了此功能。
 
-  - 构建基于邮件的 payment 流程。 含盖 receive/authorise/signature/completed 等阶段。
 
+```sql
+create table pmt_instruction(
+  id NUMBER AUTO_INCREMENT,
+  mail_id NUMBER,
+  subject VARCHAR(255),
+  status VARCHAR(6),
+  receive_date DATE,
+  comment VARCHAR(255),
+  CREATED_AT DATE,
+  UPDATED_AT DATE
+);
+```
+
+  - 在读取到指定邮箱的邮件并入表保存后，展示在 receive queue 页面
+  - ops 基于与用户的沟通，将记录 move 到对应的 authorise queue，signature queue，complete queue 等页面
+  - 在 complete queue 之前，ops 可以生成并发送 103/202 支付指令，将收益汇给受益人。
+  
 ---
 
 ## 基础服务
 
 ### swift-message
 
-1. central entry for all kinds of incoming messages.
+1.核心服务，负责监听所有入站的 swift message 的入口。使用 jms 监听 incoming queue，并根据路由配置转发到其他服务。
+
+```sql
+create table swift_incoming_message(
+  id NUMBER AUTO_INCREMENT,
+  module_identifier VARCHAR(32),
+  msg_type VARCHAR(8),
+  module_name VARCHAR(8),
+  sft_msg TEXT,
+  CREATED_AT DATE,
+  UPDATED_AT DATE
+);
+
+create table swift_message_routing(
+  id NUMBER AUTO_INCREMENT,
+  msg_type VARCHAR(8),
+  module_name VARCHAR(8),
+  receive_url VARCHAR(255),
+  CREATED_AT DATE,
+  UPDATED_AT DATE
+);
+```
+
+```java
+@JmsListener(destination = "queue-name")
+public void receive(String rawMessage) {
+  try {
+    // get delivery times from the broker, if more than 3 times, ignore processing. 
+    // default delivery times is 10, by more observation, we see almost all re-delivery 
+    // are due to our own handler logic, so its really not good to re-try with same error for 10 times.
+    @Nullable BaseSwiftMessage swiftMsg = parseMessage(rawMessage);
+    saveMessage(rawMessage, swiftMsg);
+    List<Routing> routerConfs = getRoutingConfig(swiftMsg.msgType);
+    callEachModule(routerConfs, swiftMsg);
+  } catch (Exception ex) {
+    // based on particular err to decide ignore or re-throw
+  }
+}
+
+```
+
+目前这里的实现方式有一定风险，尤其在消息堆压的情况下，事务里的 http 调用，很影响性能，吞吐会明显下降。
+
+如果能重来，我会选择 outbox pattern，借助一张中间表分离 message 入表和 http call，当监听到 message 进来时，只做 db 的写操作，将状态记到中间表里，确保进来的消息能顺利持久化，同时通过 event 驱动，异步进行 http call 并更新状态。当然 http 有失败的情况，可采取定时扫描中间表并再次通过 event 进行 http call，直到成功为止。
+
+增加吞吐的同时，保证了最终一致性。
+
+2.目前入站的 swift 消息类型包括但不仅限于：
+
+199：银行间的一般性信息传递，它并非支付指令，也不是银行资金担保或者资金承付的文件，不具备法律约束力的金融承诺性质。
+210：核心作用是资金接收的预先通知。Notice to Receive
+299：通常与金融交易（如支付、担保、贸易融资等）的补充说明或业务沟通相关。
+548：确认证券在托管账户间的转移状态（证券存入 / 提取通知）。
+537：同步证券结算的状态信息（证券结算交易状态通知）
+568：记录和通知同一机构内部证券持仓的变动（账户内持仓变动通知）
+599：传递无法通过其他标准化证券报文（如 MT537、MT548 等）覆盖的自定义信息，是证券业务沟通的补充工具。
+799：银行间就保函、备用信用证等担保类业务进行沟通、确认或补充说明
+910：通知账户贷记信息的标准化报文
+999：银行与客户（包括企业、金融机构等）之间，传递与账户管理、资金流动相关的非标准化信息，是现金管理场景中灵活沟通的补充工具
+
+当我们发起一笔汇款指令（103 或者 202）时，一般会收到 910 的 ack 信息，表示资金已到账，收到 999 的 ack，表示汇款存在问题，如账户信息不正确等。
 
 ### maintenance 
 
-1. payment currency cutoff time 
-2. payment threshold（checker 1/2/3）
+配置模版，各个业务模版需要的配置信息，都设计在此模块。
+
+1.Threshold Config
+
+PPA/Account_Bank/Issuance 的每笔账单校验，需要的 user 等级，以及需要几个 user 校验。
+
+```sql
+create table pmt_threshold(
+  id NUMBER AUTO_INCREMENT,
+  module_name VARCHAR(8),
+  pmt_amount DECIMAL,
+  check1_level NUMBER,
+  check2_level NUMBER,
+  check3_level NUMBER,
+  status VARCHAR(4),
+  CREATED_AT DATE,
+  UPDATED_AT DATE
+);
+```
+
+2.currency cutoff time 
+```sql
+create table pmt_ccy_cutoff(
+  id NUMBER AUTO_INCREMENT,
+  module_name VARCHAR(8),
+  ccy VARCHAR(3),
+  start_time VARCHAR(6),
+  end_time VARCHAR(6),
+  status VARCHAR(4),
+  CREATED_AT DATE,
+  UPDATED_AT DATE
+); 
+```
 
 ### mail-service
 
-1. reading payment instruction emails from specified mailboxes and save into database.
+1.从 ops 指定的邮箱中读取邮件，并存储到数据库中，邮件内容为 payment 的一些信息确认信息。
 
 ```sql
 create table inbound_mail ( -- 邮箱里的邮件信息
@@ -442,7 +554,7 @@ create table inbound_mail_attachment ( -- 每封邮件的附件
 
 ```
 
-2. route the mail into configured modules base on mailbox
+2.将读取的邮件，借助路由表通过 http 转发到配置的模板处理。
 ```sql
 create table mail_routing(
   id NUMBER AUTO_INCREMENT,
@@ -454,17 +566,78 @@ create table mail_routing(
 
 由于公司的创建的邮箱只支持 pop3 协议，所以只能通过定时拉取的方式（每 5 分钟）获取 inbox 目录所有的邮件。
 
-只要一封邮件被持久化了，后面在拉取，属于一种浪费，但由于没有更好的办法，我们采取了一种折中策略，即拉取后，按 receive date 过滤出最近两天的邮件，
-随着时间推移，邮件越积越多，对系统是个负担，
+该方案有两个问题：1. 非实时获取 2. 性能问题，inbox 所有邮件会被多次拉取。且邮件会越来越多。
+
+在运行了两年多后，零碎报出了线程 hang 住的情况，最终跟每个邮箱的 owner 协商，开启了 inbox 目录的自动归档功能，超过一个月的邮件自动 move 到 archive 目录，又平稳运行了 2 年多，不在有新的问题。
+
 
 ### rate-fixing
 
 
 ### ETL
 
-1. spring-batch jobs for different kinds of feeds
-2. spring-integration poller tasks for differnet eip flow
+涵盖几十个需要批处理的 job，选择了 spring-batch 作为 etl 开发的基本框架。
 
+1.HR_FEED：每天拉取整个公司员工（40w+）的信息，过滤出 emea & apac 的员工，提取出 id，manager id，region，level 等信息落表。用于支付流程授权时风控校验。
+
+```sql
+create table user_detail (
+  id NUMBER AUTO_INCREMENT,
+  u_id VARCHAR(7),
+  m_id VARCHAR(7),
+  level VARCHAR(2),
+  region VARCHAR(5),
+  CREATED_AT DATE,
+  UPDATED_AT DATE
+);
+```
+
+```java
+@Bean
+ItemReader<User> reader() {
+  var itemReader = new FlatFileItemReader(filePath);
+  LineMapper<User> lineMapper = new DefaultLineMapper<>();
+  var lineTokenizer = new DelimitedLineTokenizer();
+  lineTokenizer.setDelimiter(",");
+  lineTokenizer.setNames(Arrays.stream(User.class.getDeclaredFields()).map(Field::getName).toArray(String[]::new));
+  defaultLineMapper.setLineTokenizer(lineTokenizer);
+  var fieldSetMapper = new BeanWrapperFieldSetMapper<>();
+  fieldSetMapper.setTargetType(User.class);
+  defaultLineMapper.setFieldSetMapper(fieldSetMapper);
+  return itemReader;
+}
+
+@Bean
+ItemProcessor<User, User> processor() {
+  return new ItemProcessor<User, User>() {
+    User process(User user) {
+      // filter user.region equal apac or emea
+    }
+  };
+}
+
+@Bean
+ItemWriter<Person> writer() {
+  return new JdbcBatchItemWriter<>() {
+    setSql("insert into user values xxxx ");
+  }
+}
+
+```
+
+由于读取的文件非常大，每行的字段也非常多，这里采取了两种优化策略，最终将 job 的时间控制在 40s 左右。
+
+  1. 将大文件切割，在 batch 增加一个前置的 tasklet，使用 linux command `split` 按 5000 行一个子文件，将大文件切割成 8 - 10 个小文件。通过线程池并发处理这些小文件。
+  2. spring batch 中的 LineMapper 支持指定列的提取，这样每一行数十个字段，我们只要给定位置，就能将需要的字段提取出来。
+
+2.GENSIS_FEED daily/monthly， 核心流程与上面类似，不在叙述。
+
+
+特别想说，在写单元测试时，mock 那一套，对于 spring batch 或者 spring integration 来说，不适用，我看到了大量的 mock 框架里面实现类的单测，层层 mock，毫无意义。
+
+更多的是需要写集成测试，由于 etl 积累的大量的 job，如果每个 job 都启动一个大的 application content，ci 的时间会很长。所以最终在写集成测试时，指定需要加载进 spring context 的类文件，经此改造，etl 项目的 ci 时间由 15 mins 降低到 6 mins。
+
+当然由于内网本地无法安装 docker，build 容器的内存也有限，否则 test container 是一个更佳的选择。我们实际 数据库是 Oracle，但 ci 阶段只能折中选择 h2，db 层面的差异比如 view 的支持，也导致集成测试需要做一些额外的配置或妥协。
 
 
 ---
@@ -474,22 +647,73 @@ create table mail_routing(
 
 ### 制裁审查(Sanction Screening)
 
-1. MT series messages screening
-2. ISO messages screening
-3. build message Canonical model to unify screening process.
+该功能也是我主导设计，ISO 是 2025 年一个监管要求，国际件银行通信标准需要由 swift 格式转换到 ISO xml 的格式。
+
+incoming message 的 screening 在 swift-message 服务监听到时，就会触发。
+outgoinh message 在手动创建时触发。
+
+```sql
+create table sft_sanc_screening(
+  id NUMBER AUTO_INCREMENT,
+  msg_type VARCHAR(3),
+  msg_identifier VARCHAR(32),
+  re_screening VARCHAR(1),
+  direction VARCHAR(1),
+  xml_body text,
+  request_time DATE,
+  response_time DATE,
+  status VARCHAR(6),
+  CREATED_AT DATE,
+  UPDATED_AT DATE
+);
+```
+
+设计时按照抽象和组合的原则，划分了新老 message 的接口流程，增加类似 spring 中的 aware 回调，以及较为公共实现的 support 类。
 
 ```java
+interface ISanctionScreeningService<T extends BaseSwiftPayload> extends ISanctionScreeningNewFlowService<S extends NewPayload>, ISacntionScreeningAware {
+  performScreening(ScreeningRequest screeningRequest) {
+    try{
+      beforeScreening(screeningRequest);
+      var message = fetchMessage(screeningRequest);
+      if (isNewMessage(screeningRequest)) {
+        var canonicalModel = callPartnerATeam(message);
+        var sancScreenng = persistSancScreening(screeningRequest, null);
+        callPartnerBTeam(canonicalModel);
+      } else {
+        var swift = parseMessage(message);
+        var hdr = generateXmlHeader(swift);
+        var body = generateXmlBody(swift);
+        var sancScreenng = persistSancScreening(screeningRequest, hdr + body);
+        sendToMqForScreening(sancScreenng);
+      }
+    } catch(Exception ex) {
+      handleException(ex);
+    } finally {
+      afterScreening(screeningRequest);
+    }
+  }
+}
 
-void performScreening() {
-  var hdr = generateXmlHeader();
-  var body = generateXmlBody();
-  sendToMqForScreening(new String(hdr+"\n"+body));
+@KafkaListener("new-flow-queue") 
+public void kafkaResponse(Consumer<Record> record) {
+  var response = record.get();
+  var sancScreening = parseMessage(response);
+  updateSancScreening(sancScreening);
+}
+
+@JmsListener("existing-screening-queue")
+public void jmsListener(response) {
+  var response = record.get();
+  var sancScreening = parseMessage(response);
+  updateSancScreening(sancScreening);
 }
 
 ```
 
-### ISO message service
+### ISO message
 
+ISO 具体的生成服务由另一个团队提供。不在叙述。
 
 
 
