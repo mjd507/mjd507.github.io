@@ -29,6 +29,7 @@ tags:
 ## 债券发行(Issuance)
 
 目前是在一级市场进行发债，ops 在和 发行人，投资人等多方敲定好后，会准备一个 Excel 表格，列出要发行的债券发行号，金额，币种，发行人信息，债券类别等信息。系统根据 Excel 信息创建债券。
+
 ### main tables
 
 ```sql
@@ -80,7 +81,7 @@ create table a_event ( -- 债券发行方案表，1 instrument - n event
 
 发行完成后，理论上有一个认购流程，但是我涉及到的系统并没有涉及到认购流程，猜测发债采取的非公开发行的方式（私募债），仅面向合格机构投资者，认购门槛高（如单笔数百万起），通过线下协议认购。
 
-线下认购完成后，ops 手动初始化 payment。（todo: need confirm， payment 哪个字段关联的投资者）
+线下认购完成后，ops 手动初始化 payment。（need confirm， payment 哪个字段关联的投资者）
 
 ```sql
 create table a_payment ( -- 投资认购支付表， 1 event - n payments
@@ -188,7 +189,7 @@ create table FM_PARSE_DETAIL ( -- 记录解析信息，在 issuance 服务逐条
 -- END
 ```
 
-note：由于 file-mapper 良好的设计，现在不仅支持债券的自动化创建，还支持其他模板业务的自动化流程，如 rate-fixing，custody，clearing-system 等。
+由于 file-mapper 良好的设计，现在不仅支持债券的自动化创建，还支持其他模板业务的自动化流程，如 rate-fixing，custody，clearing-system 等。
 
 
 ### skeleton-instrument
@@ -266,9 +267,7 @@ note：由于 file-mapper 良好的设计，现在不仅支持债券的自动化
 ```
 
 
-
 ## 跨境支付
-
 
 ### 账户行(Account Bank)
 
@@ -276,26 +275,25 @@ note：由于 file-mapper 良好的设计，现在不仅支持债券的自动化
 
 新系统对账户行迁移了两块重要内容。
 
-1.展示清算通知的记录（receive-queue），即以 MT910 为核心的 record，MT910 是账户行在资金接收环节中，向账户持有人传递到账信息的核心工具，是清算的通知凭证。
-
-```sql
-select * from swift_outgoing_message where msg_type = '910';
-
--- display in ui
-```
-
-
-2.对符合要求的账户，自动进去结算(MT103/MT202)，（工作日 9 - 6 点，每 15 mins）
+1.对符合要求的账单，自动进去结算(MT103/MT202)，（工作日 9 - 6 点，每 15 mins）
 
 ```java
-void autoPaymentRelease() {
-  var payments = getValidatedPayments();
-  for (var p : payments) {
-    sendReleaseMsgToPaymentWorkflow(p);
-  }
+void paymentRelease() {
+  // see payment-workflow
+  // here only send a trigger msg to mq
+  accountBankAutoReleaseTrigger();
 }
 ```
 
+2.展示清算通知的记录（receive-queue），即以 MT910 为核心的 record，MT910 是账户行在资金接收环节中，向账户持有人传递到账信息的核心工具，是清算的通知凭证。
+
+可以理解为 103/202 的 ack 信息。
+
+```sql
+select * from swift_incoming_message where msg_type = '910';
+
+-- display in ui
+```
 
 ### PPA(Principe Paying Agent)
 
@@ -306,29 +304,67 @@ void autoPaymentRelease() {
 - 引入 mq，在验证通过后，发到 mq，由 payment-workflow 服务统一对外支付
 - 对特定币种，特定阈值下的 payment，支持自动 release。
 
-claim-letter 在 ppa 中的作用是？
-
-
-
-### IPA
-
-### payment-workflow
-
 ```java
 void paymentRelease() {
-  try {
-    releaseFunding();
-    validateStatus();
-    checkBalance();
-    updateStatusDenomination();
-    sendSwiftMessage();
-  } catch(Exception ex) {
-
-  }
+  // see payment-workflow
+  // here only do basic validation, then send a trigger msg to mq
+  ppaAutoReleaseTrigger();
 }
 ```
 
----
+claim-letter 在 ppa 中的作用是？
+
+### IPA
+
+IPA 是发行人与初始购买人（通常为承销商或主承销商）之间签订的协议，核心作用是明确双方在债券初始发行阶段的权利、义务和交易细节。
+
+这里上游的信息在我们新系统没有具体体现，但集成了 IPA 汇款的流程。
+
+```java
+void paymentRelease() {
+  // see payment-workflow
+  // here only do basic validation, then send a trigger msg to mq
+  ipaReleaseTrigger();
+}
+```
+
+### payment-workflow
+
+核心汇款的流程都在这个服务，包含了 ipa/ppa/account-bank 三种类型的汇款服务。
+
+```java
+// 以 ppa 为例
+@Transactional
+void paymentRelease(PaymentDetail paymentDetail) {
+  try {
+    releaseFunding(paymentDetail); // in a new transaction. if failed won't affect payment release.
+    validatePayment(paymentDetail); // status, balance, etc
+    updatePayment(paymentDetail);
+    generateAndSendSwiftMessage(paymentDetail);
+  } catch(Exception ex) {
+    // collect error msg, display in ui
+  }
+}
+
+@Transactional(propagation = REQUIRED_NEW)
+void releaseFunding(PaymentDetail paymentDetail) {
+  var event = retrieveEvent(paymentDetail);
+  // calc conf balance, update event
+  var funding = retrieveOrCreateFunding(event);
+  funding.setStatus("RLSD");
+  funding.setAmount(event.initialBalance);
+  event.setConfBalance(paymentDetail.amount);
+  updateFunding(funding);
+  updateEvent(event);
+  generateAndSendSwiftMessage(event);
+}
+
+void generateAndSendSwiftMessage() {
+  // 生成 103 或者 202 的swift，
+  // 发往下游进行汇款操作。
+}
+```
+
 
 ## 资金托管(Custody)
 
@@ -424,14 +460,13 @@ create table pmt_instruction(
   - 在读取到指定邮箱的邮件并入表保存后，展示在 receive queue 页面
   - ops 基于与用户的沟通，将记录 move 到对应的 authorise queue，signature queue，complete queue 等页面
   - 在 complete queue 之前，ops 可以生成并发送 103/202 支付指令，将收益汇给受益人。
-  
----
+
 
 ## 基础服务
 
 ### swift-message
 
-1.核心服务，负责监听所有入站的 swift message 的入口。使用 jms 监听 incoming queue，并根据路由配置转发到其他服务。
+1.核心服务，负责监听所有入站的 swift message 的入口。使用 jms 监听 incoming queue，解析 message，并根据路由配置转发到其他服务。
 
 ```sql
 create table swift_incoming_message(
@@ -480,16 +515,17 @@ public void receive(String rawMessage) {
 
 2.目前入站的 swift 消息类型包括但不仅限于：
 
-199：银行间的一般性信息传递，它并非支付指令，也不是银行资金担保或者资金承付的文件，不具备法律约束力的金融承诺性质。
-210：核心作用是资金接收的预先通知。Notice to Receive
-299：通常与金融交易（如支付、担保、贸易融资等）的补充说明或业务沟通相关。
-548：确认证券在托管账户间的转移状态（证券存入 / 提取通知）。
-537：同步证券结算的状态信息（证券结算交易状态通知）
-568：记录和通知同一机构内部证券持仓的变动（账户内持仓变动通知）
-599：传递无法通过其他标准化证券报文（如 MT537、MT548 等）覆盖的自定义信息，是证券业务沟通的补充工具。
-799：银行间就保函、备用信用证等担保类业务进行沟通、确认或补充说明
-910：通知账户贷记信息的标准化报文
-999：银行与客户（包括企业、金融机构等）之间，传递与账户管理、资金流动相关的非标准化信息，是现金管理场景中灵活沟通的补充工具
+
+> 199：银行间的一般性信息传递，它并非支付指令，也不是银行资金担保或者资金承付的文件，不具备法律约束力的金融承诺性质。
+> 210：核心作用是资金接收的预先通知。Notice to Receive
+> 299：通常与金融交易（如支付、担保、贸易融资等）的补充说明或业务沟通相关。
+> 548：确认证券在托管账户间的转移状态（证券存入 / 提取通知）。
+> 537：同步证券结算的状态信息（证券结算交易状态通知）
+> 568：记录和通知同一机构内部证券持仓的变动（账户内持仓变动通知）
+> 599：传递无法通过其他标准化证券报文（如 MT537、MT548 等）覆盖的自定义信息，是证券业务沟通的补充工具。
+> 799：银行间就保函、备用信用证等担保类业务进行沟通、确认或补充说明
+> 910：通知账户贷记信息的标准化报文
+> 999：银行与客户（包括企业、金融机构等）之间，传递与账户管理、资金流动相关的非标准化信息，是现金管理场景中灵活沟通的补充工具
 
 当我们发起一笔汇款指令（103 或者 202）时，一般会收到 910 的 ack 信息，表示资金已到账，收到 999 的 ack，表示汇款存在问题，如账户信息不正确等。
 
@@ -640,9 +676,6 @@ ItemWriter<Person> writer() {
 当然由于内网本地无法安装 docker，build 容器的内存也有限，否则 test container 是一个更佳的选择。我们实际 数据库是 Oracle，但 ci 阶段只能折中选择 h2，db 层面的差异比如 view 的支持，也导致集成测试需要做一些额外的配置或妥协。
 
 
----
-
-
 ## 监管合规
 
 ### 制裁审查(Sanction Screening)
@@ -671,8 +704,8 @@ create table sft_sanc_screening(
 设计时按照抽象和组合的原则，划分了新老 message 的接口流程，增加类似 spring 中的 aware 回调，以及较为公共实现的 support 类。
 
 ```java
-interface ISanctionScreeningService<T extends BaseSwiftPayload> extends ISanctionScreeningNewFlowService<S extends NewPayload>, ISacntionScreeningAware {
-  performScreening(ScreeningRequest screeningRequest) {
+interface ISanctionScreeningService<T> extends ISanctionScreeningNewFlowService<S>, ISacntionScreeningAware {
+  void performScreening(ScreeningRequest screeningRequest) {
     try{
       beforeScreening(screeningRequest);
       var message = fetchMessage(screeningRequest);
@@ -716,8 +749,16 @@ public void jmsListener(response) {
 ISO 具体的生成服务由另一个团队提供。不在叙述。
 
 
+## 其他
+
+项目采用微服务的架构跑了 5 年多，我们并没有搭建服务注册中心/配置中心等必要组件，也没有考虑使用 rpc 代替 https， 而是依赖 openshift (类似 k8s) 这种云服务本身提供的能力，比如 configmap，router，减少了一定的维护成本，同时在弹性扩容方面也更简单化。
+
+这两年困扰团队的问题是 cvm 方面的问题，我们需要时刻紧跟最新的框架版本，比如 spring-boot，如果是一两个服务还好，但我们几十个服务，每次都需要改版本号，回归测试，qa 同事额外花了不少时间。
+
+现在在看，也许聚合一些个模块是个更好的选择，采用 monolith，同时在组织包名时模块化，在成本上会好很多。 spring 也推出了 spring-modulith 来强约束我们的 package 之间的依赖。
+
+在这里，最大的收获就是，公司选取的所有框架都是基于开源社区的，我们鼓励参与开源，鼓励参与到日常使用的开源框架的贡献中，学习框架的代码设计，注重集成测试。让技术和业务都成为自己难以替代的一部分。
 
 
 
-
-
+End
