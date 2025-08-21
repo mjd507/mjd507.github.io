@@ -81,7 +81,7 @@ create table a_event ( -- 债券发行方案表，1 instrument - n event
 
 发行完成后，理论上有一个认购流程，但是我涉及到的系统并没有涉及到认购流程，猜测发债采取的非公开发行的方式（私募债），仅面向合格机构投资者，认购门槛高（如单笔数百万起），通过线下协议认购。
 
-线下认购完成后，ops 手动初始化 payment。（need confirm， payment 哪个字段关联的投资者）
+线下认购完成后，ops 手动初始化 payment。
 
 ```sql
 create table a_payment ( -- 投资认购支付表， 1 event - n payments
@@ -94,6 +94,7 @@ create table a_payment ( -- 投资认购支付表， 1 event - n payments
   pmt_currency VARCHAR(4),
   pmt_date DATE,
   pmd_addl_checker NUMBER, -- risk control table, multi-checker involved.
+  beneficial_entity NUMBER, --  收益人相关信息
   CREATED_AT DATE,
   UPDATED_AT DATE
 )
