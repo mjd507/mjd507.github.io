@@ -17,10 +17,10 @@ Install theme and renderers:
 ```shell
 $ git clone https://github.com/tufu9441/maupassant-hexo.git themes/maupassant
 $ npm install hexo-renderer-pug --save
-$ npm install hexo-renderer-sass-next --save
+$ npm install hexo-renderer-dartsass --save
 ```
 
-Then change your `theme` setting in `_config.yml` to `maupassant`.
+Then change your `theme` setting in `_config.yml` to `maupassant-hexo`.
 
 ## Configuration
 Default config:
@@ -233,6 +233,7 @@ version: 1.0.0
 - totop - Enable the rocketship to-top button
 - external_css - Enable loading an external CSS file
 - post_content_length - Abstract length of each post
+- icp - Display the ICP number at the bottom of the website
 - menu - Customize your menu of pages here, just follow the format of existied items. Don't forget to create corresponding folders inlcuding `index.md` in `source` folder to ensure the pages will correctly display. [FontAwesome](https://fontawesome.com) icon fonts have been integrated, and you can choose other icons which you like [here](https://fontawesome.com/icons/) and use them according to the instruction.
 - widgets - Choose and arrange the widgets in sidebar here.
 - info - Set your personal information of the info widget here.

@@ -22,6 +22,10 @@ block content
         a.ds-thread-count(href=url_for(post.path) + '#SOHUCS')
           span.cy_cmt_count(id='sourceId::' + post.date.valueOf() style='margin: 0 3px 0 1px;') 0
           span= ' ' + __('Comment')
+      if theme.waline.enable == true
+        a.ds-thread-count(href=url_for(post.path) + '#waline')
+          span.waline-comment-count(data-path=url_for(post.path))
+          span= ' ' + __('Comment')
       if post.description
         .post-content
           != post.description
@@ -42,6 +46,12 @@ block content
     script#dsq-count-scr(src='//'+ theme.disqus.shortname + '.disqus.com/count.js', async)
   if theme.changyan
     script#cy_cmt_num(src='https://changyan.sohu.com/upload/plugins/plugins.list.count.js?clientId=' + theme.changyan, async)
+  if theme.waline.enable == true
+    script(type='module').
+      import { commentCount } from 'https://unpkg.com/@waline/client@v3/dist/comment.js';
+      commentCount({
+        serverURL: '#{theme.waline.serverURL}',
+      });
   if config.mathjax
     include _partial/mathjax.pug
   if config.mathjax2

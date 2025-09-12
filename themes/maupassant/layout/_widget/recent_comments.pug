@@ -8,5 +8,23 @@ if theme.waline.enable == true
   .widget
     .widget-title
       i.fa.fa-comment-o= ' ' + __('recent_comments')
-    #widget-waline-list
-    script(type='text/javascript', id="recent-comment", serverURL=theme.waline.serverURL, count=theme.waline.count ,  src=url_for(theme.js) + '/recent-comments.js' + '?v=' + theme.version, async)
+    #waline-comment
+    script(type='module').
+      let commentDiv = document.getElementById("waline-comment");
+      let recentCommentUrl = '#{theme.waline.serverURL}' + '/api/comment?type=recent&count=5';
+      function format( date ) {
+        return new Date(date).toLocaleString()
+      }
+      fetch(recentCommentUrl).then((comment) => {
+        return comment.json()
+      }).then((recentComments) => {
+          let comments = "<ul>";
+          recentComments.data.forEach((comment, index) => {
+          comments += `<li>${index + 1}、${format(comment.time)}`
+          comments += `<div class="waline-comment-content"><a class="block" href="${window.location.origin + comment.url + '#waline'}">${comment.comment}</a></div>`
+          comments += `<div class="waline-comment-content-author ">--${comment.nick}</div></li>`
+          });
+          comments += "</ul>";
+          let commentDiv = document.getElementById("waline-comment");
+          commentDiv.innerHTML = comments;
+      });
