@@ -154,10 +154,8 @@ links:
    url: https://vladmihalcea.com/blog/
  - title: Dan Vega
    url: https://www.danvega.dev/blog/
- - title: Jerry Qu
-   url: https://imququ.com/
- - title: Tech Talks Weekly
-   url: https://www.techtalksweekly.io/
+ - title: Marcin Grzejszczak
+   url: https://toomuchcoding.com/
 
 timeline:
   - num: 1
