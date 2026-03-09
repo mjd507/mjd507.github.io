@@ -156,6 +156,8 @@ links:
    url: https://www.danvega.dev/blog/
  - title: Marcin Grzejszczak
    url: https://toomuchcoding.com/
+ - title: Simon Willison’s Weblog
+   url: https://simonwillison.net/
 
 timeline:
   - num: 1
