@@ -1,7 +1,7 @@
 ---
 title: Thought in Coding
 categories: Big-Back-End
-toc: true
+toc: false
 comments: true
 copyright: true
 hidden: false
