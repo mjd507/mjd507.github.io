@@ -114,6 +114,25 @@ void paymentOutboxHandler(PaymentOutbox outbox) {
 
 ```
 
+## OFAC API
+
+
+## 信贷管理（Integrated Lending Management）
+
+背景：私有化部署的贷款数据系统，部分功能不稳定，影响使用，多方评估后，决定采用合作方的云服务系统，通过 api 的方式交互。
+
+该项目作为一个 api connector 项目，仍然从 Resilience 角度设计和开发。
+
+- OAuth 2.0 (with certificates)
+- Idempotency
+- Retry 
+- error handling
+- monitoring
+
+Canonical Payload for internal different data sources.
+
+
+
 
 
 
